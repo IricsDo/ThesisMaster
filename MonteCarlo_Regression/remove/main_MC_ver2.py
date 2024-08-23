@@ -8,7 +8,7 @@ This module simulates hydrogen adsorption using a Monte Carlo method.
 It includes functions for calculating energy and performing simulations.
 """
 
-import module_ver2 as md
+import ThesisMaster.MonteCarlo_Regression.remove.module_ver2 as md
 import numpy as np
 import random as rd
 import math
