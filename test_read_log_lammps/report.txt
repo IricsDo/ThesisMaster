@@ -1,0 +1,10 @@
+Model name: CH4
+Number of atom: {"C": 1, "H": 4}
+Temperture: 300
+Start time: 2024-09-09 22:48:34
+End time: 2024-09-09 22:48:34
+Execu time: 0:00:00.418624
+Start energy: -219.77737
+End energy: -219.77737
+MC loop: 100
+MC loop stop: 100/100
