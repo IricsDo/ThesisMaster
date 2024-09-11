@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import random, math, subprocess, os, shutil, time, json
+import random, math, subprocess, os, shutil, time, json, sys
 from extract_eng import extract_lammps_last_energy
 from extract_pos import read_lammps_dump, read_type_map, extract_atom_data
 from update_conf import update_conf_lmp
@@ -8,10 +8,10 @@ from datetime import datetime
 # Set these parameters
 nloop = 100
 
-deltaperturb = 0.2
-deltamove = 0.1
+deltaperturb = 0.02 # A
+deltamove = 0.01 # A
 
-kb = 1.3806e-23 # J/K
+kb = 8.6173303e-5 #eV/K
 T = 300 # K
 
 random.seed(27848)
@@ -48,8 +48,12 @@ def run_lammps(input_file : str, debug=True):
     if debug:
         return
     """ Run LAMMPS with a given input file and output results to a given file """
-    subprocess.run(['lmp', '-i', input_file], check=True, capture_output=False)
-
+    try:
+        result = subprocess.run(['lmp', '-i', 'in.lammps'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except subprocess.CalledProcessError as e:
+        print(f"Error occurred: {e}")
+        sys.exit(-1)
+        
 if __name__ == '__main__':
 
     # Start time
@@ -78,12 +82,26 @@ if __name__ == '__main__':
     natoms = len(positions['atoms'])
     print(f"{time.time()} >Read all data file: Done")
 
-    print(f"{time.time()} >Random postion all atoms")
+    print(f"{time.time()} Init position")
     for i in range(natoms):
-        # We random for x,y,z with different value
-        positions['atoms'][i]['x'] += deltaperturb * (2 * random.random() - 1)
-        positions['atoms'][i]['y'] += deltaperturb * (2 * random.random() - 1)
-        positions['atoms'][i]['z'] += deltaperturb * (2 * random.random() - 1)
+        print(f"{positions['atoms'][i]['type']}")
+        print(f"{positions['atoms'][i]['x']}")
+        print(f"{positions['atoms'][i]['y']}")
+        print(f"{positions['atoms'][i]['z']}")
+        print("\n")
+
+
+    # print(f"{time.time()} >Random postion one atom")
+    # # Pick random one atom
+    # iatom = random.randrange(0, natoms)
+    # # We random for x,y,z with different value
+    # positions['atoms'][iatom]['x'] += deltaperturb * (2 * random.random() - 1)
+    # positions['atoms'][iatom]['y'] += deltaperturb * (2 * random.random() - 1)
+    # positions['atoms'][iatom]['z'] += deltaperturb * (2 * random.random() - 1)
+    # print(f"{positions['atoms'][iatom]['type']}")
+    # print(f"{positions['atoms'][iatom]['x']}")
+    # print(f"{positions['atoms'][iatom]['y']}")
+    # print(f"{positions['atoms'][iatom]['z']}")
 
     # Write new conf.lmp
     update_conf_lmp(conf_file, conf_file, positions['atoms'], {v: str(k) for k, v in type_map.items()})
@@ -91,7 +109,7 @@ if __name__ == '__main__':
 
     # Run initial LAMMPS simulation to get initial energy and positions
     print(f"{time.time()} >Get PE from lammps")
-    run_lammps(infile)
+    run_lammps(infile, False)
     initial_energy = extract_lammps_last_energy(file_log_path)
     print(f"{time.time()} >Get PE from lammps: Done")
 
@@ -103,27 +121,43 @@ if __name__ == '__main__':
     for i in range(nloop):
         previous_positon = positions
 
+
+
         # Pick random one atom
         iatom = random.randrange(0, natoms)
+
+        print(f"{time.time()} >Previous position")
+        print(f"{previous_positon['atoms'][iatom]['type']}")
+        print(f"{previous_positon['atoms'][iatom]['x']}")
+        print(f"{previous_positon['atoms'][iatom]['y']}")
+        print(f"{previous_positon['atoms'][iatom]['z']}")
+
         x0, y0, z0 = [positions['atoms'][iatom]['x'], positions['atoms'][iatom]['y'], positions['atoms'][iatom]['z']]
 
-        positions['atoms'][iatom]['x'] += deltaperturb * (2 * random.random() - 1)
-        positions['atoms'][iatom]['y'] += deltaperturb * (2 * random.random() - 1)
-        positions['atoms'][iatom]['z'] += deltaperturb * (2 * random.random() - 1)
+        positions['atoms'][iatom]['x'] += deltamove * random.random()
+        positions['atoms'][iatom]['y'] += deltamove * random.random()
+        positions['atoms'][iatom]['z'] += deltamove * random.random()
+
+        print(f"{time.time()} >Random one atom position")
+        print(f"{positions['atoms'][iatom]['type']}")
+        print(f"{positions['atoms'][iatom]['x']}")
+        print(f"{positions['atoms'][iatom]['y']}")
+        print(f"{positions['atoms'][iatom]['z']}")
 
         # Write new conf.lmp
         update_conf_lmp(conf_file, conf_file, positions['atoms'], {v: str(k) for k, v in type_map.items()})
 
         # Run LAMMPS and get energy with new conf.lmp
-        run_lammps(infile)
+        run_lammps(infile, False)
         energy = extract_lammps_last_energy(file_log_path)
 
         is_accept = False
+        print(f"time.time() >{float(elast)} , {float(energy)}")
         if energy <= elast:
             elast = energy
             naccept += 1
             is_accept = True
-        elif random.random() <= math.exp((elast - energy) / (kb*T)):
+        elif random.random() <= math.exp((float(elast) - float(energy)) / (kb*T)):
             elast = energy
             naccept += 1
             is_accept = True
@@ -132,7 +166,13 @@ if __name__ == '__main__':
             positions['atoms'][iatom]['y'] = previous_positon[iatom]['y']
             positions['atoms'][iatom]['z'] = previous_positon[iatom]['z']
 
-        print(f"{time.time()} >Loop {i+1}/{nloop}: Current energy is {energy} => {"Accept" if is_accept else "Keep"}")
+        print(f"{time.time()} >")
+        print(f"{previous_positon['atoms'][iatom]['type']}   {positions['atoms'][iatom]['type']}")
+        print(f"{previous_positon['atoms'][iatom]['x']}      {positions['atoms'][iatom]['x']}")
+        print(f"{previous_positon['atoms'][iatom]['y']}      {positions['atoms'][iatom]['y']}")
+        print(f"{previous_positon['atoms'][iatom]['z']}      {positions['atoms'][iatom]['z']}")
+
+        print(f"{time.time()} >Loop {i+1}/{nloop}: Current energy is {energy}, energy last is {elast} => {'Accept' if is_accept else 'Keep'}")
 
     # End time
     end_time = datetime.now()
