@@ -35,9 +35,9 @@ def update_conf_lmp(input_file, output_file, new_positions, type_map):
             atom_id = atom_data[0]  # First value is the atom id
             # Use the new type and positions from the new_positions list
             new_type = type_map[new_positions[i]['type']]
-            new_x = new_positions[i]['x']
-            new_y = new_positions[i]['y']
-            new_z = new_positions[i]['z']
+            new_x = float(new_positions[i]['x'])
+            new_y = float(new_positions[i]['y'])
+            new_z = float(new_positions[i]['z'])
 
             # Ensure the spacing is consistent with your format
             outfile.write(f"{atom_id:>6} {new_type:>6} {new_x:>13.10f} {new_y:>13.10f} {new_z:>13.10f}\n")
