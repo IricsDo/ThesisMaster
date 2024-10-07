@@ -64,6 +64,12 @@ if __name__ == '__main__':
 
     # Start time
     start_time = datetime.now()
+    # Run initial LAMMPS simulation to get initial energy and positions
+    print(f"{time.time()} >Get PE from lammps")
+    run_lammps(infile)
+    initial_energy = extract_lammps_last_energy(file_log_path)
+    print(f"{time.time()} >Get PE from lammps: Done")
+
     print(f"{time.time()} >Backup file: conf.lmp, ch4.dump, log.lammps")
 
     backup('backup_conf')
@@ -95,29 +101,6 @@ if __name__ == '__main__':
         print(f"{positions['atoms'][i]['y']}")
         print(f"{positions['atoms'][i]['z']}")
         print("\n")
-
-
-    # print(f"{time.time()} >Random postion one atom")
-    # # Pick random one atom
-    # iatom = random.randrange(0, natoms)
-    # # We random for x,y,z with different value
-    # positions['atoms'][iatom]['x'] += deltaperturb * (2 * random.random() - 1)
-    # positions['atoms'][iatom]['y'] += deltaperturb * (2 * random.random() - 1)
-    # positions['atoms'][iatom]['z'] += deltaperturb * (2 * random.random() - 1)
-    # print(f"{positions['atoms'][iatom]['type']}")
-    # print(f"{positions['atoms'][iatom]['x']}")
-    # print(f"{positions['atoms'][iatom]['y']}")
-    # print(f"{positions['atoms'][iatom]['z']}")
-
-    # Write new conf.lmp
-    update_conf_lmp(conf_file, conf_file, positions['atoms'], {v: str(k) for k, v in type_map.items()})
-    print(f"{time.time()} >Random postion all atoms: Done")
-
-    # Run initial LAMMPS simulation to get initial energy and positions
-    print(f"{time.time()} >Get PE from lammps")
-    run_lammps(infile)
-    initial_energy = extract_lammps_last_energy(file_log_path)
-    print(f"{time.time()} >Get PE from lammps: Done")
 
 
     # Run MC loop
