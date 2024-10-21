@@ -42,24 +42,25 @@ def creation_data_from_siesta(data_raw_path : str, data_npy_path: str, data_size
     
     return [training_path, validation_path]
 
-if __name__ =='__main__':
-    from data_scanning import scan_folders, is_correct_folder, KEY_WORD_DATA_FOLDER
-    from utils.folder_utils import create_folder, delete_folder
-
-    # State 1
-    root_directory = r'E:\Work Spaces\Thesis\Data'
-    folders = list()
-    for folder in scan_folders(root_directory):
-        if is_correct_folder(folder, True):
-            folders.append(folder)
-
-    # State 2
-    new_directory = r'E:\Work Spaces\Thesis\Data\TestDataSet'
+def creation(new_directory : str, folders : list) -> list:
     delete_folder(new_directory)
     create_folder(new_directory)
     train_val_folders = list()
     for folder in folders:
         train_val_folders.append(creation_data_from_siesta(folder, new_directory, 1000, KEY_WORD_DATA_FOLDER, True))
+    return train_val_folders
+
+if __name__ =='__main__':
+    from phase1.core_phase.step_1.data_scanning import scan, KEY_WORD_DATA_FOLDER
+    from utils.folder_utils import create_folder, delete_folder
+
+    # Step 1.1
+    data_directory = r'E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_in'
+    folders = scan(data_directory)
+
+    # Step 1.2
+    new_directory = r'E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_out'
+    train_val_folders = creation(new_directory, folders)
 
     
 

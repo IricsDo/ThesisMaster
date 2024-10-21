@@ -1,0 +1,18 @@
+
+def compress(new_directory):
+    #!dp freeze -o graph.pb
+    #!dp compress -i graph.pb -o compress.pb
+    command = "dir"  # Replace with your command
+    output, error = execute_command(command, new_directory)
+
+    if output:
+        print("Output:\n", output)
+    if error:
+        print("Error:\n", error)
+
+if __name__ == '__main__':
+    from utils.exec_command import execute_command
+
+    # Step 4.1
+    new_directory = r'E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_out'
+    compress(compress)

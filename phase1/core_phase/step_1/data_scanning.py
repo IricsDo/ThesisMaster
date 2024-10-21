@@ -34,10 +34,14 @@ def is_correct_folder(folder : str, verbose : bool = False) -> bool:
         print(f"The folder {full_path} is not valid")
     return False
 
-if __name__ == '__main__':
-    # State 1
-    root_directory = r'E:\Work Spaces\Thesis\Data'
-    folders = scan_folders(root_directory)
-    for folder in folders:
+def scan(data_directory : str) -> list:
+    folders = list()
+    for folder in scan_folders(data_directory):
         if is_correct_folder(folder):
-            print(folder)
+            folders.append(folder)
+    return folders
+
+if __name__ == '__main__':
+    # Step 1.1
+    data_directory = r'E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_in'
+    scan(data_directory)

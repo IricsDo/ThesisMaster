@@ -29,3 +29,15 @@ def copy_one_file(source : str, destination : str) -> None:
         print(f"File copied successfully! {source} -> {destination}")
     else:
         print("File copy failed.")
+
+def delete_file(path : str) -> None:
+    # Check if the file exists
+    if os.path.exists(path):
+        try:
+            # Remove the file
+            os.remove(path)
+            print(f"File '{path}' has been deleted successfully.")
+        except Exception as e:
+            print(f"Error occurred while deleting the file: {e}")
+    else:
+        print(f"File '{path}' does not exist.")
