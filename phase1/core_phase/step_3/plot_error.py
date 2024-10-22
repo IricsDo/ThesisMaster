@@ -20,7 +20,7 @@ def plot_loss(new_directory):
         plt.savefig(os.path.join(new_directory, 'output_loss.png'))
 
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        raise BaseException('Can not plot the loss of model after training')
 
 if __name__ == '__main__':
 

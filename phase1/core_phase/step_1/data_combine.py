@@ -1,6 +1,9 @@
-import numpy as np
 import os
+import numpy as np
+import concurrent.futures
+
 from utils.folder_utils import create_folder, copy_one_file
+from utils_com.logger import ServerLogger
 
 def combine_npy_files(folder_data : list[str], output_folder : str, verbose : bool = False) -> bool:
 
@@ -27,15 +30,20 @@ def combine_npy_files(folder_data : list[str], output_folder : str, verbose : bo
 
     return True
 
-def combine(new_directory : str, train_val_folders : list) -> None:
+def combine(new_directory : str, train_val_folders : list, verbose = False) -> None:
+    if not train_val_folders:
+        raise BaseException('The list data not include train and val folder')
+    
+    LOGGER = ServerLogger()
+
     training_folders = [os.path.join(new_directory, folder[0]) for folder in train_val_folders]
     validation_folders = [os.path.join(new_directory, folder[1]) for folder in train_val_folders]
 
     # Run the combine_npy_files function for both training and validation folders using threading
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = [
-            executor.submit(combine_npy_files, training_folders, os.path.join(new_directory, 'training_data'), True),
-            executor.submit(combine_npy_files, validation_folders, os.path.join(new_directory,'validation_data'), True)
+            executor.submit(combine_npy_files, training_folders, os.path.join(new_directory, 'training_data'), False),
+            executor.submit(combine_npy_files, validation_folders, os.path.join(new_directory,'validation_data'), False)
         ]
         
         # Wait for all threads to finish and handle any exceptions
@@ -43,15 +51,15 @@ def combine(new_directory : str, train_val_folders : list) -> None:
             try:
                 future.result()  # This will raise an exception if the function encountered one
             except Exception as exc:
-                print(f"Generated an exception: {exc}")
+                LOGGER.log(f"Combine data an exception: {exc}")
 
-    print("All files for both training and validation data have been combined and saved.")
+    if verbose:
+        print(f"All files for both training and validation data have been combined and saved in {new_directory}")
 
 if __name__ == '__main__':
     from phase1.core_phase.step_1.data_scanning import scan, KEY_WORD_DATA_FOLDER
     from phase1.core_phase.step_1.data_creation import creation
     from utils.folder_utils import create_folder
-    import concurrent.futures
 
     # Step 1.1
     data_directory = r'E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_in'

@@ -1,15 +1,17 @@
 
-import os
+from utils_com.logger import ServerLogger
+from utils.exec_command import execute_command
 
-def train(new_directory : str) -> None:
+def train(new_directory : str, verbose: bool = False) -> None:
+    LOGGER = ServerLogger()
     # !dp train input.json
     command = "dir"  # Replace with your command
     output, error = execute_command(command, new_directory)
-
-    if output:
-        print("Output:\n", output)
+    if verbose:
+        LOGGER.log(f"Training output: {output}")
+        LOGGER.log(f"Training error: {error}")
     if error:
-        print("Error:\n", error)
+        raise BaseException('Have the error in train command')
 
 if __name__ =='__main__':
 
@@ -18,7 +20,6 @@ if __name__ =='__main__':
     from phase1.core_phase.step_1.data_combine import combine
     from phase1.core_phase.step_2.setup_json import setup_training_input
     from utils.folder_utils import create_folder, delete_folder, copy_one_file, delete_file
-    from utils.exec_command import execute_command
     import concurrent.futures
 
     # Step 1.1

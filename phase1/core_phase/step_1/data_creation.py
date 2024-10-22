@@ -2,6 +2,9 @@ import numpy as np
 import dpdata
 import os
 
+from utils.folder_utils import create_folder, delete_folder
+from phase1.core_phase.step_1.data_scanning import scan, KEY_WORD_DATA_FOLDER
+
 def creation_data_from_siesta(data_raw_path : str, data_npy_path: str, data_size : int, key_word_output : str, verbose : bool = False) -> list [str, str]:
     """
     Processes data from Siesta/aimd_output format and splits it into training and validation sets.
@@ -43,16 +46,17 @@ def creation_data_from_siesta(data_raw_path : str, data_npy_path: str, data_size
     return [training_path, validation_path]
 
 def creation(new_directory : str, folders : list) -> list:
+    if not folders:
+        return list()
+    
     delete_folder(new_directory)
     create_folder(new_directory)
     train_val_folders = list()
     for folder in folders:
-        train_val_folders.append(creation_data_from_siesta(folder, new_directory, 1000, KEY_WORD_DATA_FOLDER, True))
+        train_val_folders.append(creation_data_from_siesta(folder, new_directory, 1000, KEY_WORD_DATA_FOLDER, False))
     return train_val_folders
 
 if __name__ =='__main__':
-    from phase1.core_phase.step_1.data_scanning import scan, KEY_WORD_DATA_FOLDER
-    from utils.folder_utils import create_folder, delete_folder
 
     # Step 1.1
     data_directory = r'E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_in'

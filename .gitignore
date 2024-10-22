@@ -163,3 +163,4 @@ cython_debug/
 data_test_in/
 data_test_out/
 phase1/reference/DeePMD_SiC.ipynb
+logs/

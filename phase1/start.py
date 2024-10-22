@@ -1,40 +1,83 @@
-from phase1.core_phase.step_1.data_scanning import scan
-from phase1.core_phase.step_1.data_creation import creation
-from phase1.core_phase.step_1.data_combine import combine
-from phase1.core_phase.step_2.setup_json import setup_training_input
-from phase1.core_phase.step_3.plot_error import plot_loss
-from phase1.core_phase.step_3.train_model import train
-from phase1.core_phase.step_4.model_compress import compress
-from phase1.core_phase.step_4.test_model import test
-from phase1.core_phase.step_4.valid_model import vaild
-
+import sys
+import os
+sys.path.append(os.getcwd())
+import traceback
 import argparse
 import os
+
+from utils_com.logger import ServerLogger
+LOGGER = ServerLogger()
+
+LOGGER.log(f'Import library...')
+try:
+    from core_phase.step_1.data_scanning import scan
+    from core_phase.step_1.data_creation import creation
+    from core_phase.step_1.data_combine import combine
+    from core_phase.step_2.setup_json import setup_training_input
+    from core_phase.step_3.plot_error import plot_loss
+    from core_phase.step_3.train_model import train
+    from core_phase.step_4.model_compress import compress
+    from core_phase.step_4.test_model import test
+    from core_phase.step_4.valid_model import vaild
+    from utils_com.traceback_func import run_with_traceback
+    from config.return_code import ReturnCode
+
+except Exception as e:
+    traceback.print_exc()
+    LOGGER.log(f'An error occurred: {e}')
+    exit(-1)
+
+LOGGER.log(f'Import library success')
 
 def step1(data_directory : str, new_directory : str) -> None:
     folders = scan(data_directory)
     train_val_folders = creation(new_directory, folders)
     combine(new_directory, train_val_folders)
 
-def step2() -> None:
-    source_file =r'E:\Work Spaces\Thesis\Code\Thes, isMaster\phase1\config\input.json'
-    new_file = r'E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_out\input.json'
-    type_map_value = ["C", "H"]  
-    training_systems = [r"E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_out\training_data"]  
-    validation_systems = [r"E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_out\validation_data"] 
-    disp_file_value = r'E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_out\lcurve.out'
-    setup_training_input(source_file, new_file, type_map_value, training_systems, validation_systems, disp_file_value)
+def step2(new_directory : str) -> None:
+    source_training_file =r'E:\Work Spaces\Thesis\Code\ThesisMaster\phase1\config\input.json'
+    new_training_file = os.path.join(new_directory, 'input.json')
+    type_map_value = ["Si", "C", "H"]  
+    training_systems = [os.path.join(new_directory, 'training_data')]  
+    validation_systems = [os.path.join(new_directory, 'validation_data')] 
+    disp_file_value = os.path.join(new_directory, 'lcurve.out')
+    setup_training_input(source_training_file, new_training_file, type_map_value, training_systems, validation_systems, disp_file_value)
 
 
 def step3(new_directory : str) -> None:
     train(new_directory)
-    plot_loss(new_directory)
+    # plot_loss(new_directory) # Test case no train
 
 
 def step4(new_directory : str) -> None:
     compress(new_directory)
     test(new_directory)
-    vaild(new_directory)
+    # vaild(new_directory) # Test case no vaild
+
+def workflow(input_folder : str, output_folder : str, verbose : bool) -> int:
+
+    if(run_with_traceback(step1, input_folder, output_folder)):
+        return ReturnCode.ERROR_CODE_1
+    else:
+        LOGGER.log("\n***Step 1 in phase 1 run successfully!\n")
+
+    if(run_with_traceback(step2, output_folder)):
+        return ReturnCode.ERROR_CODE_2
+    else:
+        LOGGER.log("\n***Step 2 in phase 1 run successfully!\n")
+
+    if(run_with_traceback(step3, output_folder)):
+        return ReturnCode.ERROR_CODE_3
+    else:
+        LOGGER.log("\n***Step 3 in phase 1 run successfully!\n")
+
+    if(run_with_traceback(step4, output_folder)):
+        return ReturnCode.ERROR_CODE_4
+    else:
+        LOGGER.log("\n***Step 4 in phase 1 run successfully!\n")
+
+    LOGGER.log("Phase 1 run successfully!")
+    return ReturnCode.SUCCESS
 
 def main():
     # Create an ArgumentParser object with a custom description
@@ -47,30 +90,38 @@ def main():
     # Add optional verbose argument
     parser.add_argument('-v', '--verbose', action='store_true', help="Enable verbose mode for detailed output.")
     
-    # Add help flag (this is optional because argparse automatically includes it)
-    parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS, help='Show this help message and exit.')
-
     # Parse the arguments
     args = parser.parse_args()
 
     # Verbose mode check
     if args.verbose:
-        print("Verbose mode is enabled.")
+        LOGGER.log("Verbose mode is enabled.")
     
     # Check if the input folder exists
     if not os.path.isdir(args.input_folder):
-        print(f"Error: Input folder '{args.input_folder}' does not exist.")
+        LOGGER.log(f"Error: Input folder '{args.input_folder}' does not exist.")
         return
     
     # Check if the output folder exists, create it if it doesn't
     if not os.path.isdir(args.output_folder):
-        print(f"Output folder '{args.output_folder}' does not exist. Creating it...")
+        LOGGER.log(f"Output folder '{args.output_folder}' does not exist. Creating it...")
         os.makedirs(args.output_folder)
 
     # If verbose, print the folder paths
     if args.verbose:
         print(f"Input folder: {args.input_folder}")
         print(f"Output folder: {args.output_folder}")
+
+
+    state = workflow(args.input_folder, args.output_folder, args.verbose)
+    LOGGER.log(f'State of workflow phase 1: {ReturnCode.get_message(state)}')
+    LOGGER.log(f'\nServer shutdown, bye!\n')
+
     
 if __name__ == "__main__":
-    main()
+    LOGGER.log(f'\nServer starting, hi!\n')
+    try:
+        main()
+    except SystemExit as e:
+        print('\n')
+        LOGGER.log(f'An error occurred: {e} => Missing input arguments')
