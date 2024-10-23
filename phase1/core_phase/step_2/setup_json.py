@@ -3,6 +3,7 @@ from utils.folder_utils import delete_file
 
 # Function to modify the JSON file
 def modify(source_file : str, new_file : str, type_map_value : str, training_systems : str, validation_systems : str, disp_file_value : str) -> None:
+
     # Open and load the JSON data
     with open(source_file, 'r') as f:
         data = json.load(f)
@@ -17,13 +18,13 @@ def modify(source_file : str, new_file : str, type_map_value : str, training_sys
     with open(new_file, 'w') as f:
         json.dump(data, f, indent=4)
 
+    
 def setup_training_input(source_file : str, new_file : str, type_map_value : str, training_systems : str, validation_systems : str, disp_file_value : str) -> None:
-    try:
-        delete_file(new_file)
-        delete_file(disp_file_value)
-        modify(source_file, new_file, type_map_value, training_systems, validation_systems, disp_file_value)
-    except Exception as e:
-        raise BaseException('The setup training script can not complete')
+
+    delete_file(new_file)
+    delete_file(disp_file_value)
+    modify(source_file, new_file, type_map_value, training_systems, validation_systems, disp_file_value)
+
     
 if __name__ == '__main__':
     # Step 2    

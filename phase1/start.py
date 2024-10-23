@@ -35,7 +35,7 @@ def step1(data_directory : str, new_directory : str) -> None:
     combine(new_directory, train_val_folders)
 
 def step2(new_directory : str) -> None:
-    source_training_file =r'E:\Work Spaces\Thesis\Code\ThesisMaster\phase1\config\input.json'
+    source_training_file =os.path.abspath(r'phase1\config\input.json')
     new_training_file = os.path.join(new_directory, 'input.json')
     type_map_value = ["Si", "C", "H"]  
     training_systems = [os.path.join(new_directory, 'training_data')]  
