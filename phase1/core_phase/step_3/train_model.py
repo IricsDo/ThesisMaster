@@ -1,17 +1,17 @@
+import os
 
 from utils_com.logger import ServerLogger
 from utils.exec_command import execute_command
 
 def train(new_directory : str, verbose: bool = False) -> None:
     LOGGER = ServerLogger()
-    # !dp train input.json
-    command = "dir"  # Replace with your command
+    command = f"dp train input.json"
     output, error = execute_command(command, new_directory)
     if verbose:
         LOGGER.log(f"Training output: {output}")
-        LOGGER.log(f"Training error: {error}")
     if error:
-        raise BaseException('Have the error in train command')
+        LOGGER.log(f"Training error: {error}")
+        raise Exception('Have the error in train command')
 
 if __name__ =='__main__':
 

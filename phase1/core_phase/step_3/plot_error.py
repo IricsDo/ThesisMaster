@@ -16,7 +16,7 @@ def plot_loss(new_directory):
         plt.legend()
         plt.xlabel("Training steps")
         plt.ylabel("Loss")
-        plt.show()
+        plt.plot()
         plt.savefig(os.path.join(new_directory, 'output_loss.png'))
 
     except Exception as e:

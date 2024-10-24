@@ -2,7 +2,7 @@ import json
 from utils.folder_utils import delete_file
 
 # Function to modify the JSON file
-def modify(source_file : str, new_file : str, type_map_value : str, training_systems : str, validation_systems : str, disp_file_value : str) -> None:
+def modify(source_file : str, new_file : str, type_map_value : str, training_systems : str, validation_systems : str, disp_file_value : str, numb_steps : int) -> None:
 
     # Open and load the JSON data
     with open(source_file, 'r') as f:
@@ -13,17 +13,20 @@ def modify(source_file : str, new_file : str, type_map_value : str, training_sys
     data['training']['training_data']['systems'] = training_systems
     data['training']['validation_data']['systems'] = validation_systems
     data['training']['disp_file'] = disp_file_value
-    
+    data['training']['numb_steps'] = numb_steps
+    data['training']['disp_freq'] = int(numb_steps / 50)
+    data['training']['save_freq'] = int(numb_steps / 10)
+
     # Write the updated data back to the JSON file
     with open(new_file, 'w') as f:
         json.dump(data, f, indent=4)
 
     
-def setup_training_input(source_file : str, new_file : str, type_map_value : str, training_systems : str, validation_systems : str, disp_file_value : str) -> None:
+def setup_training_input(source_file : str, new_file : str, type_map_value : str, training_systems : str, validation_systems : str, disp_file_value : str, numb_steps : int) -> None:
 
     delete_file(new_file)
     delete_file(disp_file_value)
-    modify(source_file, new_file, type_map_value, training_systems, validation_systems, disp_file_value)
+    modify(source_file, new_file, type_map_value, training_systems, validation_systems, disp_file_value, numb_steps)
 
     
 if __name__ == '__main__':

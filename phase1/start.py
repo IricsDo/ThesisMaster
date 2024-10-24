@@ -35,46 +35,50 @@ def step1(data_directory : str, new_directory : str) -> None:
     combine(new_directory, train_val_folders)
 
 def step2(new_directory : str) -> None:
-    source_training_file =os.path.abspath(r'phase1\config\input.json')
+    source_training_file = os.path.abspath(os.path.join('phase1', 'config', 'input.json'))
     new_training_file = os.path.join(new_directory, 'input.json')
     type_map_value = ["Si", "C", "H"]  
     training_systems = [os.path.join(new_directory, 'training_data')]  
     validation_systems = [os.path.join(new_directory, 'validation_data')] 
     disp_file_value = os.path.join(new_directory, 'lcurve.out')
-    setup_training_input(source_training_file, new_training_file, type_map_value, training_systems, validation_systems, disp_file_value)
+    numb_steps = 1000
+    setup_training_input(source_training_file, new_training_file, type_map_value, training_systems, validation_systems, disp_file_value, numb_steps)
 
 
 def step3(new_directory : str) -> None:
     train(new_directory)
-    # plot_loss(new_directory) # Test case no train
-
+    plot_loss(new_directory) 
 
 def step4(new_directory : str) -> None:
     compress(new_directory)
     test(new_directory)
-    # vaild(new_directory) # Test case no vaild
+    vaild(new_directory)
 
 def workflow(input_folder : str, output_folder : str, verbose : bool) -> int:
 
+    LOGGER.log("\n***Step 1/4 in phase 1 on running!\n")
     if(run_with_traceback(step1, input_folder, output_folder)):
         return ReturnCode.ERROR_CODE_1
     else:
-        LOGGER.log("\n***Step 1 in phase 1 run successfully!\n")
+        LOGGER.log("\n***Step 1/4 in phase 1 run successfully!\n")
 
+    LOGGER.log("\n***Step 2/4 in phase 1 on running!\n")
     if(run_with_traceback(step2, output_folder)):
         return ReturnCode.ERROR_CODE_2
     else:
-        LOGGER.log("\n***Step 2 in phase 1 run successfully!\n")
+        LOGGER.log("\n***Step 2/4 in phase 1 run successfully!\n")
 
+    LOGGER.log("\n***Step 3/4 in phase 1 on running!\n")
     if(run_with_traceback(step3, output_folder)):
         return ReturnCode.ERROR_CODE_3
     else:
-        LOGGER.log("\n***Step 3 in phase 1 run successfully!\n")
+        LOGGER.log("\n***Step 3/4 in phase 1 run successfully!\n")
 
+    LOGGER.log("\n***Step 4/4 in phase 1 on running!\n")
     if(run_with_traceback(step4, output_folder)):
         return ReturnCode.ERROR_CODE_4
     else:
-        LOGGER.log("\n***Step 4 in phase 1 run successfully!\n")
+        LOGGER.log("\n***Step 4/4 in phase 1 run successfully!\n")
 
     LOGGER.log("Phase 1 run successfully!")
     return ReturnCode.SUCCESS
