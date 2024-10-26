@@ -5,11 +5,15 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+
+# Get the current time with the format y-m-d_h-m-s
+CURRENT_TIME=$(date +"%Y-%m-%d_%H-%M-%S")
+
 echo -e "${GREEN}Start python script.${NC}"
 
-# Check if script_dir environment variable is set
-if [ -z "$SCRIPT_DIR" ]; then
-    echo -e "${RED}Environment variable SCRIPT_DIR is not set. Please set it before running the script.${NC}"
+# Check if root_dir environment variable is set
+if [ -z "$ROOT_DIR" ]; then
+    echo -e "${RED}Environment variable ROOT_DIR is not set. Please set it before running the script.${NC}"
     exit 1
 fi
 
@@ -33,11 +37,24 @@ while getopts ":i:o:" opt; do
 done
 
 # Change to the directory where your Python code resides
-SCRIPT_DIR="${SCRIPT_DIR:?Environment variable SCRIPT_DIR is not set}"
-SCRIPT_DIR="${SCRIPT_DIR}/scripts"
+ROOT_DIR="${ROOT_DIR:?Environment variable ROOT_DIR is not set}"
+SCRIPT_DIR="${ROOT_DIR}/scripts"
 cd "$SCRIPT_DIR" || exit  # Ensure the folder exists
 
+# Activate Conda environment
+echo -e "${GREEN}Activating Conda environment 'thesis-master'...${NC}"
+source ~/anaconda3/etc/profile.d/conda.sh  # Adjust the path if necessary
+conda activate thesis-master
+
+LOG_DIR="${SCRIPT_DIR}/logs"
+LOG_FILE="$LOG_DIR/output_$CURRENT_TIME.log"
+
 # Run the Python script with the provided arguments
-python3 phase1/start.py -i "$input_folder" -o "$output_folder"
+python3 phase1/start.py -i "$input_folder" -o "$output_folder" 2>&1 | tee "$LOG_FILE"
+
+# Deactivate the environment (optional, but a good practice)
+conda deactivate
+
+echo "Start time: $CURRENT_TIME" > "Logging to $LOG_FILE"
 
 echo -e "${GREEN}End python script.${NC}"
