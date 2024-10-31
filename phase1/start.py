@@ -41,18 +41,18 @@ def step2(new_directory : str) -> None:
     training_systems = [os.path.join(new_directory, 'training_data')]  
     validation_systems = [os.path.join(new_directory, 'validation_data')] 
     disp_file_value = os.path.join(new_directory, 'lcurve.out')
-    numb_steps = 1000
+    numb_steps = 100
     setup_training_input(source_training_file, new_training_file, type_map_value, training_systems, validation_systems, disp_file_value, numb_steps)
 
 
 def step3(new_directory : str) -> None:
     train(new_directory)
-    # plot_loss(new_directory) 
+    plot_loss(new_directory) 
 
 def step4(new_directory : str) -> None:
     compress(new_directory)
     test(new_directory)
-    # vaild(new_directory)
+    vaild(new_directory)
 
 def workflow(input_folder : str, output_folder : str, verbose : bool) -> int:
 

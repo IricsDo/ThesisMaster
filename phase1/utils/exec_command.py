@@ -9,7 +9,8 @@ def execute_command(command : str, directory : str) -> Any:
         )
         # Store the output in a variable
         output = result.stdout
-        return output, None
+        error = result.stderr
+        return output, error
     except subprocess.CalledProcessError as e:
         # Handle the error and store the stderr
-        return None, e.stderr
+        return None, e
