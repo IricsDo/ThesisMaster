@@ -7,8 +7,10 @@ import logging
 from threading import Lock
 from datetime import datetime
 
+
 class SingletonMeta(type):
     """A thread-safe Singleton implementation using metaclass."""
+
     _instances = {}
 
     def __call__(cls, *args, **kwargs):
@@ -16,6 +18,7 @@ class SingletonMeta(type):
             instance = super().__call__(*args, **kwargs)
             cls._instances[cls] = instance
         return cls._instances[cls]
+
 
 class ServerLogger(metaclass=SingletonMeta):
     _lock = Lock()  # Thread lock for folder creation

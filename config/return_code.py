@@ -8,7 +8,7 @@ class ReturnCode:
 
     @staticmethod
     def get_message(code):
-        """ Return a message based on the return code """
+        """Return a message based on the return code"""
         messages = {
             ReturnCode.SUCCESS: "No error.",
             ReturnCode.ERROR_CODE_1: "Error occurred in step: processing data from siesta output.",
