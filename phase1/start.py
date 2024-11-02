@@ -18,7 +18,7 @@ try:
     from core_phase.step_2.setup_json import setup_training_input
     from core_phase.step_3.plot_error import plot_loss
     from core_phase.step_3.train_model import train
-    from core_phase.step_4.model_compress import compress
+    from core_phase.step_4.model_compress import compress, freeze
     from core_phase.step_4.test_model import test
     from core_phase.step_4.valid_model import vaild
     from utils_com.traceback_func import run_with_traceback
@@ -32,13 +32,13 @@ except Exception as e:
 LOGGER.log(f"Import library success")
 
 
-def step1(data_directory: str, new_directory: str) -> None:
+def step1(data_directory: str, new_directory: str, verbose: bool) -> None:
     folders = scan(data_directory)
     train_val_folders = creation(new_directory, folders)
     combine(new_directory, train_val_folders)
 
 
-def step2(new_directory: str) -> None:
+def step2(new_directory: str, verbose: bool) -> None:
     source_training_file = os.path.abspath(
         os.path.join("phase1", "config", "input.json")
     )
@@ -59,39 +59,40 @@ def step2(new_directory: str) -> None:
     )
 
 
-def step3(new_directory: str) -> None:
-    train(new_directory)
+def step3(new_directory: str, verbose: bool) -> None:
+    train(new_directory, verbose)
     plot_loss(new_directory)
 
 
-def step4(new_directory: str) -> None:
-    compress(new_directory)
-    test(new_directory)
+def step4(new_directory: str, verbose: bool) -> None:
+    freeze(new_directory, verbose)
+    compress(new_directory, verbose)
+    test(new_directory, verbose)
     vaild(new_directory)
 
 
 def workflow(input_folder: str, output_folder: str, verbose: bool) -> int:
 
     LOGGER.log("\n***Step 1/4 in phase 1 on running!\n")
-    if run_with_traceback(step1, input_folder, output_folder):
+    if run_with_traceback(step1, input_folder, output_folder, verbose):
         return ReturnCode.ERROR_CODE_1
     else:
         LOGGER.log("\n***Step 1/4 in phase 1 run successfully!\n")
 
     LOGGER.log("\n***Step 2/4 in phase 1 on running!\n")
-    if run_with_traceback(step2, output_folder):
+    if run_with_traceback(step2, output_folder, verbose):
         return ReturnCode.ERROR_CODE_2
     else:
         LOGGER.log("\n***Step 2/4 in phase 1 run successfully!\n")
 
     LOGGER.log("\n***Step 3/4 in phase 1 on running!\n")
-    if run_with_traceback(step3, output_folder):
+    if run_with_traceback(step3, output_folder, verbose):
         return ReturnCode.ERROR_CODE_3
     else:
         LOGGER.log("\n***Step 3/4 in phase 1 run successfully!\n")
 
     LOGGER.log("\n***Step 4/4 in phase 1 on running!\n")
-    if run_with_traceback(step4, output_folder):
+    if run_with_traceback(step4, output_folder, verbose):
         return ReturnCode.ERROR_CODE_4
     else:
         LOGGER.log("\n***Step 4/4 in phase 1 run successfully!\n")

@@ -6,13 +6,13 @@ from utils.exec_command import execute_command
 
 def train(new_directory: str, verbose: bool = False) -> None:
     LOGGER = ServerLogger()
-    # command = f"dp train input.json"
-    command = "dir"
+    command = f"dp train input.json"
+    # command = "dir"
     output, error = execute_command(command, new_directory)
     if verbose:
         LOGGER.log(f"Training output: {output}")
-    if error:
         LOGGER.log(f"Training error: {error}")
+    if not error and not output:
         raise Exception("Have the error in train command")
 
 

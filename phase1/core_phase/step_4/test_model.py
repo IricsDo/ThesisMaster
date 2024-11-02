@@ -4,13 +4,13 @@ from utils.exec_command import execute_command
 
 def test(new_directory: str, verbose: bool = False) -> None:
     LOGGER = ServerLogger()
-    # command = "dp test -m graph.pb -s validation_data"
-    command = "dir"
+    command = "dp test -m graph.pb -s validation_data"
+    # command = "dir"
     output, error = execute_command(command, new_directory)
     if verbose:
         LOGGER.log(f"Test output: {output}")
-    if error:
         LOGGER.log(f"Test error: {error}")
+    if not error and not output:
         raise Exception("Have the error in test command")
 
 

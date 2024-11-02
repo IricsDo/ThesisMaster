@@ -40,9 +40,9 @@ def combine_npy_files(
     return True
 
 
-def combine(new_directory: str, train_val_folders: list, verbose=False) -> None:
+def combine(new_directory: str, train_val_folders: list, verbose: bool = False) -> None:
     if not train_val_folders:
-        raise BaseException("The list data not include train and val folder")
+        raise Exception("The list data not include train and val folder")
 
     LOGGER = ServerLogger()
 

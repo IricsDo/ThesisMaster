@@ -20,7 +20,7 @@ def vaild(new_directory: str) -> None:
         plt.plot()
         plt.savefig(os.path.join(new_directory, "output_predict.png"))
     except Exception as e:
-        raise BaseException("Can not complete the prediction in model")
+        raise Exception("Can not complete the prediction in model")
 
 
 if __name__ == "__main__":
