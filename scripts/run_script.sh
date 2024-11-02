@@ -50,7 +50,7 @@ ROOT_DIR="${ROOT_DIR:?Environment variable ROOT_DIR is not set}"
 # Activate Conda environment if colab is false
 if [ "$colab" != "true" ]; then
     echo -e "${GREEN}Activating Conda environment 'thesis-master'...${NC}"
-    # source ~/anaconda3/etc/profile.d/conda.sh  # Adjust the path if necessary
+    source ~/miniconda3/etc/profile.d/conda.sh  # Adjust the path if necessary
     conda activate thesis-master
 fi
 
@@ -58,9 +58,15 @@ SCRIPT_DIR="${ROOT_DIR}/scripts"
 LOG_DIR="${SCRIPT_DIR}/logs"
 LOG_FILE="$LOG_DIR/output_$CURRENT_TIME.log"
 
+# Check if the log directory exists; if not, create it
+if [ ! -d "$LOG_DIR" ]; then
+    mkdir -p "$LOG_DIR"
+    echo "Created log directory: $LOG_DIR"
+fi
+
 echo -e "${GREEN}Running command ...${NC}"
 # Run the Python script with the provided arguments
-python3 phase1/start.py -i "$input_folder" -o "$output_folder" 2>&1 | tee "$LOG_FILE"
+python3 phase1/start.py -i "$input_folder" -o "$output_folder" -v 2>&1 | tee "$LOG_FILE"
 
 # Deactivate the environment if it was activated
 if [ "$colab" != "true" ]; then
