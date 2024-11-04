@@ -1,6 +1,6 @@
 import os
 
-KEY_WORD_DATA_FOLDER = "output.out"
+KEY_WORD_DATA_FOLDER = ["output.out", "TIMES"]
 
 
 def scan_folders(root_dir: str) -> list:
@@ -29,7 +29,7 @@ def is_correct_folder(folder: str, verbose: bool = False) -> bool:
     for item in os.listdir(folder):
         full_path = os.path.join(folder, item)
         if os.path.isfile(full_path) and (
-            os.path.basename(full_path) == KEY_WORD_DATA_FOLDER
+            os.path.basename(full_path) in KEY_WORD_DATA_FOLDER
         ):
             if verbose:
                 print(f"The folder {full_path} is valid")

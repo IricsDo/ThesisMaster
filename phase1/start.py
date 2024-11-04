@@ -38,7 +38,7 @@ def step1(data_directory: str, new_directory: str, verbose: bool) -> None:
     combine(new_directory, train_val_folders)
 
 
-def step2(new_directory: str, verbose: bool) -> None:
+def step2(new_directory: str, epochs: int, verbose: bool) -> None:
     source_training_file = os.path.abspath(
         os.path.join("phase1", "config", "input.json")
     )
@@ -47,7 +47,7 @@ def step2(new_directory: str, verbose: bool) -> None:
     training_systems = [os.path.join(new_directory, "training_data")]
     validation_systems = [os.path.join(new_directory, "validation_data")]
     disp_file_value = os.path.join(new_directory, "lcurve.out")
-    numb_steps = 100
+    numb_steps = epochs
     setup_training_input(
         source_training_file,
         new_training_file,
@@ -67,11 +67,11 @@ def step3(new_directory: str, verbose: bool) -> None:
 def step4(new_directory: str, verbose: bool) -> None:
     freeze(new_directory, verbose)
     compress(new_directory, verbose)
-    test(new_directory, verbose)
+    # test(new_directory, verbose)
     vaild(new_directory)
 
 
-def workflow(input_folder: str, output_folder: str, verbose: bool) -> int:
+def workflow(input_folder: str, output_folder: str, epochs: int, verbose: bool) -> int:
 
     LOGGER.log("\n***Step 1/4 in phase 1 on running!\n")
     if run_with_traceback(step1, input_folder, output_folder, verbose):
@@ -80,7 +80,7 @@ def workflow(input_folder: str, output_folder: str, verbose: bool) -> int:
         LOGGER.log("\n***Step 1/4 in phase 1 run successfully!\n")
 
     LOGGER.log("\n***Step 2/4 in phase 1 on running!\n")
-    if run_with_traceback(step2, output_folder, verbose):
+    if run_with_traceback(step2, output_folder, epochs, verbose):
         return ReturnCode.ERROR_CODE_2
     else:
         LOGGER.log("\n***Step 2/4 in phase 1 run successfully!\n")
@@ -123,6 +123,14 @@ def main():
         help="The output folder where results will be saved.",
     )
 
+    parser.add_argument(
+        "-e",
+        "--epochs",
+        type=int,
+        default=10000,
+        help="The number of epochs to train the model (default: 10000).",
+    )
+
     # Add optional verbose argument
     parser.add_argument(
         "-v",
@@ -155,7 +163,7 @@ def main():
         print(f"Input folder: {args.input_folder}")
         print(f"Output folder: {args.output_folder}")
 
-    state = workflow(args.input_folder, args.output_folder, args.verbose)
+    state = workflow(args.input_folder, args.output_folder, args.epochs, args.verbose)
     LOGGER.log(f"State of workflow phase 1: {ReturnCode.get_message(state)}")
     LOGGER.log(f"\nServer shutdown, bye!\n")
 

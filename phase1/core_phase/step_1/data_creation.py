@@ -55,6 +55,12 @@ def creation_data_from_siesta(
 
     return [training_path, validation_path]
 
+def extract_data_size(path : str, file_name: str) -> int:
+    with open(os.path.join(path, file_name), 'r') as file:
+        for line in file:
+            if 'siesta_move' in line:
+                value = line.split()[1]
+                return int(value)
 
 def creation(new_directory: str, folders: list) -> list:
     if not folders:
@@ -64,9 +70,10 @@ def creation(new_directory: str, folders: list) -> list:
     create_folder(new_directory)
     train_val_folders = list()
     for folder in folders:
+        data_size = extract_data_size(folder, KEY_WORD_DATA_FOLDER[1])
         train_val_folders.append(
             creation_data_from_siesta(
-                folder, new_directory, 1000, KEY_WORD_DATA_FOLDER, False
+                folder, new_directory, data_size, KEY_WORD_DATA_FOLDER[0], False
             )
         )
     return train_val_folders
