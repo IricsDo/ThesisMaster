@@ -12,7 +12,8 @@ def freeze(new_directory: str, verbose: bool = False) -> None:
         LOGGER.log(f"Compress error: {error}")
     if not error and not output:
         raise Exception("Have the error in compress command")
-    
+
+
 def compress(new_directory: str, verbose: bool = False) -> None:
     LOGGER = ServerLogger()
     command = f"dp compress -i graph.pb -o compress.pb"

@@ -3,7 +3,7 @@ import os
 KEY_WORD_DATA_FOLDER = ["output.out", "TIMES"]
 
 
-def scan_folders(root_dir: str) -> list:
+def scan_all_folders(root_dir: str) -> list:
     """
     Scans through the directory tree starting from root_dir and collects the
     paths of all folders within the directory structure.
@@ -18,36 +18,38 @@ def scan_folders(root_dir: str) -> list:
     return folder_paths
 
 
-def is_correct_folder(folder: str, verbose: bool = False) -> bool:
+def find_all_matching_files(folder: str, verbose: bool = False, index: int = 0) -> list:
     """
-    Checks if the given folder contains a file whose name matches
-    KEY_WORD_DATA_FOLDER.
+    Recursively finds all files in the given folder or its subfolders
+    whose names match any entry in KEY_WORD_DATA_FOLDER.
 
-    Returns True if such a file exists, otherwise returns False.
+    Returns a list of full paths to the matching files.
     """
-    full_path = ""
-    for item in os.listdir(folder):
-        full_path = os.path.join(folder, item)
-        if os.path.isfile(full_path) and (
-            os.path.basename(full_path) in KEY_WORD_DATA_FOLDER
-        ):
-            if verbose:
-                print(f"The folder {full_path} is valid")
-            return True
-    if verbose:
-        print(f"The folder {full_path} is not valid")
-    return False
+    if index >= len(KEY_WORD_DATA_FOLDER) or index < 0:
+        raise Exception(
+            f"The index must be greater than 0 or less than {len(KEY_WORD_DATA_FOLDER)}"
+        )
+
+    matches = []  # To store all matching file paths
+    for root, _, files in os.walk(folder):
+        if verbose:
+            print(f"Checking folder: {root}, files: {files}")
+        for file in files:
+            if file in KEY_WORD_DATA_FOLDER[index]:
+                match_path = os.path.join(root, file)
+                matches.append(root)
+                if verbose:
+                    print(f"Found matching file: {match_path}")
+    if verbose and not matches:
+        print(f"No valid file found in the directory tree starting at {folder}")
+    return matches
 
 
-def scan(data_directory: str) -> list:
-    folders = list()
-    for folder in scan_folders(data_directory):
-        if is_correct_folder(folder):
-            folders.append(folder)
-    return folders
+def scan(data_directory: str, verbose: bool = False) -> list:
+    return find_all_matching_files(data_directory, verbose)
 
 
 if __name__ == "__main__":
     # Step 1.1
     data_directory = r"E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_in"
-    scan(data_directory)
+    print(scan(data_directory, False))

@@ -55,12 +55,14 @@ def creation_data_from_siesta(
 
     return [training_path, validation_path]
 
-def extract_data_size(path : str, file_name: str) -> int:
-    with open(os.path.join(path, file_name), 'r') as file:
+
+def extract_data_size(path: str, file_name: str) -> int:
+    with open(os.path.join(path, file_name), "r") as file:
         for line in file:
-            if 'siesta_move' in line:
+            if "siesta_move" in line:
                 value = line.split()[1]
                 return int(value)
+
 
 def creation(new_directory: str, folders: list) -> list:
     if not folders:
