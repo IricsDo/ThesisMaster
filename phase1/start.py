@@ -31,19 +31,22 @@ except Exception as e:
 
 LOGGER.log(f"Import library success")
 
+TYPE_MAP = []
 
-def step1(data_directory: str, new_directory: str, verbose: bool) -> None:
+def step1(data_directory: str, new_directory: str, verbose: bool) -> list:
+    global TYPE_MAP
     folders = scan(data_directory)
-    train_val_folders = creation(new_directory, folders)
+    train_val_folders, type_map = creation(new_directory, folders)
     combine(new_directory, train_val_folders)
-
+    TYPE_MAP =  type_map
 
 def step2(new_directory: str, epochs: int, verbose: bool) -> None:
+    global TYPE_MAP
     source_training_file = os.path.abspath(
         os.path.join("phase1", "config", "input.json")
     )
     new_training_file = os.path.join(new_directory, "input.json")
-    type_map_value = ["Si", "C", "H"]
+    type_map_value = TYPE_MAP
     training_systems = [os.path.join(new_directory, "training_data")]
     validation_systems = [os.path.join(new_directory, "validation_data")]
     disp_file_value = os.path.join(new_directory, "lcurve.out")

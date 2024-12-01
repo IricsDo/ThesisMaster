@@ -4,14 +4,19 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
         {
             "name": "Python Debugger: Current File",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["--input_folder", "E:\\Work Spaces\\Thesis\\Code\\ThesisMaster\\data_test_in", "--output_folder", "E:\\Work Spaces\\Thesis\\Code\\ThesisMaster\\data_test_out", "--verbose"]
+            "args": [
+                "--input_folder",
+                "E:\\Work Spaces\\Thesis\\Code\\ThesisMaster\\data_test_in",
+                "--output_folder",
+                "E:\\Work Spaces\\Thesis\\Code\\ThesisMaster\\data_test_out",
+                "--verbose"
+            ]
         }
     ]
 }
