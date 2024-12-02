@@ -6,9 +6,9 @@ echo Start time: %CURRENT_TIME%
 
 echo Checking arguments...
 
-:: Check if the ROOT_DIR environment variable is set
-if "%ROOT_DIR%"=="" (
-    echo Environment variable ROOT_DIR is not set. Please set it before running the script.
+:: Check if the ROOT_WS_DUY environment variable is set
+if "%ROOT_WS_DUY%"=="" (
+    echo Environment variable ROOT_WS_DUY is not set. Please set it before running the script.
     exit /b 1
 )
 
@@ -51,13 +51,13 @@ if not exist "%output_folder%" (
 echo Change to the working directory...
 
 :: Change to the directory where your Python code resides
-cd /d "%ROOT_DIR%" || exit /b 1
+cd /d "%ROOT_WS_DUY%" || exit /b 1
 
 :: Activate Miniconda environment
 echo Activating Conda environment 'thesis-master'...
 call "%USERPROFILE%\miniconda3\Scripts\activate.bat" thesis-master
 
-set SCRIPT_DIR=%ROOT_DIR%\scripts
+set SCRIPT_DIR=%ROOT_WS_DUY%\ThesisMaster\scripts
 set LOG_DIR=%SCRIPT_DIR%\logs
 set LOG_FILE=%LOG_DIR%\output_%CURRENT_TIME%.log
 

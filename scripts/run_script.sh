@@ -11,9 +11,9 @@ CURRENT_TIME=$(date +"%Y-%m-%d_%H-%M-%S")
 echo -e "${GREEN}$CURRENT_TIME.${NC}"
 echo -e "${GREEN}Checking arguments...${NC}"
 
-# Check if ROOT_DIR environment variable is set
-if [ -z "$ROOT_DIR" ]; then
-    echo -e "${RED}Environment variable ROOT_DIR is not set. Please set it before running the script.${NC}"
+# Check if ROOT_WS_DUY environment variable is set
+if [ -z "$ROOT_WS_DUY" ]; then
+    echo -e "${RED}Environment variable ROOT_WS_DUY is not set. Please set it before running the script.${NC}"
     exit 1
 fi
 
@@ -42,10 +42,10 @@ while getopts ":i:o:c:" opt; do
 done
 
 echo -e "${GREEN}Change to the working directory...${NC}"
-cd "$ROOT_DIR" || exit  # Ensure the folder exists
+cd "$ROOT_WS_DUY" || exit  # Ensure the folder exists
 
 # Change to the directory where your Python code resides
-ROOT_DIR="${ROOT_DIR:?Environment variable ROOT_DIR is not set}"
+ROOT_WS_DUY="${ROOT_WS_DUY:?Environment variable ROOT_WS_DUY is not set}"
 
 # Activate Conda environment if colab is false
 if [ "$colab" != "true" ]; then
@@ -54,7 +54,7 @@ if [ "$colab" != "true" ]; then
     conda activate thesis-master
 fi
 
-SCRIPT_DIR="${ROOT_DIR}/scripts"
+SCRIPT_DIR="${ROOT_WS_DUY}/ThesisMaster/scripts"
 LOG_DIR="${SCRIPT_DIR}/logs"
 LOG_FILE="$LOG_DIR/output_$CURRENT_TIME.log"
 
