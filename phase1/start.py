@@ -32,6 +32,7 @@ except Exception as e:
     exit(-1)
 
 def update_process_ui(percent: int) -> None:
+    global TOTAL_PROCESS
     TOTAL_PROCESS = randint(TOTAL_PROCESS, percent)
     LOGGER.log(f"<update_process_ui>{TOTAL_PROCESS}</>")
 

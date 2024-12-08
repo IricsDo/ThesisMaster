@@ -4,7 +4,7 @@ from utils_com.logger import ServerLogger
 
 def freeze(new_directory: str, verbose: bool = False) -> None:
     LOGGER = ServerLogger()
-    command = f"dp freeze -o graph.pb"
+    command = f"dp --tf freeze -o graph.pb"
     # command = "dir"
     output, error = execute_command(command, new_directory)
     if verbose:
@@ -16,7 +16,7 @@ def freeze(new_directory: str, verbose: bool = False) -> None:
 
 def compress(new_directory: str, verbose: bool = False) -> None:
     LOGGER = ServerLogger()
-    command = f"dp compress -i graph.pb -o compress.pb"
+    command = f"dp --tf compress -i graph.pb -o compress.pb"
     # command = "dir"
     output, error = execute_command(command, new_directory)
     if verbose:

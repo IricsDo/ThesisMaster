@@ -61,4 +61,4 @@ def delete_file(path: str, verbose: bool = False) -> None:
             LOGGER.log(f"Error occurred while deleting the file: {e}")
     else:
         if verbose:
-            LOGGER.log(f"File '{path}' does not exist.")
+            LOGGER.log(f"File '{path}' does not exist, no deleted.")
