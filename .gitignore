@@ -162,5 +162,6 @@ cython_debug/
 # Custom ignore
 data_test_in/
 data_test_out/
+data_predict/
 phase1/reference/DeePMD_SiC.ipynb
 logs/

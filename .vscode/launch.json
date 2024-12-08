@@ -15,6 +15,8 @@
                 "E:\\Work Spaces\\Thesis\\Code\\ThesisMaster\\data_test_in",
                 "--output_folder",
                 "E:\\Work Spaces\\Thesis\\Code\\ThesisMaster\\data_test_out",
+                "--predict_folder",
+                "E:\\Work Spaces\\Thesis\\Code\\ThesisMaster\\data_predict",
                 "--verbose"
             ]
         }

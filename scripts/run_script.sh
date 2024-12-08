@@ -42,7 +42,7 @@ while getopts ":i:o:c:" opt; do
 done
 
 echo -e "${GREEN}Change to the working directory...${NC}"
-cd "$ROOT_WS_DUY" || exit  # Ensure the folder exists
+cd "$ROOT_WS_DUY/ThesisMaster" || exit  # Ensure the folder exists
 
 # Change to the directory where your Python code resides
 ROOT_WS_DUY="${ROOT_WS_DUY:?Environment variable ROOT_WS_DUY is not set}"

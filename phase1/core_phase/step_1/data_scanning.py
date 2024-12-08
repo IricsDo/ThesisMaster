@@ -1,4 +1,5 @@
 import os
+from utils_com.logger import ServerLogger
 
 KEY_WORD_DATA_FOLDER = ["output.out", "TIMES"]
 
@@ -31,17 +32,19 @@ def find_all_matching_files(folder: str, verbose: bool = False, index: int = 0) 
         )
 
     matches = []  # To store all matching file paths
+    LOGGER = ServerLogger()
+
     for root, _, files in os.walk(folder):
         if verbose:
-            print(f"Checking folder: {root}, files: {files}")
+            LOGGER.log(f"Checking folder: {root}, files: {files}")
         for file in files:
             if file in KEY_WORD_DATA_FOLDER[index]:
                 match_path = os.path.join(root, file)
                 matches.append(root)
                 if verbose:
-                    print(f"Found matching file: {match_path}")
+                    LOGGER.log(f"Found matching file: {match_path}")
     if verbose and not matches:
-        print(f"No valid file found in the directory tree starting at {folder}")
+        LOGGER.log(f"No valid file found in the directory tree starting at {folder}")
     return matches
 
 
@@ -52,4 +55,3 @@ def scan(data_directory: str, verbose: bool = False) -> list:
 if __name__ == "__main__":
     # Step 1.1
     data_directory = r"E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_in"
-    print(scan(data_directory, False))

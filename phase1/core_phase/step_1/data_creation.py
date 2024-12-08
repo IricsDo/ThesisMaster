@@ -5,6 +5,7 @@ import re
 
 from utils.folder_utils import create_folder, delete_folder
 from phase1.core_phase.step_1.data_scanning import scan, KEY_WORD_DATA_FOLDER
+from utils_com.logger import ServerLogger
 
 
 def creation_data_from_siesta(
@@ -12,8 +13,9 @@ def creation_data_from_siesta(
     data_npy_path: str,
     data_size: int,
     key_word_output: str,
-    verbose: bool = False,
-) -> list[str, str]:
+    task_predict: bool = False,
+    verbose: bool = False
+) -> list:
     """
     Processes data from Siesta/aimd_output format and splits it into training and validation sets.
 
@@ -28,34 +30,65 @@ def creation_data_from_siesta(
     """
 
     if data_size < 0:
-        return []
+        return ["", ""]
 
     data = dpdata.LabeledSystem(
         os.path.join(data_raw_path, key_word_output), fmt="siesta/aimd_output"
     )
+    LOGGER = ServerLogger()
 
-    index_validation = np.random.choice(
-        data_size, size=int(data_size * 0.2), replace=False
-    )
+    if task_predict:
+        predict_path = "prediction_data"
+        new_path = os.path.join(data_npy_path, predict_path)
+        if not os.path.exists(new_path):
+            if verbose:
+                LOGGER.log(f"The directory {new_path} does not exist, already created")
+            os.makedirs(new_path, exist_ok=True)
+        data.to("deepmd/npy", new_path)
 
-    index_training = list(set(range(data_size)) - set(index_validation))
-    data_training = data.sub_system(index_training)
-    data_validation = data.sub_system(index_validation)
+        if verbose:
+            LOGGER.log(f"# {data_raw_path} -> {predict_path}")
+            LOGGER.log("# the data contains %d frames" % len(data))
+            LOGGER.log("# the predict data contains %d frames" % len(predict_path))
 
-    training_path = "_".join(["training_data", os.path.basename(data_raw_path)])
-    validation_path = "_".join(["validation_data", os.path.basename(data_raw_path)])
+        return [predict_path, ""]
 
-    data_training.to_deepmd_npy(os.path.join(data_npy_path, training_path))
-    data_validation.to_deepmd_npy(os.path.join(data_npy_path, validation_path))
+    else:
+        index_validation = np.random.choice(
+            data_size, size=int(data_size * 0.2), replace=False
+        )
 
-    if verbose:
-        print(f"# {data_raw_path} -> {training_path} , {validation_path}")
-        print("# the data contains %d frames" % len(data))
-        print("# the training data contains %d frames" % len(data_training))
-        print("# the validation data contains %d frames" % len(data_validation))
+        index_training = list(set(range(data_size)) - set(index_validation))
+        data_training = data.sub_system(index_training)
+        data_validation = data.sub_system(index_validation)
 
-    return [training_path, validation_path]
+        training_path = "_".join(["training_data", os.path.basename(data_raw_path)])
+        validation_path = "_".join(["validation_data", os.path.basename(data_raw_path)])
 
+        data_training.to_deepmd_npy(os.path.join(data_npy_path, training_path))
+        data_validation.to_deepmd_npy(os.path.join(data_npy_path, validation_path))
+
+
+        if verbose:
+            LOGGER.log(f"# {data_raw_path} -> {training_path} , {validation_path}")
+            LOGGER.log("# the data contains %d frames" % len(data))
+            LOGGER.log("# the training data contains %d frames" % len(data_training))
+            LOGGER.log("# the validation data contains %d frames" % len(data_validation))
+
+        return [training_path, validation_path]
+    
+    return ["", ""]
+
+def creation_data(
+    predict_directory: str,
+    data_npy_path: str,
+    data_size: int,
+    key_word_output: str,
+    task_predict: bool = False,
+    verbose: bool = False
+) -> list:
+    
+    return creation_data_from_siesta(predict_directory, data_npy_path, data_size, key_word_output, task_predict, verbose)
 
 def extract_data_size(path: str, file_name: str) -> int:
     with open(os.path.join(path, file_name), "r") as file:
@@ -79,22 +112,22 @@ def extract_type_map(path: str, file_name) -> list:
     else:
         raise Exception("Not found the atomic type mapping")
 
-def creation(new_directory: str, folders: list) -> list:
+def creation(data_directory: str, folders: list, task_predict: bool = False, verbose: bool = False) -> list:
     if not folders:
         return list()
 
-    delete_folder(new_directory)
-    create_folder(new_directory)
-    train_val_folders = list()
+    delete_folder(data_directory)
+    create_folder(data_directory)
+    data_npy_folders = list()
     for folder in folders:
         data_size = extract_data_size(folder, KEY_WORD_DATA_FOLDER[1])
         type_map = extract_type_map(folder, KEY_WORD_DATA_FOLDER[0])
-        train_val_folders.append(
-            creation_data_from_siesta(
-                folder, new_directory, data_size, KEY_WORD_DATA_FOLDER[0], False
+        data_npy_folders.append(
+            creation_data(
+                folder, data_directory, data_size, KEY_WORD_DATA_FOLDER[0], task_predict, verbose
             )
         )
-    return train_val_folders, type_map
+    return data_npy_folders, type_map
 
 
 if __name__ == "__main__":

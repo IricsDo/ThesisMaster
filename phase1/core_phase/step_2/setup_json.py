@@ -11,6 +11,7 @@ def modify(
     validation_systems: str,
     disp_file_value: str,
     numb_steps: int,
+    verbose: bool =False
 ) -> None:
 
     # Open and load the JSON data
@@ -39,10 +40,11 @@ def setup_training_input(
     validation_systems: str,
     disp_file_value: str,
     numb_steps: int,
+    verbose: bool = False
 ) -> None:
 
-    delete_file(new_file)
-    delete_file(disp_file_value)
+    delete_file(new_file, verbose)
+    delete_file(disp_file_value, verbose)
     modify(
         source_file,
         new_file,
@@ -51,6 +53,7 @@ def setup_training_input(
         validation_systems,
         disp_file_value,
         numb_steps,
+        verbose
     )
 
 

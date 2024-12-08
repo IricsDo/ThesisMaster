@@ -20,6 +20,7 @@ def combine_npy_files(
         os.path.join(folder_data[0], "type_map.raw"),
         os.path.join(output_folder, "type_map.raw"),
     )
+    LOGGER = ServerLogger()
 
     npy_files = ["virial.npy", "force.npy", "energy.npy", "coord.npy", "box.npy"]
 
@@ -34,23 +35,24 @@ def combine_npy_files(
         else:
             raise ValueError("Arrays have different shapes and cannot be stacked.")
 
+
         if verbose:
-            print(f"Combined {data_type} and saved to {new_output_folder}")
+            LOGGER.log(f"Combined {data_type} and saved to {new_output_folder}")
 
     return True
 
 
-def combine(new_directory: str, train_val_folders: list, verbose: bool = False) -> None:
-    if not train_val_folders:
+def combine(new_directory: str, data_folders: list, verbose: bool = False) -> None:
+    if not data_folders:
         raise Exception("The list data not include train and val folder")
 
     LOGGER = ServerLogger()
 
     training_folders = [
-        os.path.join(new_directory, folder[0]) for folder in train_val_folders
+        os.path.join(new_directory, folder[0]) for folder in data_folders
     ]
     validation_folders = [
-        os.path.join(new_directory, folder[1]) for folder in train_val_folders
+        os.path.join(new_directory, folder[1]) for folder in data_folders
     ]
 
     # Run the combine_npy_files function for both training and validation folders using threading
@@ -78,7 +80,7 @@ def combine(new_directory: str, train_val_folders: list, verbose: bool = False) 
                 LOGGER.log(f"Combine data an exception: {exc}")
 
     if verbose:
-        print(
+        LOGGER.log(
             f"All files for both training and validation data have been combined and saved in {new_directory}"
         )
 

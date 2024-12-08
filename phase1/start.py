@@ -1,12 +1,14 @@
 import sys
 import os
+from random import randint
 
 sys.path.append(os.getcwd())
 import traceback
 import argparse
-import os
 
 from utils_com.logger import ServerLogger
+
+TOTAL_PROCESS = 0
 
 LOGGER = ServerLogger()
 
@@ -29,16 +31,36 @@ except Exception as e:
     LOGGER.log(f"An error occurred: {e}")
     exit(-1)
 
+def update_process_ui(percent: int) -> None:
+    TOTAL_PROCESS = randint(TOTAL_PROCESS, percent)
+    LOGGER.log(f"<update_process_ui>{TOTAL_PROCESS}</>")
+
 LOGGER.log(f"Import library success")
+
+update_process_ui(5)
 
 TYPE_MAP = []
 
-def step1(data_directory: str, new_directory: str, verbose: bool) -> list:
+
+def step1(data_directory: str, new_directory: str, predict_directory: str, verbose: bool) -> list:
     global TYPE_MAP
     folders = scan(data_directory)
-    train_val_folders, type_map = creation(new_directory, folders)
+    update_process_ui(10)
+
+    train_val_folders, type_map_train = creation(new_directory, folders, task_predict=False, verbose=verbose)
+    update_process_ui(20)
+
     combine(new_directory, train_val_folders)
-    TYPE_MAP =  type_map
+    update_process_ui(25)
+    TYPE_MAP =  type_map_train
+
+    if predict_directory:
+        folders = scan(predict_directory)
+        _, type_map_predict = creation(os.path.join(predict_directory, 'result'), folders, task_predict=True, verbose=verbose)
+
+        if TYPE_MAP != type_map_predict:
+            raise Exception("The data for training and prediction is different types.")
+    update_process_ui(30)
 
 def step2(new_directory: str, epochs: int, verbose: bool) -> None:
     global TYPE_MAP
@@ -59,25 +81,41 @@ def step2(new_directory: str, epochs: int, verbose: bool) -> None:
         validation_systems,
         disp_file_value,
         numb_steps,
+        verbose
     )
+    update_process_ui(40)
+
 
 
 def step3(new_directory: str, verbose: bool) -> None:
     train(new_directory, verbose)
+    update_process_ui(60)
+
     plot_loss(new_directory)
+    update_process_ui(65)
 
 
-def step4(new_directory: str, verbose: bool) -> None:
+def step4(new_directory: str, predict_directory: str, verbose: bool) -> None:
     freeze(new_directory, verbose)
+    update_process_ui(70)
+
     compress(new_directory, verbose)
-    # test(new_directory, verbose)
-    vaild(new_directory)
+    update_process_ui(75)
+
+    test(new_directory, verbose)
+    update_process_ui(80)
+
+    vaild(new_directory, task_predict=False)
+    update_process_ui(85)
+
+    vaild(os.path.join(predict_directory, 'result'), task_predict=True)
+    update_process_ui(90)
 
 
-def workflow(input_folder: str, output_folder: str, epochs: int, verbose: bool) -> int:
+def workflow(input_folder: str, output_folder: str, predict_folder: str, epochs: int, verbose: bool) -> int:
 
     LOGGER.log("\n***Step 1/4 in phase 1 on running!\n")
-    if run_with_traceback(step1, input_folder, output_folder, verbose):
+    if run_with_traceback(step1, input_folder, output_folder, predict_folder, verbose):
         return ReturnCode.ERROR_CODE_1
     else:
         LOGGER.log("\n***Step 1/4 in phase 1 run successfully!\n")
@@ -95,7 +133,7 @@ def workflow(input_folder: str, output_folder: str, epochs: int, verbose: bool) 
         LOGGER.log("\n***Step 3/4 in phase 1 run successfully!\n")
 
     LOGGER.log("\n***Step 4/4 in phase 1 on running!\n")
-    if run_with_traceback(step4, output_folder, verbose):
+    if run_with_traceback(step4, output_folder, predict_folder, verbose):
         return ReturnCode.ERROR_CODE_4
     else:
         LOGGER.log("\n***Step 4/4 in phase 1 run successfully!\n")
@@ -127,10 +165,19 @@ def main():
     )
 
     parser.add_argument(
+        "-p",
+        "--predict_folder",
+        type=str,
+        required=False,
+        default="",
+        help="The predict folder to process.",
+    )
+
+    parser.add_argument(
         "-e",
         "--epochs",
         type=int,
-        default=10000,
+        default=100,
         help="The number of epochs to train the model (default: 10000).",
     )
 
@@ -163,12 +210,17 @@ def main():
 
     # If verbose, print the folder paths
     if args.verbose:
-        print(f"Input folder: {args.input_folder}")
-        print(f"Output folder: {args.output_folder}")
+        LOGGER.log('-'*30)
+        for key, value in vars(args).items():
+            LOGGER.log(
+                (f"Name argument: {key} - Value: {value}")
+            )
+        LOGGER.log('-'*30)
 
-    state = workflow(args.input_folder, args.output_folder, args.epochs, args.verbose)
+    state = workflow(args.input_folder, args.output_folder, args.predict_folder, args.epochs, args.verbose)
     LOGGER.log(f"State of workflow phase 1: {ReturnCode.get_message(state)}")
     LOGGER.log(f"\nServer shutdown, bye!\n")
+    update_process_ui(100)
 
 
 if __name__ == "__main__":
@@ -176,5 +228,5 @@ if __name__ == "__main__":
     try:
         main()
     except SystemExit as e:
-        print("\n")
+        LOGGER.log("\n")
         LOGGER.log(f"An error occurred: {e} => Missing input arguments")
