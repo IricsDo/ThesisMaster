@@ -109,7 +109,8 @@ def step4(new_directory: str, predict_directory: str, verbose: bool) -> None:
     vaild(new_directory, task_predict=False)
     update_process_ui(85)
 
-    vaild(os.path.join(predict_directory, 'result'), task_predict=True)
+    if predict_directory:
+        vaild(os.path.join(predict_directory, 'result'), task_predict=True)
     update_process_ui(90)
 
 
