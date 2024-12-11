@@ -66,7 +66,7 @@ fi
 
 echo -e "${GREEN}Running command ...${NC}"
 # Run the Python script with the provided arguments
-python3 phase1/start.py -i "$input_folder" -o "$output_folder" -v 2>&1 | tee "$LOG_FILE"
+python3 -u phase1/start.py -i "$input_folder" -o "$output_folder" -v 2>&1 | tee "$LOG_FILE"
 
 # Deactivate the environment if it was activated
 if [ "$colab" != "true" ]; then
