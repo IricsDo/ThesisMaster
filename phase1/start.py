@@ -33,7 +33,7 @@ except Exception as e:
 
 def update_process_ui(percent: int) -> None:
     global TOTAL_PROCESS
-    TOTAL_PROCESS = randint(TOTAL_PROCESS, percent)
+    TOTAL_PROCESS = randint(TOTAL_PROCESS, percent) if percent !=100 else 100
     LOGGER.log(f"<update_process_ui>{TOTAL_PROCESS}</>")
 
 LOGGER.log(f"Import library success")
