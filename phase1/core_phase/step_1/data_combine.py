@@ -29,11 +29,15 @@ def combine_npy_files(
         for folder in folder_data:
             data_combine.append(np.load(os.path.join(folder, "set.000", data_type)))
 
-        if all(arr.shape == data_combine[0].shape for arr in data_combine):
-            combined_data = np.vstack(data_combine)
+        if data_combine:
+            # Temp fix incorrect shape of data
+            # Truncate to the smallest number of columns
+            min_cols = min(arr.shape[1] for arr in data_combine)
+            data_combine_aligned = [arr[:, :min_cols] for arr in data_combine]
+            combined_data = np.vstack(data_combine_aligned)
             np.save(os.path.join(new_output_folder, data_type), combined_data)
         else:
-            raise ValueError("Arrays have different shapes and cannot be stacked.")
+            raise ValueError("The list is empty shapes. Cannot be stacked.")
 
 
         if verbose:

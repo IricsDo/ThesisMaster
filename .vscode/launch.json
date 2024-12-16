@@ -12,11 +12,11 @@
             "console": "integratedTerminal",
             "args": [
                 "--input_folder",
-                "E:\\Work Spaces\\Thesis\\Code\\ThesisMaster\\data_test_in",
+                "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/data_input",
                 "--output_folder",
-                "E:\\Work Spaces\\Thesis\\Code\\ThesisMaster\\data_test_out",
+                "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/data_output",
                 "--predict_folder",
-                "E:\\Work Spaces\\Thesis\\Code\\ThesisMaster\\data_predict",
+                "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/data_predict",
                 "--verbose"
             ]
         }

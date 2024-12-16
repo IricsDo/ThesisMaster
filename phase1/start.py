@@ -22,7 +22,7 @@ try:
     from core_phase.step_3.train_model import train
     from core_phase.step_4.model_compress import compress, freeze
     from core_phase.step_4.test_model import test
-    from core_phase.step_4.valid_model import vaild
+    from core_phase.step_4.valid_model import vaild, predict
     from utils_com.traceback_func import run_with_traceback
     from config.return_code import ReturnCode
 
@@ -110,7 +110,7 @@ def step4(new_directory: str, predict_directory: str, verbose: bool) -> None:
     update_process_ui(85)
 
     if predict_directory:
-        vaild(os.path.join(predict_directory, 'result'), task_predict=True)
+        predict(os.path.join(predict_directory, 'result'), task_predict=True)
     update_process_ui(90)
 
 
@@ -222,7 +222,8 @@ def main():
     state = workflow(args.input_folder, args.output_folder, args.predict_folder, args.epochs, args.verbose)
     LOGGER.log(f"State of workflow phase 1: {ReturnCode.get_message(state)}")
     LOGGER.log(f"\nServer shutdown, bye!\n")
-    update_process_ui(100)
+    if state == ReturnCode.SUCCESS:
+        update_process_ui(100)
 
 
 if __name__ == "__main__":

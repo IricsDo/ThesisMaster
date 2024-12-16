@@ -19,7 +19,7 @@ fi
 
 # Check if arguments are passed
 if [ "$#" -lt 4 ]; then
-    echo -e "${YELLOW}Usage: $0 -i input_folder -o output_folder [-colab true|false]${NC}"
+    echo -e "${YELLOW}Usage: $0 -i input_folder -o output_folder -p predict_folder [-colab true|false]${NC}"
     exit 1
 fi
 
@@ -27,11 +27,13 @@ fi
 colab=false
 
 # Parse the input arguments
-while getopts ":i:o:c:" opt; do
+while getopts ":i:o:p:c:" opt; do
   case $opt in
     i) input_folder="$OPTARG"
     ;;
     o) output_folder="$OPTARG"
+    ;;
+    p) predict_folder="$OPTARG"
     ;;
     c) colab="$OPTARG"
     ;;
@@ -66,7 +68,7 @@ fi
 
 echo -e "${GREEN}Running command ...${NC}"
 # Run the Python script with the provided arguments
-python3 -u phase1/start.py -i "$input_folder" -o "$output_folder" -v 2>&1 | tee "$LOG_FILE"
+python3 -u phase1/start.py -i "$input_folder" -o "$output_folder" -p "$predict_folder"-v 2>&1 | tee "$LOG_FILE"
 
 # Deactivate the environment if it was activated
 if [ "$colab" != "true" ]; then

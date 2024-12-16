@@ -4,12 +4,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def vaild(new_directory: str, task_predict: bool = False) -> None:
+def vaild(new_directory: str, model_path: str, task_predict: bool = False) -> None:
     try:
         training_systems = dpdata.LabeledSystem(
             os.path.join(new_directory, "prediction_data" if task_predict else "validation_data"), fmt="deepmd/npy"
         )
-        predict = training_systems.predict(os.path.join(new_directory, "graph.pb"))
+        if task_predict and model_path:
+            predict = training_systems.predict(os.path.join(model_path, "graph.pb"))
+        else:
+            predict = training_systems.predict(os.path.join(new_directory, "graph.pb"))
 
         plt.scatter(training_systems["energies"], predict["energies"])
         x_range = np.linspace(plt.xlim()[0], plt.xlim()[1])
@@ -23,8 +26,8 @@ def vaild(new_directory: str, task_predict: bool = False) -> None:
         raise Exception("Can not complete the prediction in model")
 
 
-def predict(predict_directory: str) -> None:
-    vaild(predict_directory, True)
+def predict(predict_directory: str, model_path : str) -> None:
+    vaild(predict_directory, model_path, True)
     
 if __name__ == "__main__":
     # Step 4.3
