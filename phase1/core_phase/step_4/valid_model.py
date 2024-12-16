@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def vaild(new_directory: str, model_path: str, task_predict: bool = False) -> None:
+def vaild(new_directory: str, model_path: str = "", task_predict: bool = False) -> None:
     try:
         training_systems = dpdata.LabeledSystem(
             os.path.join(new_directory, "prediction_data" if task_predict else "validation_data"), fmt="deepmd/npy"

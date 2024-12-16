@@ -106,11 +106,11 @@ def step4(new_directory: str, predict_directory: str, verbose: bool) -> None:
     test(new_directory, verbose)
     update_process_ui(80)
 
-    vaild(new_directory, task_predict=False)
+    vaild(new_directory, "", task_predict=False)
     update_process_ui(85)
 
     if predict_directory:
-        predict(os.path.join(predict_directory, 'result'), task_predict=True)
+        predict(os.path.join(predict_directory, 'result'), new_directory, task_predict=True)
     update_process_ui(90)
 
 
