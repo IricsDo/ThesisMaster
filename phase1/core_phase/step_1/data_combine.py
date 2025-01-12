@@ -29,6 +29,10 @@ def combine_npy_files(
         for folder in folder_data:
             data_combine.append(np.load(os.path.join(folder, "set.000", data_type)))
 
+        # if all(arr.shape == data_combine[0].shape for arr in data_combine):
+        #     combined_data = np.vstack(data_combine)
+        #     np.save(os.path.join(new_output_folder, data_type), combined_data)
+        
         if data_combine:
             # Temp fix incorrect shape of data
             # Truncate to the smallest number of columns
