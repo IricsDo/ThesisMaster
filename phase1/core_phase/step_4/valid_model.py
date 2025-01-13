@@ -26,8 +26,8 @@ def vaild(new_directory: str, model_path: str = "", task_predict: bool = False) 
         raise Exception("Can not complete the prediction in model")
 
 
-def predict(predict_directory: str, model_path : str) -> None:
-    vaild(predict_directory, model_path, True)
+def predict(predict_directory: str, model_path : str, task_predict: bool) -> None:
+    vaild(predict_directory, model_path, task_predict)
     
 if __name__ == "__main__":
     # Step 4.3
