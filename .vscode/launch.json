@@ -10,13 +10,22 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
+            // "args": [
+            //     "--input_folder",
+            //     "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/data_input",
+            //     "--output_folder",
+            //     "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/data_output",
+            //     "--predict_folder",
+            //     "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/data_predict",
+            //     "--verbose"
+            // ]
             "args": [
                 "--input_folder",
-                "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/data_input",
+                "E:/Work Spaces/Thesis/Data/Check/data_input",
                 "--output_folder",
-                "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/data_output",
+                "E:/Work Spaces/Thesis/Data/Check/data_output",
                 "--predict_folder",
-                "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/data_predict",
+                "E:/Work Spaces/Thesis/Data/Check/data_predict",
                 "--verbose"
             ]
         }
