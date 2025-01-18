@@ -19,7 +19,7 @@ def plot_loss(new_directory):
         plt.ylabel("Loss")
         plt.plot()
         plt.savefig(os.path.join(new_directory, "output_loss.png"))
-
+        plt.close()
     except Exception as e:
         raise Exception("Can not plot the loss of model after training")
 

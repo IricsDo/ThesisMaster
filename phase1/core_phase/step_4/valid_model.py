@@ -9,6 +9,8 @@ def vaild(new_directory: str, model_path: str = "", task_predict: bool = False) 
         training_systems = dpdata.LabeledSystem(
             os.path.join(new_directory, "prediction_data" if task_predict else "validation_data"), fmt="deepmd/npy"
         )
+        predict = None
+
         if task_predict and model_path:
             predict = training_systems.predict(os.path.join(model_path, "graph.pb"))
         else:
@@ -22,8 +24,9 @@ def vaild(new_directory: str, model_path: str = "", task_predict: bool = False) 
         plt.ylabel("Energy predicted by deep potential")
         plt.plot()
         plt.savefig(os.path.join(new_directory, f"output_predict_with_{'prediction_data' if task_predict else 'validation_data'}.png"))
+        plt.close()
     except Exception as e:
-        raise Exception("Can not complete the prediction in model")
+        raise Exception("Can not complete the vaildation in model")
 
 
 def predict(predict_directory: str, model_path : str, task_predict: bool) -> None:

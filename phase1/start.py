@@ -179,7 +179,7 @@ def main():
         "-e",
         "--epochs",
         type=int,
-        default=100,
+        default=10000,
         help="The number of epochs to train the model (default: 10000).",
     )
 
