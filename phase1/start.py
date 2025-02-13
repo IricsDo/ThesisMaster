@@ -114,7 +114,7 @@ def step4(new_directory: str, predict_directory: str, verbose: bool) -> None:
     update_process_ui(90)
 
 
-def workflow(input_folder: str, output_folder: str, predict_folder: str, epochs: int, verbose: bool) -> int:
+def workflow(input_folder: str, output_folder: str, predict_folder: str, epochs: int, only_make_data: bool, verbose: bool) -> int:
 
     LOGGER.log("\n***Step 1/4 in phase 1 on running!\n")
     if run_with_traceback(step1, input_folder, output_folder, predict_folder, verbose):
@@ -122,23 +122,26 @@ def workflow(input_folder: str, output_folder: str, predict_folder: str, epochs:
     else:
         LOGGER.log("\n***Step 1/4 in phase 1 run successfully!\n")
 
-    LOGGER.log("\n***Step 2/4 in phase 1 on running!\n")
-    if run_with_traceback(step2, output_folder, epochs, verbose):
-        return ReturnCode.ERROR_CODE_2
-    else:
-        LOGGER.log("\n***Step 2/4 in phase 1 run successfully!\n")
+    if not only_make_data:
+        LOGGER.log("\n***Step 2/4 in phase 1 on running!\n")
+        if run_with_traceback(step2, output_folder, epochs, verbose):
+            return ReturnCode.ERROR_CODE_2
+        else:
+            LOGGER.log("\n***Step 2/4 in phase 1 run successfully!\n")
 
-    LOGGER.log("\n***Step 3/4 in phase 1 on running!\n")
-    if run_with_traceback(step3, output_folder, verbose):
-        return ReturnCode.ERROR_CODE_3
-    else:
-        LOGGER.log("\n***Step 3/4 in phase 1 run successfully!\n")
+        LOGGER.log("\n***Step 3/4 in phase 1 on running!\n")
+        if run_with_traceback(step3, output_folder, verbose):
+            return ReturnCode.ERROR_CODE_3
+        else:
+            LOGGER.log("\n***Step 3/4 in phase 1 run successfully!\n")
 
-    LOGGER.log("\n***Step 4/4 in phase 1 on running!\n")
-    if run_with_traceback(step4, output_folder, predict_folder, verbose):
-        return ReturnCode.ERROR_CODE_4
+        LOGGER.log("\n***Step 4/4 in phase 1 on running!\n")
+        if run_with_traceback(step4, output_folder, predict_folder, verbose):
+            return ReturnCode.ERROR_CODE_4
+        else:
+            LOGGER.log("\n***Step 4/4 in phase 1 run successfully!\n")
     else:
-        LOGGER.log("\n***Step 4/4 in phase 1 run successfully!\n")
+        LOGGER.log("Mode <<Only Make Data>> on, bypass all steps 2,3,4\n")
 
     LOGGER.log("Phase 1 run successfully!")
     return ReturnCode.SUCCESS
@@ -191,6 +194,14 @@ def main():
         help="Enable verbose mode for detailed output.",
     )
 
+    # Add optional only make data argument
+    parser.add_argument(
+        "-omd",
+        "--only_make_data",
+        action="store_true",
+        help="Enable only make data mode for input data.",
+    )
+
     # Parse the arguments
     args = parser.parse_args()
 
@@ -219,7 +230,7 @@ def main():
             )
         LOGGER.log('-'*30)
 
-    state = workflow(args.input_folder, args.output_folder, args.predict_folder, args.epochs, args.verbose)
+    state = workflow(args.input_folder, args.output_folder, args.predict_folder, args.epochs, args.only_make_data, args.verbose)
     LOGGER.log(f"State of workflow phase 1: {ReturnCode.get_message(state)}")
     LOGGER.log(f"\nServer shutdown, bye!\n")
     if state == ReturnCode.SUCCESS:

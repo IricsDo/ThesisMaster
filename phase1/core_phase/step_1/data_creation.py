@@ -8,6 +8,24 @@ from phase1.core_phase.step_1.data_scanning import scan, KEY_WORD_DATA_FOLDER
 from utils_com.logger import ServerLogger
 
 
+def max_min_scale_array(arr : np.array) -> np.array:
+    # Compute the min and max of the array
+    arr_min = arr.min()
+    arr_max = arr.max()
+    # Avoid division by zero if all values are equal
+    if arr_max - arr_min == 0:
+        return arr
+    return (arr - arr_min) / (arr_max - arr_min)
+
+def scale_dpdata(data_obj : dpdata.LabeledSystem) -> dpdata.LabeledSystem:
+    # Assuming the dpdata object has a dictionary attribute 'data'
+    for key, value in data_obj.data.items():
+        # Only scale if the value is a numeric numpy array
+        if isinstance(value, np.ndarray) and np.issubdtype(value.dtype, np.number):
+            data_obj.data[key] = max_min_scale_array(value)
+    return data_obj
+
+
 def creation_data_from_siesta(
     data_raw_path: str,
     data_npy_path: str,
@@ -44,7 +62,11 @@ def creation_data_from_siesta(
             if verbose:
                 LOGGER.log(f"The directory {new_path} does not exist, already created")
             os.makedirs(new_path, exist_ok=True)
-        data.to("deepmd/npy", new_path)
+
+         # Apply max-min scaling to each numeric field
+        scaled_data = scale_dpdata(data.copy())
+        
+        scaled_data.to("deepmd/npy", new_path)
 
         if verbose:
             LOGGER.log(f"# {data_raw_path} -> {predict_path}")
@@ -64,6 +86,10 @@ def creation_data_from_siesta(
 
         training_path = "_".join(["training_data", os.path.basename(data_raw_path)])
         validation_path = "_".join(["validation_data", os.path.basename(data_raw_path)])
+
+        # Apply scaling on training and validation sets separately
+        scale_dpdata(data_training)
+        scale_dpdata(data_validation)
 
         data_training.to_deepmd_npy(os.path.join(data_npy_path, training_path))
         data_validation.to_deepmd_npy(os.path.join(data_npy_path, validation_path))
