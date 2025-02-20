@@ -15,8 +15,8 @@
                 "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/52_55_58_input",
                 "--output_folder",
                 "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/52_55_58_output",
-                // "--predict_folder",
-                // "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/112_predict",
+                "--predict_folder",
+                "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/112_predict",
                 "--verbose"
             ]
             // "args": [
