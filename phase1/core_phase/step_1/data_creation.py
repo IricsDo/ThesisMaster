@@ -65,8 +65,8 @@ def creation_data_from_siesta(
 
          # Apply max-min scaling to each numeric field
         scaled_data = scale_dpdata(data.copy())
-        
         scaled_data.to("deepmd/npy", new_path)
+        # data.to("deepmd/npy", new_path)
 
         if verbose:
             LOGGER.log(f"# {data_raw_path} -> {predict_path}")
