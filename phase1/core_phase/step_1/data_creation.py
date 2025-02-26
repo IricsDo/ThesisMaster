@@ -21,9 +21,9 @@ def scale_dpdata(data_obj : dpdata.LabeledSystem) -> dpdata.LabeledSystem:
     # Assuming the dpdata object has a dictionary attribute 'data'
     for key, value in data_obj.data.items():
         # Only scale if the value is a numeric numpy array
-        if isinstance(value, np.ndarray) and np.issubdtype(value.dtype, np.number) and key == 'energies':
+        if isinstance(value, np.ndarray) and np.issubdtype(value.dtype, np.number) : #and key == 'energies':
             data_obj.data[key] = max_min_scale_array(value)
-    return data_obj
+            return data_obj
 
 
 def creation_data_from_siesta(
