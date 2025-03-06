@@ -30,10 +30,11 @@ def creation_data_from_siesta(
     data_raw_path: str,
     data_npy_path: str,
     data_size: int,
-    key_word_output: str,
+    data_keyword: str,
+    option_keywork: list = [],
     task_predict: bool = False,
     verbose: bool = False
-) -> list:
+) -> dict:
     """
     Processes data from Siesta/aimd_output format and splits it into training and validation sets.
 
@@ -51,7 +52,7 @@ def creation_data_from_siesta(
         return ["", ""]
 
     data = dpdata.LabeledSystem(
-        os.path.join(data_raw_path, key_word_output), fmt="siesta/aimd_output"
+        os.path.join(data_raw_path, data_keyword), fmt="siesta/aimd_output"
     )
     LOGGER = ServerLogger()
 
@@ -64,9 +65,9 @@ def creation_data_from_siesta(
             os.makedirs(new_path, exist_ok=True)
 
          # Apply max-min scaling to each numeric field
-        scaled_data = scale_dpdata(data.copy())
-        scaled_data.to("deepmd/npy", new_path)
-        # data.to("deepmd/npy", new_path)
+        # scaled_data = scale_dpdata(data.copy())
+        # scaled_data.to("deepmd/npy", new_path)
+        data.to("deepmd/npy", new_path)
 
         if verbose:
             LOGGER.log(f"# {data_raw_path} -> {predict_path}")
@@ -76,6 +77,10 @@ def creation_data_from_siesta(
         return [predict_path, ""]
 
     else:
+
+        if not option_keywork:
+            raise Exception("Unknow option to get number of atom type")
+        
         index_validation = np.random.choice(
             data_size, size=int(data_size * 0.2), replace=False
         )
@@ -88,8 +93,8 @@ def creation_data_from_siesta(
         validation_path = "_".join(["validation_data", os.path.basename(data_raw_path)])
 
         # Apply scaling on training and validation sets separately
-        scale_dpdata(data_training)
-        scale_dpdata(data_validation)
+        # scale_dpdata(data_training)
+        # scale_dpdata(data_validation)
 
         data_training.to_deepmd_npy(os.path.join(data_npy_path, training_path))
         data_validation.to_deepmd_npy(os.path.join(data_npy_path, validation_path))
@@ -101,7 +106,9 @@ def creation_data_from_siesta(
             LOGGER.log("# the training data contains %d frames" % len(data_training))
             LOGGER.log("# the validation data contains %d frames" % len(data_validation))
 
-        return [training_path, validation_path]
+        for i in option_keywork:
+            if i in os.path.basename(data_raw_path):
+                return {i: [training_path, validation_path]}
     
     return ["", ""]
 
@@ -109,12 +116,13 @@ def creation_data(
     predict_directory: str,
     data_npy_path: str,
     data_size: int,
-    key_word_output: str,
+    data_keyword: str,
+    option_keyword: list,
     task_predict: bool = False,
     verbose: bool = False
-) -> list:
+) -> dict:
     
-    return creation_data_from_siesta(predict_directory, data_npy_path, data_size, key_word_output, task_predict, verbose)
+    return creation_data_from_siesta(predict_directory, data_npy_path, data_size, data_keyword, option_keyword, task_predict, verbose)
 
 def extract_data_size(path: str, file_name: str) -> int:
     with open(os.path.join(path, file_name), "r") as file:
@@ -138,7 +146,7 @@ def extract_type_map(path: str, file_name) -> list:
     else:
         raise Exception("Not found the atomic type mapping")
 
-def creation(data_directory: str, folders: list, task_predict: bool = False, verbose: bool = False) -> list:
+def creation(data_directory: str, folders: list, option_keyword: list, task_predict: bool = False, verbose: bool = False) -> list:
     if not folders:
         return list()
 
@@ -150,7 +158,7 @@ def creation(data_directory: str, folders: list, task_predict: bool = False, ver
         type_map = extract_type_map(folder, KEY_WORD_DATA_FOLDER[0])
         data_npy_folders.append(
             creation_data(
-                folder, data_directory, data_size, KEY_WORD_DATA_FOLDER[0], task_predict, verbose
+                folder, data_directory, data_size, KEY_WORD_DATA_FOLDER[0], option_keyword, task_predict, verbose
             )
         )
     return data_npy_folders, type_map

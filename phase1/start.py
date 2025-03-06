@@ -41,37 +41,41 @@ LOGGER.log(f"Import library success")
 update_process_ui(5)
 
 TYPE_MAP = []
+FOLDER_COMBINE = []
 
-
-def step1(data_directory: str, new_directory: str, predict_directory: str, verbose: bool) -> list:
+def step1(data_directory: str, new_directory: str, predict_directory: str, option_keyword: list, verbose: bool) -> None:
     global TYPE_MAP
+    global FOLDER_COMBINE
+
     folders = scan(data_directory)
     update_process_ui(10)
 
-    train_val_folders, type_map_train = creation(new_directory, folders, task_predict=False, verbose=verbose)
+    train_val_folders, type_map_train = creation(new_directory, folders, option_keyword, task_predict=False, verbose=verbose)
     update_process_ui(20)
 
-    combine(new_directory, train_val_folders)
+    FOLDER_COMBINE = combine(new_directory, train_val_folders)
     update_process_ui(25)
     TYPE_MAP =  type_map_train
 
-    if predict_directory:
-        folders = scan(predict_directory)
-        _, type_map_predict = creation(os.path.join(predict_directory, 'result'), folders, task_predict=True, verbose=verbose)
+    # if predict_directory:
+    #     folders = scan(predict_directory)
+    #     _, type_map_predict = creation(os.path.join(predict_directory, 'result'), folders, task_predict=True, verbose=verbose)
 
-        if TYPE_MAP != type_map_predict:
-            raise Exception("The data for training and prediction is different types.")
+    #     if TYPE_MAP != type_map_predict:
+    #         raise Exception("The data for training and prediction is different types.")
     update_process_ui(30)
 
 def step2(new_directory: str, epochs: int, verbose: bool) -> None:
     global TYPE_MAP
+    global FOLDER_COMBINE
+
     source_training_file = os.path.abspath(
         os.path.join("phase1", "config", "input.json")
     )
     new_training_file = os.path.join(new_directory, "input.json")
     type_map_value = TYPE_MAP
-    training_systems = [os.path.join(new_directory, "training_data")]
-    validation_systems = [os.path.join(new_directory, "validation_data")]
+    training_systems = [item for sublist in FOLDER_COMBINE[0].values() for item in sublist]
+    validation_systems = [item for sublist in FOLDER_COMBINE[1].values() for item in sublist]
     disp_file_value = os.path.join(new_directory, "lcurve.out")
     numb_steps = epochs
     setup_training_input(
@@ -114,10 +118,10 @@ def step4(new_directory: str, predict_directory: str, verbose: bool) -> None:
     update_process_ui(90)
 
 
-def workflow(input_folder: str, output_folder: str, predict_folder: str, epochs: int, only_make_data: bool, verbose: bool) -> int:
+def workflow(input_folder: str, output_folder: str, predict_folder: str, epochs: int, option_keyword: list, only_make_data: bool, verbose: bool) -> int:
 
     LOGGER.log("\n***Step 1/4 in phase 1 on running!\n")
-    if run_with_traceback(step1, input_folder, output_folder, predict_folder, verbose):
+    if run_with_traceback(step1, input_folder, output_folder, predict_folder, option_keyword, verbose):
         return ReturnCode.ERROR_CODE_1
     else:
         LOGGER.log("\n***Step 1/4 in phase 1 run successfully!\n")
@@ -202,6 +206,15 @@ def main():
         help="Enable only make data mode for input data.",
     )
 
+    parser.add_argument(
+        "-optkw",
+        "--option_keyword",
+        metavar='N',
+        type=str,
+        nargs='*',       
+        help="List of different atomic systems.",
+    )
+
     # Parse the arguments
     args = parser.parse_args()
 
@@ -230,7 +243,7 @@ def main():
             )
         LOGGER.log('-'*30)
 
-    state = workflow(args.input_folder, args.output_folder, args.predict_folder, args.epochs, args.only_make_data, args.verbose)
+    state = workflow(args.input_folder, args.output_folder, args.predict_folder, args.epochs, args.option_keyword, args.only_make_data, args.verbose)
     LOGGER.log(f"State of workflow phase 1: {ReturnCode.get_message(state)}")
     LOGGER.log(f"\nServer shutdown, bye!\n")
     if state == ReturnCode.SUCCESS:

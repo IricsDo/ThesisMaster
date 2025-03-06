@@ -7,8 +7,8 @@ def modify(
     source_file: str,
     new_file: str,
     type_map_value: str,
-    training_systems: str,
-    validation_systems: str,
+    training_systems: list[str],
+    validation_systems: list[str],
     disp_file_value: str,
     numb_steps: int,
     verbose: bool =False
@@ -36,8 +36,8 @@ def setup_training_input(
     source_file: str,
     new_file: str,
     type_map_value: str,
-    training_systems: str,
-    validation_systems: str,
+    training_systems: list[str],
+    validation_systems: list[str],
     disp_file_value: str,
     numb_steps: int,
     verbose: bool = False
