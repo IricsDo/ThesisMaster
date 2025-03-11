@@ -47,6 +47,61 @@ def copy_one_file(source: str, destination: str, verbose: bool = False) -> None:
             LOGGER.log("File copy failed.")
 
 
+def move_many_to_one(
+    source: list[str], destination: str, verbose: bool = False, copy: bool = False
+) -> None:
+    """
+    Moves or copies multiple folders or files into a single destination folder.
+
+    :param source: List of source paths (folders or files) to move or copy.
+    :param destination: Destination folder where all sources will be moved or copied.
+    :param verbose: If True, prints details of the operation.
+    :param copy: If True, copies instead of moving.
+    """
+
+    LOGGER = ServerLogger()
+
+    if not os.path.exists(destination):
+        os.makedirs(destination)
+
+    # Track existing names to prevent overwriting
+    existing_names = set(os.listdir(destination))
+    name_counters = {}
+
+    for src in source:
+        if not os.path.exists(src):
+            if verbose:
+                LOGGER.log(f"Source path does not exist: {src}")
+            continue
+
+        base_name = os.path.basename(src)
+        dest_path = os.path.join(destination, base_name)
+
+        # Handle duplicate names
+        if base_name in existing_names:
+            if base_name not in name_counters:
+                name_counters[base_name] = 1
+            while os.path.exists(dest_path):
+                name_counters[base_name] += 1
+                name, ext = os.path.splitext(base_name)
+                new_name = f"{name}_{name_counters[base_name]}{ext}"
+                dest_path = os.path.join(destination, new_name)
+
+        existing_names.add(os.path.basename(dest_path))
+
+        try:
+            if copy:
+                if os.path.isdir(src):
+                    shutil.copytree(src, dest_path)
+                else:
+                    shutil.copy2(src, dest_path)
+            else:
+                shutil.move(src, dest_path)
+        except Exception as e:
+            if verbose:
+                LOGGER.log(f"Failed to process {src}: {e}")
+
+
 def delete_file(path: str, verbose: bool = False) -> None:
     # Check if the file exists
     LOGGER = ServerLogger()

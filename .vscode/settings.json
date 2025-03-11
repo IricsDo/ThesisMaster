@@ -1,0 +1,7 @@
+{
+    "jupyter.kernels.excludePythonEnvironments": [
+        ""
+    ],
+    "python.createEnvironment.contentButton": "show",
+    "python.terminal.shellIntegration.enabled": true
+}

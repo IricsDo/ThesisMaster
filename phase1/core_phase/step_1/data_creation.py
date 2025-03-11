@@ -8,7 +8,7 @@ from phase1.core_phase.step_1.data_scanning import scan, KEY_WORD_DATA_FOLDER
 from utils_com.logger import ServerLogger
 
 
-def max_min_scale_array(arr : np.array) -> np.array:
+def max_min_scale_array(arr: np.array) -> np.array:
     # Compute the min and max of the array
     arr_min = arr.min()
     arr_max = arr.max()
@@ -17,11 +17,14 @@ def max_min_scale_array(arr : np.array) -> np.array:
         return arr
     return (arr - arr_min) / (arr_max - arr_min)
 
-def scale_dpdata(data_obj : dpdata.LabeledSystem) -> dpdata.LabeledSystem:
+
+def scale_dpdata(data_obj: dpdata.LabeledSystem) -> dpdata.LabeledSystem:
     # Assuming the dpdata object has a dictionary attribute 'data'
     for key, value in data_obj.data.items():
         # Only scale if the value is a numeric numpy array
-        if isinstance(value, np.ndarray) and np.issubdtype(value.dtype, np.number) : #and key == 'energies':
+        if isinstance(value, np.ndarray) and np.issubdtype(
+            value.dtype, np.number
+        ):  # and key == 'energies':
             data_obj.data[key] = max_min_scale_array(value)
             return data_obj
 
@@ -33,7 +36,7 @@ def creation_data_from_siesta(
     data_keyword: str,
     option_keywork: list = [],
     task_predict: bool = False,
-    verbose: bool = False
+    verbose: bool = False,
 ) -> dict:
     """
     Processes data from Siesta/aimd_output format and splits it into training and validation sets.
@@ -64,7 +67,7 @@ def creation_data_from_siesta(
                 LOGGER.log(f"The directory {new_path} does not exist, already created")
             os.makedirs(new_path, exist_ok=True)
 
-         # Apply max-min scaling to each numeric field
+        # Apply max-min scaling to each numeric field
         # scaled_data = scale_dpdata(data.copy())
         # scaled_data.to("deepmd/npy", new_path)
         data.to("deepmd/npy", new_path)
@@ -80,7 +83,7 @@ def creation_data_from_siesta(
 
         if not option_keywork:
             raise Exception("Unknow option to get number of atom type")
-        
+
         index_validation = np.random.choice(
             data_size, size=int(data_size * 0.2), replace=False
         )
@@ -99,18 +102,20 @@ def creation_data_from_siesta(
         data_training.to_deepmd_npy(os.path.join(data_npy_path, training_path))
         data_validation.to_deepmd_npy(os.path.join(data_npy_path, validation_path))
 
-
         if verbose:
             LOGGER.log(f"# {data_raw_path} -> {training_path} , {validation_path}")
             LOGGER.log("# the data contains %d frames" % len(data))
             LOGGER.log("# the training data contains %d frames" % len(data_training))
-            LOGGER.log("# the validation data contains %d frames" % len(data_validation))
+            LOGGER.log(
+                "# the validation data contains %d frames" % len(data_validation)
+            )
 
         for i in option_keywork:
             if i in os.path.basename(data_raw_path):
                 return {i: [training_path, validation_path]}
-    
+
     return ["", ""]
+
 
 def creation_data(
     predict_directory: str,
@@ -119,10 +124,19 @@ def creation_data(
     data_keyword: str,
     option_keyword: list,
     task_predict: bool = False,
-    verbose: bool = False
+    verbose: bool = False,
 ) -> dict:
-    
-    return creation_data_from_siesta(predict_directory, data_npy_path, data_size, data_keyword, option_keyword, task_predict, verbose)
+
+    return creation_data_from_siesta(
+        predict_directory,
+        data_npy_path,
+        data_size,
+        data_keyword,
+        option_keyword,
+        task_predict,
+        verbose,
+    )
+
 
 def extract_data_size(path: str, file_name: str) -> int:
     with open(os.path.join(path, file_name), "r") as file:
@@ -131,22 +145,36 @@ def extract_data_size(path: str, file_name: str) -> int:
                 value = line.split()[1]
                 return int(value)
 
+
 def extract_type_map(path: str, file_name) -> list:
     with open(os.path.join(path, file_name), "r") as file:
         content = file.read()
 
-    match = re.search(r"%block ChemicalSpeciesLabel\n(.*?)\n%endblock ChemicalSpeciesLabel", content, re.DOTALL)
+    match = re.search(
+        r"%block ChemicalSpeciesLabel\n(.*?)\n%endblock ChemicalSpeciesLabel",
+        content,
+        re.DOTALL,
+    )
     if match:
         block_content = match.group(1)
         # Find all occurrences of the pattern "number atomic_weight symbol"
         matches = re.findall(r"^\s*(\d+)\s+\d+\s+(\w+)", block_content, re.MULTILINE)
         # Sort the matches by the number and extract the symbols
-        sorted_symbols = [symbol for _, symbol in sorted(matches, key=lambda x: int(x[0]))]
+        sorted_symbols = [
+            symbol for _, symbol in sorted(matches, key=lambda x: int(x[0]))
+        ]
         return sorted_symbols
     else:
         raise Exception("Not found the atomic type mapping")
 
-def creation(data_directory: str, folders: list, option_keyword: list, task_predict: bool = False, verbose: bool = False) -> list:
+
+def creation(
+    data_directory: str,
+    folders: list,
+    option_keyword: list,
+    task_predict: bool = False,
+    verbose: bool = False,
+) -> list:
     if not folders:
         return list()
 
@@ -158,7 +186,13 @@ def creation(data_directory: str, folders: list, option_keyword: list, task_pred
         type_map = extract_type_map(folder, KEY_WORD_DATA_FOLDER[0])
         data_npy_folders.append(
             creation_data(
-                folder, data_directory, data_size, KEY_WORD_DATA_FOLDER[0], option_keyword, task_predict, verbose
+                folder,
+                data_directory,
+                data_size,
+                KEY_WORD_DATA_FOLDER[0],
+                option_keyword,
+                task_predict,
+                verbose,
             )
         )
     return data_npy_folders, type_map

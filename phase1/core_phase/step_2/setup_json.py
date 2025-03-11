@@ -11,7 +11,7 @@ def modify(
     validation_systems: list[str],
     disp_file_value: str,
     numb_steps: int,
-    verbose: bool =False
+    verbose: bool = False,
 ) -> None:
 
     # Open and load the JSON data
@@ -22,6 +22,7 @@ def modify(
     data["model"]["type_map"] = type_map_value
     data["training"]["training_data"]["systems"] = training_systems
     data["training"]["validation_data"]["systems"] = validation_systems
+    data["training"]["validation_data"]["numb_btch"] = len(validation_systems)
     data["training"]["disp_file"] = disp_file_value
     data["training"]["numb_steps"] = numb_steps
     data["training"]["disp_freq"] = int(numb_steps / 50)
@@ -40,7 +41,7 @@ def setup_training_input(
     validation_systems: list[str],
     disp_file_value: str,
     numb_steps: int,
-    verbose: bool = False
+    verbose: bool = False,
 ) -> None:
 
     delete_file(new_file, verbose)
@@ -53,7 +54,7 @@ def setup_training_input(
         validation_systems,
         disp_file_value,
         numb_steps,
-        verbose
+        verbose,
     )
 
 

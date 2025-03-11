@@ -23,6 +23,7 @@ try:
     from core_phase.step_4.model_compress import compress, freeze
     from core_phase.step_4.test_model import test
     from core_phase.step_4.valid_model import vaild, predict
+    from core_phase.step_4.post_process_data import collect_data_to_one
     from utils_com.traceback_func import run_with_traceback
     from config.return_code import ReturnCode
 
@@ -31,10 +32,12 @@ except Exception as e:
     LOGGER.log(f"An error occurred: {e}")
     exit(-1)
 
+
 def update_process_ui(percent: int) -> None:
     global TOTAL_PROCESS
-    TOTAL_PROCESS = randint(TOTAL_PROCESS, percent) if percent !=100 else 100
+    TOTAL_PROCESS = randint(TOTAL_PROCESS, percent) if percent != 100 else 100
     LOGGER.log(f"<update_process_ui>{TOTAL_PROCESS}</>")
+
 
 LOGGER.log(f"Import library success")
 
@@ -43,29 +46,46 @@ update_process_ui(5)
 TYPE_MAP = []
 FOLDER_COMBINE = []
 
-def step1(data_directory: str, new_directory: str, predict_directory: str, option_keyword: list, verbose: bool) -> None:
+
+def step1(
+    data_directory: str,
+    new_directory: str,
+    predict_directory: str,
+    option_keyword: list,
+    verbose: bool,
+    bypass: bool = False,
+) -> None:
+    if bypass:
+        LOGGER.log(f"Bypass step 1")
+        return
     global TYPE_MAP
     global FOLDER_COMBINE
 
     folders = scan(data_directory)
     update_process_ui(10)
 
-    train_val_folders, type_map_train = creation(new_directory, folders, option_keyword, task_predict=False, verbose=verbose)
+    train_val_folders, type_map_train = creation(
+        new_directory, folders, option_keyword, task_predict=False, verbose=verbose
+    )
     update_process_ui(20)
 
     FOLDER_COMBINE = combine(new_directory, train_val_folders)
     update_process_ui(25)
-    TYPE_MAP =  type_map_train
+    TYPE_MAP = type_map_train
 
-    # if predict_directory:
-    #     folders = scan(predict_directory)
-    #     _, type_map_predict = creation(os.path.join(predict_directory, 'result'), folders, task_predict=True, verbose=verbose)
+    if predict_directory:
+        folders = scan(predict_directory)
+        _, type_map_predict = creation(os.path.join(predict_directory, 'result'), folders, task_predict=True, verbose=verbose)
 
-    #     if TYPE_MAP != type_map_predict:
-    #         raise Exception("The data for training and prediction is different types.")
+        if TYPE_MAP != type_map_predict:
+            raise Exception("The data for training and prediction is different types.")
     update_process_ui(30)
 
-def step2(new_directory: str, epochs: int, verbose: bool) -> None:
+
+def step2(new_directory: str, epochs: int, verbose: bool, bypass: bool = False) -> None:
+    if bypass:
+        LOGGER.log(f"Bypass step 2")
+        return
     global TYPE_MAP
     global FOLDER_COMBINE
 
@@ -74,8 +94,12 @@ def step2(new_directory: str, epochs: int, verbose: bool) -> None:
     )
     new_training_file = os.path.join(new_directory, "input.json")
     type_map_value = TYPE_MAP
-    training_systems = [item for sublist in FOLDER_COMBINE[0].values() for item in sublist]
-    validation_systems = [item for sublist in FOLDER_COMBINE[1].values() for item in sublist]
+    training_systems = [
+        item for sublist in FOLDER_COMBINE[0].values() for item in sublist
+    ]
+    validation_systems = [
+        item for sublist in FOLDER_COMBINE[1].values() for item in sublist
+    ]
     disp_file_value = os.path.join(new_directory, "lcurve.out")
     numb_steps = epochs
     setup_training_input(
@@ -86,13 +110,15 @@ def step2(new_directory: str, epochs: int, verbose: bool) -> None:
         validation_systems,
         disp_file_value,
         numb_steps,
-        verbose
+        verbose,
     )
     update_process_ui(40)
 
 
-
-def step3(new_directory: str, verbose: bool) -> None:
+def step3(new_directory: str, verbose: bool, bypass: bool = False) -> None:
+    if bypass:
+        LOGGER.log(f"Bypass step 3")
+        return
     train(new_directory, verbose)
     update_process_ui(60)
 
@@ -100,28 +126,57 @@ def step3(new_directory: str, verbose: bool) -> None:
     update_process_ui(65)
 
 
-def step4(new_directory: str, predict_directory: str, verbose: bool) -> None:
+def step4(
+    new_directory: str, predict_directory: str, verbose: bool, bypass: bool = False
+) -> None:
+    if bypass:
+        LOGGER.log(f"Bypass step 4")
+        return
+    global FOLDER_COMBINE
+
     freeze(new_directory, verbose)
     update_process_ui(70)
 
     compress(new_directory, verbose)
     update_process_ui(75)
 
+    validation_systems = [
+        item for sublist in FOLDER_COMBINE[1].values() for item in sublist
+    ]
+    new_path = collect_data_to_one(new_directory, validation_systems)
+
     test(new_directory, verbose)
     update_process_ui(80)
 
-    vaild(new_directory, "", task_predict=False)
+    vaild(new_directory, new_path, "", task_predict=False)
     update_process_ui(85)
 
     if predict_directory:
-        predict(os.path.join(predict_directory, 'result'), new_directory, task_predict=True)
+        predict(
+            os.path.join(predict_directory, "result"), new_directory, task_predict=True
+        )
     update_process_ui(90)
 
 
-def workflow(input_folder: str, output_folder: str, predict_folder: str, epochs: int, option_keyword: list, only_make_data: bool, verbose: bool) -> int:
+def workflow(
+    input_folder: str,
+    output_folder: str,
+    predict_folder: str,
+    epochs: int,
+    option_keyword: list,
+    only_make_data: bool,
+    verbose: bool,
+) -> int:
 
     LOGGER.log("\n***Step 1/4 in phase 1 on running!\n")
-    if run_with_traceback(step1, input_folder, output_folder, predict_folder, option_keyword, verbose):
+    if run_with_traceback(
+        step1,
+        input_folder,
+        output_folder,
+        predict_folder,
+        option_keyword,
+        verbose
+    ):
         return ReturnCode.ERROR_CODE_1
     else:
         LOGGER.log("\n***Step 1/4 in phase 1 run successfully!\n")
@@ -209,9 +264,9 @@ def main():
     parser.add_argument(
         "-optkw",
         "--option_keyword",
-        metavar='N',
+        metavar="N",
         type=str,
-        nargs='*',       
+        nargs="*",
         help="List of different atomic systems.",
     )
 
@@ -236,14 +291,20 @@ def main():
 
     # If verbose, print the folder paths
     if args.verbose:
-        LOGGER.log('-'*30)
+        LOGGER.log("-" * 30)
         for key, value in vars(args).items():
-            LOGGER.log(
-                (f"Name argument: {key} - Value: {value}")
-            )
-        LOGGER.log('-'*30)
+            LOGGER.log((f"Name argument: {key} - Value: {value}"))
+        LOGGER.log("-" * 30)
 
-    state = workflow(args.input_folder, args.output_folder, args.predict_folder, args.epochs, args.option_keyword, args.only_make_data, args.verbose)
+    state = workflow(
+        args.input_folder,
+        args.output_folder,
+        args.predict_folder,
+        args.epochs,
+        args.option_keyword,
+        args.only_make_data,
+        args.verbose,
+    )
     LOGGER.log(f"State of workflow phase 1: {ReturnCode.get_message(state)}")
     LOGGER.log(f"\nServer shutdown, bye!\n")
     if state == ReturnCode.SUCCESS:

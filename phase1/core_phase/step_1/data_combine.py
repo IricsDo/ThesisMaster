@@ -33,7 +33,7 @@ def combine_npy_files(
         # if all(arr.shape == data_combine[0].shape for arr in data_combine):
         #     combined_data = np.vstack(data_combine)
         #     np.save(os.path.join(new_output_folder, data_type), combined_data)
-        
+
         if data_combine:
             # Temp fix incorrect shape of data
             # Truncate to the smallest number of columns
@@ -44,11 +44,11 @@ def combine_npy_files(
         else:
             raise ValueError("The list is empty shapes. Cannot be stacked.")
 
-
         if verbose:
             LOGGER.log(f"Combined {data_type} and saved to {new_output_folder}")
 
     return
+
 
 def combine_dp_system(
     folder_data: dict, output_folder: str, verbose: bool = False
@@ -60,10 +60,13 @@ def combine_dp_system(
             data.extend(dpdata.LabeledSystem(v, fmt="deepmd/npy"))
         if key not in dict_dp_data.keys():
             dict_dp_data[key] = data
-    
+
     return
 
-def combine(new_directory: str, data_folders: list, verbose: bool = False) -> list[dict]:
+
+def combine(
+    new_directory: str, data_folders: list, verbose: bool = False
+) -> list[dict]:
     if not data_folders:
         raise Exception("The list data not include train and val folder")
 
@@ -83,7 +86,9 @@ def combine(new_directory: str, data_folders: list, verbose: bool = False) -> li
                 if key not in validation_folders.keys():
                     validation_folders[key] = [os.path.join(new_directory, value[1])]
                 else:
-                    validation_folders[key].append(os.path.join(new_directory, value[1]))
+                    validation_folders[key].append(
+                        os.path.join(new_directory, value[1])
+                    )
     except Exception as exc:
         LOGGER.log(f"Combine data an exception: {exc}")
 
@@ -117,6 +122,7 @@ def combine(new_directory: str, data_folders: list, verbose: bool = False) -> li
         )
 
     return [training_folders, validation_folders]
+
 
 if __name__ == "__main__":
     from phase1.core_phase.step_1.data_scanning import scan, KEY_WORD_DATA_FOLDER
