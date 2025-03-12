@@ -77,7 +77,7 @@ def creation_data_from_siesta(
             LOGGER.log("# the data contains %d frames" % len(data))
             LOGGER.log("# the predict data contains %d frames" % len(predict_path))
 
-        return [predict_path, ""]
+        return {"", [predict_path, ""]}
 
     else:
 
