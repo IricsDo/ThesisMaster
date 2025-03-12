@@ -52,7 +52,7 @@ def creation_data_from_siesta(
     """
 
     if data_size < 0:
-        return ["", ""]
+        return {"", ["", ""]}
 
     data = dpdata.LabeledSystem(
         os.path.join(data_raw_path, data_keyword), fmt="siesta/aimd_output"
@@ -77,7 +77,7 @@ def creation_data_from_siesta(
             LOGGER.log("# the data contains %d frames" % len(data))
             LOGGER.log("# the predict data contains %d frames" % len(predict_path))
 
-        return {"", [predict_path, ""]}
+        return {"predict": [new_path, ""]}
 
     else:
 

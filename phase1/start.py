@@ -75,7 +75,13 @@ def step1(
 
     if predict_directory:
         folders = scan(predict_directory)
-        _, type_map_predict = creation(os.path.join(predict_directory, 'result'), folders, "", task_predict=True, verbose=verbose)
+        _, type_map_predict = creation(
+            os.path.join(predict_directory, "result"),
+            folders,
+            "",
+            task_predict=True,
+            verbose=verbose,
+        )
 
         if TYPE_MAP != type_map_predict:
             raise Exception("The data for training and prediction is different types.")
@@ -170,12 +176,7 @@ def workflow(
 
     LOGGER.log("\n***Step 1/4 in phase 1 on running!\n")
     if run_with_traceback(
-        step1,
-        input_folder,
-        output_folder,
-        predict_folder,
-        option_keyword,
-        verbose
+        step1, input_folder, output_folder, predict_folder, option_keyword, verbose
     ):
         return ReturnCode.ERROR_CODE_1
     else:

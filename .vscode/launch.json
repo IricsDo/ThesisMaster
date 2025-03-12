@@ -28,6 +28,8 @@
                 "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_input",
                 "--output_folder",
                 "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output",
+                "--predict_folder",
+                "E:/Work Spaces/Thesis/Data/Si-C-H/112_predict",
                 "--verbose"
             ]
         }

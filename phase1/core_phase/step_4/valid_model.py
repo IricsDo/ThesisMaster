@@ -4,7 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def vaild(new_directory: str, new_path: str, model_path: str = "", task_predict: bool = False) -> None:
+def vaild(
+    new_directory: str, new_path: str, model_path: str = "", task_predict: bool = False
+) -> None:
     try:
         for data in os.listdir(new_path):
             data_path = os.path.join(new_path, data)
@@ -17,7 +19,9 @@ def vaild(new_directory: str, new_path: str, model_path: str = "", task_predict:
             if task_predict and model_path:
                 predict = training_systems.predict(os.path.join(model_path, "graph.pb"))
             else:
-                predict = training_systems.predict(os.path.join(new_directory, "graph.pb"))
+                predict = training_systems.predict(
+                    os.path.join(new_directory, "graph.pb")
+                )
 
             plt.scatter(training_systems["energies"], predict["energies"])
             x_range = np.linspace(plt.xlim()[0], plt.xlim()[1])
