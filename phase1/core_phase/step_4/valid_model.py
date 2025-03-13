@@ -32,7 +32,7 @@ def vaild(
             plt.plot()
             plt.savefig(
                 os.path.join(
-                    new_directory,
+                    new_path if task_predict else new_directory,
                     f"output_with_{'prediction_data' if task_predict else os.path.basename(data_path)}.png",
                 )
             )
@@ -41,8 +41,8 @@ def vaild(
         raise Exception("Can not complete the vaildation in model")
 
 
-def predict(predict_directory: str, model_path: str, task_predict: bool) -> None:
-    vaild(predict_directory, model_path, task_predict)
+def predict(predict_directory: str, new_path: str, model_path: str, task_predict: bool) -> None:
+    vaild(predict_directory, new_path,  model_path, task_predict)
 
 
 if __name__ == "__main__":
