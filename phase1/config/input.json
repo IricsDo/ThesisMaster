@@ -10,12 +10,11 @@
           "sel":		"auto",
           "rcut_smth":	0.50,
           "rcut":		6.00,
-          "neuron": [100, 200, 400, 400, 200, 100],
+          "neuron": [25, 50, 100, 100, 50, 25],
           "type_one_side":	true,
           "resnet_dt":	true,
           "axis_neuron":	24,
           "seed":		1,
-          "activation_function": "tanh",
           "_comment":		" that's all"
           },
           {
@@ -27,7 +26,6 @@
             "resnet_dt": false,
             "type_one_side": true,
             "seed":		1,
-            "activation_function": "tanh",
             "_comment": " that's all"
           }
         ]
@@ -78,13 +76,13 @@
       "disp_freq":	20,
       "save_freq":	100,
 
-      "disp_training":true,
-      "time_training":true,
+      "disp_training": true,
+      "time_training": true,
       "tensorboard":	true,
-      "tensorboard_log_dir":"log",
+      "tensorboard_log_dir": "replace your path",
       "tensorboard_freq": 1000,
       "profiling":	false,
-      "profiling_file":"timeline.json",
+      "profiling_file": "replace your path",
       "_comment":	"that's all"
     },
     "_comment":	"that's all"

@@ -107,6 +107,8 @@ def step2(new_directory: str, epochs: int, verbose: bool, bypass: bool = False) 
         item for sublist in FOLDER_COMBINE[1].values() for item in sublist
     ]
     disp_file_value = os.path.join(new_directory, "lcurve.out")
+    profiling_file = os.path.join(new_directory, "timeline.json")
+    tensorboard_log_dir = os.path.join(new_directory, "log")
     numb_steps = epochs
     setup_training_input(
         source_training_file,
@@ -115,6 +117,8 @@ def step2(new_directory: str, epochs: int, verbose: bool, bypass: bool = False) 
         training_systems,
         validation_systems,
         disp_file_value,
+        profiling_file,
+        tensorboard_log_dir,
         numb_steps,
         verbose,
     )

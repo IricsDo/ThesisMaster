@@ -1,5 +1,5 @@
 import json
-from utils.folder_utils import delete_file
+from utils.folder_utils import delete_file, delete_folder
 
 
 # Function to modify the JSON file
@@ -10,6 +10,8 @@ def modify(
     training_systems: list[str],
     validation_systems: list[str],
     disp_file_value: str,
+    profiling_file: str,
+    tensorboard_log_dir: str,
     numb_steps: int,
     verbose: bool = False,
 ) -> None:
@@ -24,9 +26,12 @@ def modify(
     data["training"]["validation_data"]["systems"] = validation_systems
     data["training"]["validation_data"]["numb_btch"] = len(validation_systems)
     data["training"]["disp_file"] = disp_file_value
+    data["training"]["profiling_file"] = profiling_file
+    data["training"]["tensorboard_log_dir"]= tensorboard_log_dir
     data["training"]["numb_steps"] = numb_steps
     data["training"]["disp_freq"] = int(numb_steps / 50)
     data["training"]["save_freq"] = int(numb_steps / 10)
+    data["training"]["tensorboard_freq"] = int(numb_steps / 10)
 
     # Write the updated data back to the JSON file
     with open(new_file, "w") as f:
@@ -40,12 +45,16 @@ def setup_training_input(
     training_systems: list[str],
     validation_systems: list[str],
     disp_file_value: str,
+    profiling_file: str,
+    tensorboard_log_dir: str,
     numb_steps: int,
     verbose: bool = False,
 ) -> None:
 
     delete_file(new_file, verbose)
     delete_file(disp_file_value, verbose)
+    delete_file(profiling_file, verbose)
+    delete_folder(tensorboard_log_dir, verbose)
     modify(
         source_file,
         new_file,
@@ -53,6 +62,8 @@ def setup_training_input(
         training_systems,
         validation_systems,
         disp_file_value,
+        profiling_file,
+        tensorboard_log_dir,
         numb_steps,
         verbose,
     )
