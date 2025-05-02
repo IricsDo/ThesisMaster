@@ -1,6 +1,21 @@
 import json
 from utils.folder_utils import delete_file, delete_folder
+from utils_com.logger import ServerLogger
 
+
+def recommend_decay_steps(numb_steps : int, mode : str ="normal") -> int:
+    LOGGER = ServerLogger()
+
+    if mode == "slow":
+        n = 2
+    elif mode == "fast":
+        n = 5
+    elif mode == "normal":
+        n = 3
+    else:
+        LOGGER.log(f"Decay steps for training invaild ! Set default 5000")
+        return 5000
+    return numb_steps // n
 
 # Function to modify the JSON file
 def modify(
@@ -22,6 +37,7 @@ def modify(
 
     # Modify the values
     data["model"]["type_map"] = type_map_value
+    data["model"]["learning_rate"]["decay_steps"] = recommend_decay_steps(numb_steps)
     data["training"]["training_data"]["systems"] = training_systems
     data["training"]["validation_data"]["systems"] = validation_systems
     data["training"]["validation_data"]["numb_btch"] = len(validation_systems)

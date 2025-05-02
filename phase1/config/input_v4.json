@@ -7,19 +7,43 @@
         "list": [
             {
               "type": "se_e2_a",
-              "sel":		"auto",
+              "sel": [16,16,32],
               "rcut_smth": 0.5,
               "rcut": 6.0,
-              "neuron": [25, 50, 100, 200, 100],
+              "neuron": [25, 50, 50, 25],
+              "type_one_side": true,
+              "resnet_dt": false,
               "axis_neuron": 16,
-              "seed": 42
+              "seed": 1,
+              "activation_function": "tanh",
+              "precision": "default",
+              "trainable": true,
+              "exclude_types": [],
+              "env_protection": 0.0,
+              "set_davg_zero": false
+            },
+            {
+                "type": "se_e2_r",
+                "sel": [16,16,32],
+                "rcut_smth": 0.5,
+                "rcut": 6.0,
+                "neuron": [32, 64, 64, 32],
+                "resnet_dt": false,
+                "type_one_side": true,
+                "seed": 1,
+                "activation_function": "tanh",
+                "precision": "default",
+                "trainable": true,
+                "exclude_types": [],
+                "env_protection": 0.0,
+                "set_davg_zero": false
             }
         ]
     },
     "fitting_net" : {
-        "neuron": [256, 128, 64, 128, 256],
+        "neuron": [384, 384, 256, 128, 64],
         "resnet_dt":	false,
-        "seed":		42,
+        "seed":		1,
         "_comment":		" that's all"
     },
     "_comment":	" that's all"
