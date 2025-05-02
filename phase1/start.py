@@ -51,7 +51,7 @@ def step1(
     data_directory: str,
     new_directory: str,
     predict_directory: str,
-    option_keyword: list,
+    num_of_hidro: list,
     verbose: bool,
     bypass: bool = False,
 ) -> None:
@@ -65,7 +65,7 @@ def step1(
     update_process_ui(10)
 
     train_val_folders, type_map_train = creation(
-        new_directory, folders, option_keyword, task_predict=False, verbose=verbose
+        new_directory, folders, num_of_hidro, task_predict=False, verbose=verbose
     )
     update_process_ui(20)
 
@@ -176,14 +176,14 @@ def workflow(
     output_folder: str,
     predict_folder: str,
     epochs: int,
-    option_keyword: list,
+    num_of_hidro: list,
     only_make_data: bool,
     verbose: bool,
 ) -> int:
 
     LOGGER.log("\n***Step 1/4 in phase 1 on running!\n")
     if run_with_traceback(
-        step1, input_folder, output_folder, predict_folder, option_keyword, verbose
+        step1, input_folder, output_folder, predict_folder, num_of_hidro, verbose
     ):
         return ReturnCode.ERROR_CODE_1
     else:
@@ -270,8 +270,8 @@ def main():
     )
 
     parser.add_argument(
-        "-optkw",
-        "--option_keyword",
+        "-noh",
+        "--num_of_hidro",
         metavar="N",
         type=str,
         nargs="*",
@@ -309,7 +309,7 @@ def main():
         args.output_folder,
         args.predict_folder,
         args.epochs,
-        args.option_keyword,
+        args.num_of_hidro,
         args.only_make_data,
         args.verbose,
     )

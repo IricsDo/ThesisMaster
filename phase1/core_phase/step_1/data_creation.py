@@ -122,7 +122,7 @@ def creation_data(
     data_npy_path: str,
     data_size: int,
     data_keyword: str,
-    option_keyword: list,
+    num_of_hidro: list,
     task_predict: bool = False,
     verbose: bool = False,
 ) -> dict:
@@ -132,7 +132,7 @@ def creation_data(
         data_npy_path,
         data_size,
         data_keyword,
-        option_keyword,
+        num_of_hidro,
         task_predict,
         verbose,
     )
@@ -171,7 +171,7 @@ def extract_type_map(path: str, file_name) -> list:
 def creation(
     data_directory: str,
     folders: list,
-    option_keyword: list,
+    num_of_hidro: list,
     task_predict: bool = False,
     verbose: bool = False,
 ) -> list:
@@ -190,7 +190,7 @@ def creation(
                 data_directory,
                 data_size,
                 KEY_WORD_DATA_FOLDER[0],
-                option_keyword,
+                num_of_hidro,
                 task_predict,
                 verbose,
             )

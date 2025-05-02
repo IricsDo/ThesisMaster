@@ -10,32 +10,30 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": [
-                "--option_keyword",
-                "52",
-                "55",
-                "58",
-                "--input_folder",
-                "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/52_55_58_input",
-                "--output_folder",
-                "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/52_55_58_output",
-                "--predict_folder",
-                "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/112_predict",
-                "--verbose"
-            ]
             // "args": [
-            //     "--option_keyword",
+            //     "--num_of_hidro",
             //     "52",
             //     "55",
             //     "58",
             //     "--input_folder",
-            //     "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_input",
+            //     "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/52_55_58_input",
             //     "--output_folder",
-            //     "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output",
+            //     "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/52_55_58_output",
             //     "--predict_folder",
-            //     "E:/Work Spaces/Thesis/Data/Si-C-H/112_predict",
+            //     "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/112_predict",
             //     "--verbose"
             // ]
+            "args": [
+                "--num_of_hidro",
+                "52",
+                "55",
+                "58",
+                "--input_folder",
+                "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_input",
+                "--output_folder",
+                "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output",
+                "--verbose"
+            ]
         }
     ]
 }
