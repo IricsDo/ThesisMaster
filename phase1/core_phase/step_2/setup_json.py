@@ -3,7 +3,7 @@ from utils.folder_utils import delete_file, delete_folder
 from utils_com.logger import ServerLogger
 
 
-def recommend_decay_steps(numb_steps : int, mode : str ="normal") -> int:
+def recommend_decay_steps(numb_steps: int, mode: str = "normal") -> int:
     LOGGER = ServerLogger()
 
     if mode == "slow":
@@ -16,6 +16,7 @@ def recommend_decay_steps(numb_steps : int, mode : str ="normal") -> int:
         LOGGER.log(f"Decay steps for training invaild ! Set default 5000")
         return 5000
     return numb_steps // n
+
 
 # Function to modify the JSON file
 def modify(
@@ -43,7 +44,7 @@ def modify(
     data["training"]["validation_data"]["numb_btch"] = len(validation_systems)
     data["training"]["disp_file"] = disp_file_value
     data["training"]["profiling_file"] = profiling_file
-    data["training"]["tensorboard_log_dir"]= tensorboard_log_dir
+    data["training"]["tensorboard_log_dir"] = tensorboard_log_dir
     data["training"]["numb_steps"] = numb_steps
     data["training"]["disp_freq"] = int(numb_steps / 50)
     data["training"]["save_freq"] = int(numb_steps / 10)

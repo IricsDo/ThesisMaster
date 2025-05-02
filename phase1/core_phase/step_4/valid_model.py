@@ -41,8 +41,10 @@ def vaild(
         raise Exception("Can not complete the vaildation in model")
 
 
-def predict(predict_directory: str, new_path: str, model_path: str, task_predict: bool) -> None:
-    vaild(predict_directory, new_path,  model_path, task_predict)
+def predict(
+    predict_directory: str, new_path: str, model_path: str, task_predict: bool
+) -> None:
+    vaild(predict_directory, new_path, model_path, task_predict)
 
 
 if __name__ == "__main__":

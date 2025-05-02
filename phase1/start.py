@@ -163,7 +163,10 @@ def step4(
 
     if predict_directory:
         predict(
-            "", os.path.join(predict_directory, "result"), new_directory, task_predict=True
+            "",
+            os.path.join(predict_directory, "result"),
+            new_directory,
+            task_predict=True,
         )
     update_process_ui(90)
 
