@@ -96,7 +96,7 @@ def step2(new_directory: str, epochs: int, verbose: bool, bypass: bool = False) 
     global FOLDER_COMBINE
 
     source_training_file = os.path.abspath(
-        os.path.join("phase1", "config", "input.json")
+        os.path.join("phase1", "training_params", "input.json")
     )
     new_training_file = os.path.join(new_directory, "input.json")
     type_map_value = TYPE_MAP
