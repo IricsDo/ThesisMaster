@@ -32,6 +32,9 @@
                 "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_input",
                 "--output_folder",
                 "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output",
+                "--only_make_data",
+                "--config_filename",
+                "input_003.json",
                 "--verbose"
             ]
         }

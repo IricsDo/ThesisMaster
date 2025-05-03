@@ -88,17 +88,18 @@ def step1(
     update_process_ui(30)
 
 
-def step2(new_directory: str, epochs: int, verbose: bool, bypass: bool = False) -> None:
+def step2(new_directory: str, epochs: int, config_filename: str, verbose: bool, bypass: bool = False) -> None:
     if bypass:
         LOGGER.log(f"Bypass step 2")
         return
+    
     global TYPE_MAP
     global FOLDER_COMBINE
-
+    
     source_training_file = os.path.abspath(
-        os.path.join("phase1", "training_params", "input.json")
+        os.path.join("phase1", "training_params", config_filename)
     )
-    new_training_file = os.path.join(new_directory, "input.json")
+    new_training_file = os.path.join(new_directory, config_filename)
     type_map_value = TYPE_MAP
     training_systems = [
         item for sublist in FOLDER_COMBINE[0].values() for item in sublist
@@ -175,6 +176,7 @@ def workflow(
     input_folder: str,
     output_folder: str,
     predict_folder: str,
+    config_filename: str,
     epochs: int,
     num_of_hidro: list,
     only_make_data: bool,
@@ -191,7 +193,7 @@ def workflow(
 
     if not only_make_data:
         LOGGER.log("\n***Step 2/4 in phase 1 on running!\n")
-        if run_with_traceback(step2, output_folder, epochs, verbose):
+        if run_with_traceback(step2, output_folder, config_filename, epochs, verbose):
             return ReturnCode.ERROR_CODE_2
         else:
             LOGGER.log("\n***Step 2/4 in phase 1 run successfully!\n")
@@ -253,7 +255,6 @@ def main():
         help="The number of epochs to train the model (default: 10000).",
     )
 
-    # Add optional verbose argument
     parser.add_argument(
         "-v",
         "--verbose",
@@ -261,7 +262,6 @@ def main():
         help="Enable verbose mode for detailed output.",
     )
 
-    # Add optional only make data argument
     parser.add_argument(
         "-omd",
         "--only_make_data",
@@ -278,6 +278,14 @@ def main():
         help="List of different atomic systems.",
     )
 
+    parser.add_argument(
+        "-cfg",
+        "--config_filename",
+        type=str,
+        required=True,
+        help="The training file name is used to configure all parameters.",
+    )
+
     # Parse the arguments
     args = parser.parse_args()
 
@@ -288,6 +296,10 @@ def main():
     # Check if the input folder exists
     if not os.path.isdir(args.input_folder):
         LOGGER.log(f"Error: Input folder '{args.input_folder}' does not exist.")
+        return
+
+    if not args.config_filename.endswith(".json"):
+        LOGGER.log(f"The config file not vaild, try again or check the correct file")
         return
 
     # Check if the output folder exists, create it if it doesn't
@@ -308,6 +320,7 @@ def main():
         args.input_folder,
         args.output_folder,
         args.predict_folder,
+        args.config_filename,
         args.epochs,
         args.num_of_hidro,
         args.only_make_data,
