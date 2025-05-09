@@ -88,7 +88,7 @@ def step1(
     update_process_ui(30)
 
 
-def step2(new_directory: str, epochs: int, config_filename: str, verbose: bool, bypass: bool = False) -> None:
+def step2(new_directory: str, config_filename: str, epochs: int, verbose: bool, bypass: bool = False) -> None:
     if bypass:
         LOGGER.log(f"Bypass step 2")
         return
@@ -99,7 +99,7 @@ def step2(new_directory: str, epochs: int, config_filename: str, verbose: bool, 
     source_training_file = os.path.abspath(
         os.path.join("phase1", "training_params", config_filename)
     )
-    new_training_file = os.path.join(new_directory, config_filename)
+    new_training_file = os.path.join(new_directory, "input.json")
     type_map_value = TYPE_MAP
     training_systems = [
         item for sublist in FOLDER_COMBINE[0].values() for item in sublist
