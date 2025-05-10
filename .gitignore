@@ -165,4 +165,5 @@ data_result/
 data_predict/
 phase1/reference/DeePMD_SiC.ipynb
 logs/
-phase1/training_params/images/
+phase1/training_params/*/*.png
+phase1/training_params/*/*.jpg

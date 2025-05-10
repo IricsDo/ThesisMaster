@@ -88,7 +88,7 @@ def step1(
     update_process_ui(30)
 
 
-def step2(new_directory: str, config_filename: str, epochs: int, verbose: bool, bypass: bool = False) -> None:
+def step2(new_directory: str, config_filename: str, epochs: int, tesorflow_fw: bool, pytorch_fw: bool, verbose: bool, bypass: bool = False) -> None:
     if bypass:
         LOGGER.log(f"Bypass step 2")
         return
@@ -110,6 +110,7 @@ def step2(new_directory: str, config_filename: str, epochs: int, verbose: bool, 
     disp_file_value = os.path.join(new_directory, "lcurve.out")
     profiling_file = os.path.join(new_directory, "timeline.json")
     tensorboard_log_dir = os.path.join(new_directory, "log")
+    stat_file = os.path.join(new_directory, "dpa2.hdf5")
     numb_steps = epochs
     setup_training_input(
         source_training_file,
@@ -120,17 +121,20 @@ def step2(new_directory: str, config_filename: str, epochs: int, verbose: bool, 
         disp_file_value,
         profiling_file,
         tensorboard_log_dir,
+        stat_file,
         numb_steps,
+        tesorflow_fw,
+        pytorch_fw,
         verbose,
     )
     update_process_ui(40)
 
 
-def step3(new_directory: str, verbose: bool, bypass: bool = False) -> None:
+def step3(new_directory: str, tesorflow_fw: bool, pytorch_fw: bool, verbose: bool, bypass: bool = False) -> None:
     if bypass:
         LOGGER.log(f"Bypass step 3")
         return
-    train(new_directory, verbose)
+    train(new_directory, tesorflow_fw, pytorch_fw, verbose)
     update_process_ui(60)
 
     plot_loss(new_directory)
@@ -138,17 +142,17 @@ def step3(new_directory: str, verbose: bool, bypass: bool = False) -> None:
 
 
 def step4(
-    new_directory: str, predict_directory: str, verbose: bool, bypass: bool = False
+    new_directory: str, predict_directory: str, tesorflow_fw: bool, pytorch_fw: bool, verbose: bool, bypass: bool = False
 ) -> None:
     if bypass:
         LOGGER.log(f"Bypass step 4")
         return
     global FOLDER_COMBINE
 
-    freeze(new_directory, verbose)
+    freeze(new_directory, tesorflow_fw, pytorch_fw, verbose)
     update_process_ui(70)
 
-    compress(new_directory, verbose)
+    compress(new_directory, tesorflow_fw, pytorch_fw, verbose)
     update_process_ui(75)
 
     validation_systems = [
@@ -156,10 +160,10 @@ def step4(
     ]
     new_path = collect_data_to_one(new_directory, validation_systems)
 
-    test(new_directory, verbose)
+    test(new_directory, tesorflow_fw, pytorch_fw, verbose)
     update_process_ui(80)
 
-    vaild(new_directory, new_path, "", task_predict=False)
+    vaild(new_directory, new_path, "", tesorflow_fw, pytorch_fw, task_predict=False)
     update_process_ui(85)
 
     if predict_directory:
@@ -167,7 +171,9 @@ def step4(
             "",
             os.path.join(predict_directory, "result"),
             new_directory,
-            task_predict=True,
+            tesorflow_fw, 
+            pytorch_fw,
+            task_predict=True
         )
     update_process_ui(90)
 
@@ -180,6 +186,8 @@ def workflow(
     epochs: int,
     num_of_hidro: list,
     only_make_data: bool,
+    tesorflow_fw: bool,
+    pytorch_fw: bool,
     verbose: bool,
 ) -> int:
 
@@ -199,7 +207,7 @@ def workflow(
             LOGGER.log("\n***Step 2/4 in phase 1 run successfully!\n")
 
         LOGGER.log("\n***Step 3/4 in phase 1 on running!\n")
-        if run_with_traceback(step3, output_folder, verbose):
+        if run_with_traceback(step3, output_folder, tesorflow_fw, pytorch_fw, verbose):
             return ReturnCode.ERROR_CODE_3
         else:
             LOGGER.log("\n***Step 3/4 in phase 1 run successfully!\n")
@@ -270,6 +278,20 @@ def main():
     )
 
     parser.add_argument(
+        "-tf",
+        "--tesorflow",
+        action="store_true",
+        help="Select framework for backend",
+    )
+
+    parser.add_argument(
+        "-pt",
+        "--pytorch",
+        action="store_true",
+        help="Using pytorch backend",
+    )
+
+    parser.add_argument(
         "-noh",
         "--num_of_hidro",
         metavar="N",
@@ -324,6 +346,8 @@ def main():
         args.epochs,
         args.num_of_hidro,
         args.only_make_data,
+        args.tesorflow,
+        args.pytorch,
         args.verbose,
     )
     LOGGER.log(f"State of workflow phase 1: {ReturnCode.get_message(state)}")
