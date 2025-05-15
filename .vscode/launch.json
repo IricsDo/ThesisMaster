@@ -24,6 +24,7 @@
             //     "--verbose"
             // ]
             "args": [
+                "-pt",
                 "--num_of_hidro",
                 "52",
                 "55",
@@ -33,7 +34,7 @@
                 "--output_folder",
                 "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output",
                 "--config_filename",
-                "input_003.json",
+                "E:/Work Spaces/Thesis/Code/ThesisMaster/phase1/training_params/dpa2/input_torch_small.json",
                 "--verbose"
             ]
         }

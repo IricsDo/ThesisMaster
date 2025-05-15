@@ -22,10 +22,3 @@ def plot_loss(new_directory):
         plt.close()
     except Exception as e:
         raise Exception("Can not plot the loss of model after training")
-
-
-if __name__ == "__main__":
-
-    # Step 3.2
-    new_directory = r"E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_out"
-    plot_loss(new_directory)

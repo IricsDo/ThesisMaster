@@ -50,8 +50,3 @@ def find_all_matching_files(folder: str, verbose: bool = False, index: int = 0) 
 
 def scan(data_directory: str, verbose: bool = False) -> list:
     return find_all_matching_files(data_directory, verbose)
-
-
-if __name__ == "__main__":
-    # Step 1.1
-    data_directory = r"E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_in"

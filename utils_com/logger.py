@@ -63,10 +63,3 @@ class ServerLogger(metaclass=SingletonMeta):
 
         # Log the message with the current timestamp to both file and console
         self.logger.info(message)
-
-
-# Example usage
-if __name__ == "__main__":
-    logger = ServerLogger()
-    logger.log("This is a log message.")
-    logger.log("Logging another message.")

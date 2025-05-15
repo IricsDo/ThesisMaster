@@ -50,18 +50,19 @@ def combine_npy_files(
     return
 
 
-def combine_dp_system(
-    folder_data: dict, output_folder: str, verbose: bool = False
-) -> None:
-    dict_dp_data = {}
-    for key, value in folder_data.items():
-        data = dpdata.LabeledSystem()
-        for v in value:
-            data.extend(dpdata.LabeledSystem(v, fmt="deepmd/npy"))
-        if key not in dict_dp_data.keys():
-            dict_dp_data[key] = data
+# def combine_dp_system(
+#     folder_data: dict, output_folder: str, verbose: bool = False
+# ) -> None:
+#     dict_dp_data = {}
+#     for key, value in folder_data.items():
+#         data = dpdata.LabeledSystem()
+#         for v in value:
+#             system = dpdata.LabeledSystem(v, fmt="deepmd/npy")
+#             data.append(system)
+#         if key not in dict_dp_data.keys():
+#             dict_dp_data[key] = data
 
-    return
+#     return None
 
 
 def combine(
@@ -122,20 +123,3 @@ def combine(
         )
 
     return [training_folders, validation_folders]
-
-
-if __name__ == "__main__":
-    from phase1.core_phase.step_1.data_scanning import scan, KEY_WORD_DATA_FOLDER
-    from phase1.core_phase.step_1.data_creation import creation
-    from utils.folder_utils import create_folder
-
-    # Step 1.1
-    data_directory = r"E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_in"
-    folders = scan(data_directory)
-
-    # Step 1.2
-    new_directory = r"E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_out"
-    train_val_folders = creation(new_directory, folders)
-
-    # Step 1.3
-    combine(new_directory, train_val_folders)

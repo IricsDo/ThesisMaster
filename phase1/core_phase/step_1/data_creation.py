@@ -6,9 +6,10 @@ import re
 from utils.folder_utils import create_folder, delete_folder
 from phase1.core_phase.step_1.data_scanning import scan, KEY_WORD_DATA_FOLDER
 from utils_com.logger import ServerLogger
+from typing import Tuple, List, Any
 
 
-def max_min_scale_array(arr: np.array) -> np.array:
+def max_min_scale_array(arr: np.ndarray) -> np.ndarray:
     # Compute the min and max of the array
     arr_min = arr.min()
     arr_max = arr.max()
@@ -27,6 +28,7 @@ def scale_dpdata(data_obj: dpdata.LabeledSystem) -> dpdata.LabeledSystem:
         ):  # and key == 'energies':
             data_obj.data[key] = max_min_scale_array(value)
             return data_obj
+    return data_obj
 
 
 def creation_data_from_siesta(
@@ -50,9 +52,8 @@ def creation_data_from_siesta(
     Returns:
     - A list containing the paths of the saved training and validation datasets.
     """
-
     if data_size < 0:
-        return {"", ["", ""]}
+        return {"empty": ["", ""]}
 
     data = dpdata.LabeledSystem(
         os.path.join(data_raw_path, data_keyword), fmt="siesta/aimd_output"
@@ -99,8 +100,8 @@ def creation_data_from_siesta(
         # scale_dpdata(data_training)
         # scale_dpdata(data_validation)
 
-        data_training.to_deepmd_npy(os.path.join(data_npy_path, training_path))
-        data_validation.to_deepmd_npy(os.path.join(data_npy_path, validation_path))
+        data_training.to_deepmd_npy(os.path.join(data_npy_path, training_path))  # type: ignore
+        data_validation.to_deepmd_npy(os.path.join(data_npy_path, validation_path))  # type: ignore
 
         if verbose:
             LOGGER.log(f"# {data_raw_path} -> {training_path} , {validation_path}")
@@ -114,7 +115,7 @@ def creation_data_from_siesta(
             if i in os.path.basename(data_raw_path):
                 return {i: [training_path, validation_path]}
 
-    return ["", ""]
+    return {"empty": ["", ""]}
 
 
 def creation_data(
@@ -144,6 +145,7 @@ def extract_data_size(path: str, file_name: str) -> int:
             if "siesta_move" in line:
                 value = line.split()[1]
                 return int(value)
+    return 0
 
 
 def extract_type_map(path: str, file_name) -> list:
@@ -174,13 +176,15 @@ def creation(
     num_of_hidro: list,
     task_predict: bool = False,
     verbose: bool = False,
-) -> list:
+) -> Tuple[List[Any], Any]:
     if not folders:
-        return list()
+        return [], None
 
     delete_folder(data_directory)
     create_folder(data_directory)
-    data_npy_folders = list()
+    data_npy_folders = []
+    type_map: Any = None
+
     for folder in folders:
         data_size = extract_data_size(folder, KEY_WORD_DATA_FOLDER[1])
         type_map = extract_type_map(folder, KEY_WORD_DATA_FOLDER[0])
@@ -196,14 +200,3 @@ def creation(
             )
         )
     return data_npy_folders, type_map
-
-
-if __name__ == "__main__":
-
-    # Step 1.1
-    data_directory = r"E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_in"
-    folders = scan(data_directory)
-
-    # Step 1.2
-    new_directory = r"E:\Work Spaces\Thesis\Code\ThesisMaster\data_test_out"
-    train_val_folders = creation(new_directory, folders)

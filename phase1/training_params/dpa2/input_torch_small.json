@@ -1,7 +1,9 @@
 {
   "_comment": "that's all",
   "model": {
-    "type_map":	["replace your type"],
+    "type_map": [
+      "replace your type"
+    ],
     "descriptor": {
       "type": "dpa2",
       "repinit": {
@@ -66,7 +68,7 @@
   },
   "learning_rate": {
     "type": "exp",
-    "decay_steps": 5000,
+    "decay_steps": 50,
     "start_lr": 0.001,
     "stop_lr": 3.51e-08,
     "_comment": "that's all"
@@ -84,12 +86,16 @@
   "training": {
     "stat_file": "replace your path",
     "training_data": {
-	    "systems":   ["replace your path"],
+      "systems": [
+        "replace your path"
+      ],
       "batch_size": "auto",
       "_comment": "that's all"
     },
     "validation_data": {
-	    "systems":	   ["replace your path"],
+      "systems": [
+        "replace your path"
+      ],
       "batch_size": "auto",
       "_comment": "that's all"
     },
@@ -97,9 +103,9 @@
     "warmup_steps": 0,
     "gradient_max_norm": 5.0,
     "seed": 10,
-    "disp_file":	"replace your path",
-    "disp_freq":	20,
-    "save_freq":	100,
+    "disp_file": "replace your path",
+    "disp_freq": 20,
+    "save_freq": 100,
     "_comment": "that's all"
   }
 }

@@ -43,8 +43,8 @@ LOGGER.log(f"Import library success")
 
 update_process_ui(5)
 
-TYPE_MAP = []
-FOLDER_COMBINE = []
+TYPE_MAP = str()
+FOLDER_COMBINE = list()
 
 
 def step1(
@@ -78,7 +78,7 @@ def step1(
         _, type_map_predict = creation(
             os.path.join(predict_directory, "result"),
             folders,
-            "",
+            [],
             task_predict=True,
             verbose=verbose,
         )
@@ -88,17 +88,23 @@ def step1(
     update_process_ui(30)
 
 
-def step2(new_directory: str, config_filename: str, epochs: int, tesorflow_fw: bool, pytorch_fw: bool, verbose: bool, bypass: bool = False) -> None:
+def step2(
+    new_directory: str,
+    config_filename: str,
+    epochs: int,
+    tesorflow_fw: bool,
+    pytorch_fw: bool,
+    verbose: bool,
+    bypass: bool = False,
+) -> None:
     if bypass:
         LOGGER.log(f"Bypass step 2")
         return
-    
+
     global TYPE_MAP
     global FOLDER_COMBINE
-    
-    source_training_file = os.path.abspath(
-        os.path.join("phase1", "training_params", config_filename)
-    )
+
+    source_training_file = config_filename
     new_training_file = os.path.join(new_directory, "input.json")
     type_map_value = TYPE_MAP
     training_systems = [
@@ -130,7 +136,13 @@ def step2(new_directory: str, config_filename: str, epochs: int, tesorflow_fw: b
     update_process_ui(40)
 
 
-def step3(new_directory: str, tesorflow_fw: bool, pytorch_fw: bool, verbose: bool, bypass: bool = False) -> None:
+def step3(
+    new_directory: str,
+    tesorflow_fw: bool,
+    pytorch_fw: bool,
+    verbose: bool,
+    bypass: bool = False,
+) -> None:
     if bypass:
         LOGGER.log(f"Bypass step 3")
         return
@@ -142,7 +154,12 @@ def step3(new_directory: str, tesorflow_fw: bool, pytorch_fw: bool, verbose: boo
 
 
 def step4(
-    new_directory: str, predict_directory: str, tesorflow_fw: bool, pytorch_fw: bool, verbose: bool, bypass: bool = False
+    new_directory: str,
+    predict_directory: str,
+    tesorflow_fw: bool,
+    pytorch_fw: bool,
+    verbose: bool,
+    bypass: bool = False,
 ) -> None:
     if bypass:
         LOGGER.log(f"Bypass step 4")
@@ -171,9 +188,9 @@ def step4(
             "",
             os.path.join(predict_directory, "result"),
             new_directory,
-            tesorflow_fw, 
+            tesorflow_fw,
             pytorch_fw,
-            task_predict=True
+            task_predict=True,
         )
     update_process_ui(90)
 
@@ -201,7 +218,15 @@ def workflow(
 
     if not only_make_data:
         LOGGER.log("\n***Step 2/4 in phase 1 on running!\n")
-        if run_with_traceback(step2, output_folder, config_filename, epochs, verbose):
+        if run_with_traceback(
+            step2,
+            output_folder,
+            config_filename,
+            epochs,
+            tesorflow_fw,
+            pytorch_fw,
+            verbose,
+        ):
             return ReturnCode.ERROR_CODE_2
         else:
             LOGGER.log("\n***Step 2/4 in phase 1 run successfully!\n")
@@ -213,7 +238,9 @@ def workflow(
             LOGGER.log("\n***Step 3/4 in phase 1 run successfully!\n")
 
         LOGGER.log("\n***Step 4/4 in phase 1 on running!\n")
-        if run_with_traceback(step4, output_folder, predict_folder, verbose):
+        if run_with_traceback(
+            step4, output_folder, predict_folder, tesorflow_fw, pytorch_fw, verbose
+        ):
             return ReturnCode.ERROR_CODE_4
         else:
             LOGGER.log("\n***Step 4/4 in phase 1 run successfully!\n")
