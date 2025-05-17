@@ -60,7 +60,7 @@ def modify(
     data["training"]["disp_freq"] = int(numb_steps / 50)
     data["training"]["save_freq"] = int(numb_steps / 10)
     if tesorflow_fw:
-        data["model"]["learning_rate"]["decay_steps"] = recommend_decay_steps(
+        data["learning_rate"]["decay_steps"] = recommend_decay_steps(
             numb_steps
         )
         data["training"]["tensorboard_freq"] = int(numb_steps / 10)

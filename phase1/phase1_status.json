@@ -1,0 +1,46 @@
+{
+    "input_folder": "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_input",
+    "output_folder": "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output",
+    "phase1": {
+        "step_1": {
+            "FOLDER_COMBINE": [
+                {
+                    "52": [
+                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\training_data_52_10",
+                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\training_data_52_9"
+                    ],
+                    "55": [
+                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\training_data_55_10",
+                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\training_data_55_9"
+                    ],
+                    "58": [
+                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\training_data_58_4",
+                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\training_data_58_5"
+                    ]
+                },
+                {
+                    "52": [
+                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\validation_data_52_10",
+                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\validation_data_52_9"
+                    ],
+                    "55": [
+                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\validation_data_55_10",
+                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\validation_data_55_9"
+                    ],
+                    "58": [
+                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\validation_data_58_4",
+                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\validation_data_58_5"
+                    ]
+                }
+            ],
+            "TYPE_MAP": [
+                "Si",
+                "C",
+                "H"
+            ]
+        },
+        "step_2": {},
+        "step_3": {},
+        "step_4": {}
+    }
+}

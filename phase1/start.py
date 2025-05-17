@@ -5,6 +5,7 @@ from random import randint
 sys.path.append(os.getcwd())
 import traceback
 import argparse
+import json
 
 from utils_com.logger import ServerLogger
 
@@ -26,6 +27,7 @@ try:
     from core_phase.step_4.post_process_data import collect_data_to_one
     from utils_com.traceback_func import run_with_traceback
     from config.return_code import ReturnCode
+    from utils.file_utils import is_valid_json, load_json
 
 except Exception as e:
     traceback.print_exc()
@@ -52,6 +54,7 @@ def step1(
     new_directory: str,
     predict_directory: str,
     num_of_hidro: list,
+    load_phase1_status: bool,
     verbose: bool,
     bypass: bool = False,
 ) -> None:
@@ -61,39 +64,68 @@ def step1(
     global TYPE_MAP
     global FOLDER_COMBINE
 
-    folders = scan(data_directory)
-    update_process_ui(10)
+    status_path =  os.path.join("phase1/phase1_status.json") 
+    data = load_json(status_path)
 
-    train_val_folders, type_map_train = creation(
-        new_directory, folders, num_of_hidro, task_predict=False, verbose=verbose
-    )
-    update_process_ui(20)
+    is_data_available = False
 
-    FOLDER_COMBINE = combine(new_directory, train_val_folders)
-    update_process_ui(25)
-    TYPE_MAP = type_map_train
+    if load_phase1_status and (data["input_folder"] == data_directory and data["output_folder"] == new_directory):
+        try:
+            FOLDER_COMBINE = data["phase1"]["step_1"]["FOLDER_COMBINE"]
+            TYPE_MAP = data["phase1"]["step_1"]["TYPE_MAP"]
 
-    if predict_directory:
-        folders = scan(predict_directory)
-        _, type_map_predict = creation(
-            os.path.join(predict_directory, "result"),
-            folders,
-            [],
-            task_predict=True,
-            verbose=verbose,
+            LOGGER.log("Step 1 found data store in status file, load status")
+            is_data_available = True
+        except:
+            LOGGER.log("Step 1 *NOT* found data store in status file, run again")
+            is_data_available = False
+
+    if not is_data_available:
+
+        data["input_folder"] = data_directory
+        data["output_folder"] = new_directory
+
+        folders = scan(data_directory)
+        update_process_ui(10)
+
+        train_val_folders, type_map_train = creation(
+            new_directory, folders, num_of_hidro, task_predict=False, verbose=verbose
         )
+        update_process_ui(20)
 
-        if TYPE_MAP != type_map_predict:
-            raise Exception("The data for training and prediction is different types.")
+        FOLDER_COMBINE = combine(new_directory, train_val_folders)
+        data["phase1"]["step_1"]["FOLDER_COMBINE"] = FOLDER_COMBINE
+
+        update_process_ui(25)
+        
+        TYPE_MAP = type_map_train
+        data["phase1"]["step_1"]["TYPE_MAP"] = TYPE_MAP
+
+        if predict_directory:
+            folders = scan(predict_directory)
+            _, type_map_predict = creation(
+                os.path.join(predict_directory, "result"),
+                folders,
+                [],
+                task_predict=True,
+                verbose=verbose,
+            )
+
+            if TYPE_MAP != type_map_predict:
+                raise Exception("The data for training and prediction is different types.")
+            
+    with open(status_path, "w") as f:
+        json.dump(data, f, indent=4)
     update_process_ui(30)
 
 
 def step2(
     new_directory: str,
-    config_filename: str,
+    training_json: str,
     epochs: int,
     tesorflow_fw: bool,
     pytorch_fw: bool,
+    load_phase1_status: bool,
     verbose: bool,
     bypass: bool = False,
 ) -> None:
@@ -104,7 +136,7 @@ def step2(
     global TYPE_MAP
     global FOLDER_COMBINE
 
-    source_training_file = config_filename
+    source_training_file = training_json
     new_training_file = os.path.join(new_directory, "input.json")
     type_map_value = TYPE_MAP
     training_systems = [
@@ -140,6 +172,7 @@ def step3(
     new_directory: str,
     tesorflow_fw: bool,
     pytorch_fw: bool,
+    load_phase1_status: bool,
     verbose: bool,
     bypass: bool = False,
 ) -> None:
@@ -158,6 +191,7 @@ def step4(
     predict_directory: str,
     tesorflow_fw: bool,
     pytorch_fw: bool,
+    load_phase1_status: bool,
     verbose: bool,
     bypass: bool = False,
 ) -> None:
@@ -199,18 +233,45 @@ def workflow(
     input_folder: str,
     output_folder: str,
     predict_folder: str,
-    config_filename: str,
+    training_json: str,
     epochs: int,
     num_of_hidro: list,
     only_make_data: bool,
     tesorflow_fw: bool,
     pytorch_fw: bool,
+    load_phase1_status: bool,
     verbose: bool,
 ) -> int:
+    
+    if load_phase1_status:
+        phase1_status = os.path.join("phase1/phase1_status.json") 
+
+        default_data = {
+            "input_folder": input_folder,
+            "output_folder": output_folder,
+            "phase1": {
+                "step_1": {
+                },
+                "step_2": {
+                },
+                "step_3": {
+                },
+                "step_4": {
+                }
+            }
+        }
+        if not os.path.exists(phase1_status) or not is_valid_json(phase1_status):
+            # Create or overwrite the file with correct structure
+            with open(phase1_status, "w") as f:
+                json.dump(default_data, f, indent=4)
+            LOGGER.log(f"{phase1_status} created or overwritten with default structure.")
+        else:
+            LOGGER.log(f"{phase1_status} already exists and contains valid JSON.")
+
 
     LOGGER.log("\n***Step 1/4 in phase 1 on running!\n")
     if run_with_traceback(
-        step1, input_folder, output_folder, predict_folder, num_of_hidro, verbose
+        step1, input_folder, output_folder, predict_folder, num_of_hidro, load_phase1_status, verbose
     ):
         return ReturnCode.ERROR_CODE_1
     else:
@@ -221,10 +282,11 @@ def workflow(
         if run_with_traceback(
             step2,
             output_folder,
-            config_filename,
+            training_json,
             epochs,
             tesorflow_fw,
             pytorch_fw,
+            load_phase1_status,
             verbose,
         ):
             return ReturnCode.ERROR_CODE_2
@@ -232,14 +294,14 @@ def workflow(
             LOGGER.log("\n***Step 2/4 in phase 1 run successfully!\n")
 
         LOGGER.log("\n***Step 3/4 in phase 1 on running!\n")
-        if run_with_traceback(step3, output_folder, tesorflow_fw, pytorch_fw, verbose):
+        if run_with_traceback(step3, output_folder, tesorflow_fw, pytorch_fw, load_phase1_status, verbose):
             return ReturnCode.ERROR_CODE_3
         else:
             LOGGER.log("\n***Step 3/4 in phase 1 run successfully!\n")
 
         LOGGER.log("\n***Step 4/4 in phase 1 on running!\n")
         if run_with_traceback(
-            step4, output_folder, predict_folder, tesorflow_fw, pytorch_fw, verbose
+            step4, output_folder, predict_folder, tesorflow_fw, pytorch_fw, load_phase1_status, verbose
         ):
             return ReturnCode.ERROR_CODE_4
         else:
@@ -319,6 +381,13 @@ def main():
     )
 
     parser.add_argument(
+        "-lps1",
+        "--load_phase1_status",
+        action="store_true",
+        help="If system already use this data before, don't need to create data again. Use data are available on folder",
+    )
+
+    parser.add_argument(
         "-noh",
         "--num_of_hidro",
         metavar="N",
@@ -328,8 +397,8 @@ def main():
     )
 
     parser.add_argument(
-        "-cfg",
-        "--config_filename",
+        "-trainj",
+        "--training_json",
         type=str,
         required=True,
         help="The training file name is used to configure all parameters.",
@@ -347,7 +416,7 @@ def main():
         LOGGER.log(f"Error: Input folder '{args.input_folder}' does not exist.")
         return
 
-    if not args.config_filename.endswith(".json"):
+    if not args.training_json.endswith(".json"):
         LOGGER.log(f"The config file not vaild, try again or check the correct file")
         return
 
@@ -369,12 +438,13 @@ def main():
         args.input_folder,
         args.output_folder,
         args.predict_folder,
-        args.config_filename,
+        args.training_json,
         args.epochs,
         args.num_of_hidro,
         args.only_make_data,
         args.tesorflow,
         args.pytorch,
+        args.load_phase1_status,
         args.verbose,
     )
     LOGGER.log(f"State of workflow phase 1: {ReturnCode.get_message(state)}")
