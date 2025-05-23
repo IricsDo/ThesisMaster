@@ -75,6 +75,8 @@ def step1(
             TYPE_MAP = data["phase1"]["step_1"]["TYPE_MAP"]
 
             LOGGER.log("Step 1 found data store in status file, load status")
+            LOGGER.log(FOLDER_COMBINE)
+            LOGGER.log(TYPE_MAP)
             is_data_available = True
         except:
             LOGGER.log("Step 1 *NOT* found data store in status file, run again")
@@ -113,7 +115,9 @@ def step1(
 
             if TYPE_MAP != type_map_predict:
                 raise Exception("The data for training and prediction is different types.")
-            
+    
+    data["phase1"]["step_1"]["success"] = True
+
     with open(status_path, "w") as f:
         json.dump(data, f, indent=4)
     update_process_ui(30)
@@ -136,35 +140,62 @@ def step2(
     global TYPE_MAP
     global FOLDER_COMBINE
 
-    source_training_file = training_json
-    new_training_file = os.path.join(new_directory, "input.json")
-    type_map_value = TYPE_MAP
-    training_systems = [
-        item for sublist in FOLDER_COMBINE[0].values() for item in sublist
-    ]
-    validation_systems = [
-        item for sublist in FOLDER_COMBINE[1].values() for item in sublist
-    ]
-    disp_file_value = os.path.join(new_directory, "lcurve.out")
-    profiling_file = os.path.join(new_directory, "timeline.json")
-    tensorboard_log_dir = os.path.join(new_directory, "log")
-    stat_file = os.path.join(new_directory, "dpa2.hdf5")
-    numb_steps = epochs
-    setup_training_input(
-        source_training_file,
-        new_training_file,
-        type_map_value,
-        training_systems,
-        validation_systems,
-        disp_file_value,
-        profiling_file,
-        tensorboard_log_dir,
-        stat_file,
-        numb_steps,
-        tesorflow_fw,
-        pytorch_fw,
-        verbose,
-    )
+    status_path =  os.path.join("phase1/phase1_status.json") 
+    data = load_json(status_path)
+
+    is_data_available = False
+    config_training_file = ""
+
+    if load_phase1_status:
+        try:
+            new_training_file = data["phase1"]["step_2"]["new_training_file"]
+            config_training_file = data["phase1"]["step_2"]["config_training_file"]
+            LOGGER.log("Step 2 found data store in status file, load status")
+            LOGGER.log(new_training_file)
+            LOGGER.log(training_json)
+            is_data_available = True
+        except:
+            LOGGER.log("Step 2 *NOT* found data store in status file, run again")
+            is_data_available = False
+    
+    if not is_data_available or (config_training_file != training_json):
+        config_training_file = training_json
+        new_training_file = os.path.join(new_directory, "input.json")
+        data["phase1"]["step_2"]["new_training_file"] = new_training_file
+        data["phase1"]["step_2"]["config_training_file"] = config_training_file
+
+        type_map_value = TYPE_MAP
+        training_systems = [
+            item for sublist in FOLDER_COMBINE[0].values() for item in sublist
+        ]
+        validation_systems = [
+            item for sublist in FOLDER_COMBINE[1].values() for item in sublist
+        ]
+        disp_file_value = os.path.join(new_directory, "lcurve.out")
+        profiling_file = os.path.join(new_directory, "timeline.json")
+        tensorboard_log_dir = os.path.join(new_directory, "log")
+        stat_file = os.path.join(new_directory, "dpa2.hdf5")
+        numb_steps = epochs
+        setup_training_input(
+            config_training_file,
+            new_training_file,
+            type_map_value,
+            training_systems,
+            validation_systems,
+            disp_file_value,
+            profiling_file,
+            tensorboard_log_dir,
+            stat_file,
+            numb_steps,
+            tesorflow_fw,
+            pytorch_fw,
+            verbose,
+        )
+    
+    data["phase1"]["step_2"]["success"] = True
+
+    with open(status_path, "w") as f:
+        json.dump(data, f, indent=4)
     update_process_ui(40)
 
 
@@ -179,10 +210,34 @@ def step3(
     if bypass:
         LOGGER.log(f"Bypass step 3")
         return
-    train(new_directory, tesorflow_fw, pytorch_fw, verbose)
-    update_process_ui(60)
+    
+    status_path =  os.path.join("phase1/phase1_status.json") 
+    data = load_json(status_path)
 
-    plot_loss(new_directory)
+    is_data_available = False
+
+    if load_phase1_status:
+        try:
+            model_path = data["phase1"]["step_3"]["model_path"]
+            LOGGER.log("Step 3 found data store in status file, load status")
+            LOGGER.log(model_path)
+            is_data_available = True
+        except:
+            LOGGER.log("Step 3 *NOT* found data store in status file, run again")
+            is_data_available = False
+
+    if not is_data_available:
+        train(new_directory, tesorflow_fw, pytorch_fw, verbose)
+        data["phase1"]["step_3"]["model_path"] = os.path.join(new_directory, "graph.pb" if tesorflow_fw else "graph.pth")
+        update_process_ui(60)
+
+        plot_loss(new_directory)
+
+
+    data["phase1"]["step_3"]["success"] = True
+
+    with open(status_path, "w") as f:
+        json.dump(data, f, indent=4)
     update_process_ui(65)
 
 
@@ -200,22 +255,40 @@ def step4(
         return
     global FOLDER_COMBINE
 
-    freeze(new_directory, tesorflow_fw, pytorch_fw, verbose)
-    update_process_ui(70)
+    status_path =  os.path.join("phase1/phase1_status.json") 
+    data = load_json(status_path)
 
-    compress(new_directory, tesorflow_fw, pytorch_fw, verbose)
-    update_process_ui(75)
+    is_data_available = False
 
-    validation_systems = [
-        item for sublist in FOLDER_COMBINE[1].values() for item in sublist
-    ]
-    new_path = collect_data_to_one(new_directory, validation_systems)
+    if load_phase1_status:
+        try:
+            image_loss = data["phase1"]["step_4"]["image_loss"]
+            LOGGER.log("Step 4 found data store in status file, load status")
+            LOGGER.log(image_loss)
+            is_data_available = True
+        except:
+            LOGGER.log("Step 4 *NOT* found data store in status file, run again")
+            is_data_available = False
 
-    test(new_directory, tesorflow_fw, pytorch_fw, verbose)
-    update_process_ui(80)
+    if not is_data_available:
+        freeze(new_directory, tesorflow_fw, pytorch_fw, verbose)
+        update_process_ui(70)
 
-    vaild(new_directory, new_path, "", tesorflow_fw, pytorch_fw, task_predict=False)
-    update_process_ui(85)
+        compress(new_directory, tesorflow_fw, pytorch_fw, verbose)
+        update_process_ui(75)
+
+        validation_systems = [
+            item for sublist in FOLDER_COMBINE[1].values() for item in sublist
+        ]
+        new_path = collect_data_to_one(new_directory, validation_systems)
+
+        test(new_directory, tesorflow_fw, pytorch_fw, verbose)
+        update_process_ui(80)
+
+        vaild(new_directory, new_path, "", tesorflow_fw, pytorch_fw, task_predict=False)
+        update_process_ui(85)
+
+        data["phase1"]["step_4"]["image_loss"] = os.path.join(new_directory, "output_loss.png")
 
     if predict_directory:
         predict(
@@ -226,6 +299,11 @@ def step4(
             pytorch_fw,
             task_predict=True,
         )
+
+    data["phase1"]["step_4"]["success"] = True
+
+    with open(status_path, "w") as f:
+        json.dump(data, f, indent=4)
     update_process_ui(90)
 
 
@@ -251,12 +329,16 @@ def workflow(
             "output_folder": output_folder,
             "phase1": {
                 "step_1": {
+                    "success" : False
                 },
                 "step_2": {
+                    "success" : False
                 },
                 "step_3": {
+                    "success" : False
                 },
                 "step_4": {
+                    "success" : False
                 }
             }
         }

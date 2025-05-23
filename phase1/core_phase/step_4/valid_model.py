@@ -3,6 +3,8 @@ import dpdata
 import numpy as np
 import matplotlib.pyplot as plt
 
+from utils_com.logger import ServerLogger
+
 
 def vaild(
     new_directory: str,
@@ -13,11 +15,16 @@ def vaild(
     task_predict: bool = False,
 ) -> None:
 
+    LOGGER = ServerLogger()
+
     if tesorflow_fw and pytorch_fw:
         raise Exception("Backend not vaild!")
     try:
         for data in os.listdir(new_path):
             data_path = os.path.join(new_path, data)
+            if not os.path.isdir(data_path):
+                LOGGER.log(f"{data_path} not vaild, find another file")
+                continue
             training_systems = dpdata.LabeledSystem(
                 data_path,
                 fmt="deepmd/npy",

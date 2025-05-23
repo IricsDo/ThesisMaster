@@ -1,35 +1,71 @@
 {
-    "input_folder": "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_input",
-    "output_folder": "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output",
+    "input_folder": "/content/drive/MyDrive/Thesis_Code/52_55_58_input",
+    "output_folder": "/content/drive/MyDrive/Thesis_Code/52_55_58_output",
     "phase1": {
         "step_1": {
             "FOLDER_COMBINE": [
                 {
+                    "58": [
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_58_1",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_58_3",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_58_2",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_58_4",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_58_5"
+                    ],
                     "52": [
-                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\training_data_52_10",
-                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\training_data_52_9"
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_52_2",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_52_6",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_52_4",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_52_1",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_52_10",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_52_5",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_52_8",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_52_9",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_52_7",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_52_3"
                     ],
                     "55": [
-                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\training_data_55_10",
-                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\training_data_55_9"
-                    ],
-                    "58": [
-                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\training_data_58_4",
-                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\training_data_58_5"
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_55_3",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_55_10",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_55_8",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_55_6",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_55_9",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_55_2",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_55_5",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_55_4",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/training_data_55_7"
                     ]
                 },
                 {
+                    "58": [
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_58_1",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_58_3",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_58_2",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_58_4",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_58_5"
+                    ],
                     "52": [
-                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\validation_data_52_10",
-                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\validation_data_52_9"
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_52_2",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_52_6",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_52_4",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_52_1",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_52_10",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_52_5",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_52_8",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_52_9",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_52_7",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_52_3"
                     ],
                     "55": [
-                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\validation_data_55_10",
-                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\validation_data_55_9"
-                    ],
-                    "58": [
-                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\validation_data_58_4",
-                        "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output\\validation_data_58_5"
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_55_3",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_55_10",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_55_8",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_55_6",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_55_9",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_55_2",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_55_5",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_55_4",
+                        "/content/drive/MyDrive/Thesis_Code/52_55_58_output/validation_data_55_7"
                     ]
                 }
             ],
@@ -37,10 +73,20 @@
                 "Si",
                 "C",
                 "H"
-            ]
+            ],
+            "success" : "True"
         },
-        "step_2": {},
-        "step_3": {},
-        "step_4": {}
+        "step_2": {
+            "new_training_file" : "/content/drive/MyDrive/Thesis_Code/52_55_58_output/input.json", 
+            "success" : "True"
+        },
+        "step_3": {
+            "model_path": "/content/drive/MyDrive/Thesis_Code/52_55_58_output/graph.pb",
+            "success" : "True"
+        },
+        "step_4": {
+            "image_loss": "/content/drive/MyDrive/Thesis_Code/52_55_58_output/output_loss.png",
+            "success" : "False"
+        }
     }
 }

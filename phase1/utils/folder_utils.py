@@ -48,7 +48,7 @@ def copy_one_file(source: str, destination: str, verbose: bool = False) -> None:
 
 
 def move_many_to_one(
-    source: list[str], destination: str, verbose: bool = False, copy: bool = False
+    source: list[str], destination: str, copy: bool = False, verbose: bool = False
 ) -> None:
     """
     Moves or copies multiple folders or files into a single destination folder.

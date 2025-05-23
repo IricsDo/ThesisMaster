@@ -167,3 +167,5 @@ phase1/reference/DeePMD_SiC.ipynb
 logs/
 phase1/training_params/*/*.png
 phase1/training_params/*/*.jpg
+phase1/training_params/*/*.zip
+
