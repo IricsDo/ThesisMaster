@@ -168,4 +168,5 @@ logs/
 phase1/training_params/*/*.png
 phase1/training_params/*/*.jpg
 phase1/training_params/*/*.zip
+phase1/test/images_predict/*.png
 
