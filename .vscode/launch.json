@@ -10,32 +10,25 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            // "args": [
-            //     "--num_of_hidro",
-            //     "52",
-            //     "55",
-            //     "58",
-            //     "--input_folder",
-            //     "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/52_55_58_input",
-            //     "--output_folder",
-            //     "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/52_55_58_output",
-            //     "--predict_folder",
-            //     "/media/hoanguyen/0AFECAD26E04553D/DeePMD/SiC-H data/112_predict",
-            //     "--verbose"
-            // ]
             "args": [
                 "-tf",
                 "--num_of_hidro",
+                "4",
+                "10",
+                "19",
+                "28",
                 "52",
                 "55",
                 "58",
+                "100",
+                "112",
                 "--input_folder",
-                "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_input",
+                "E:/Work Spaces/Thesis/Data/SiCH_v2/input",
                 "--output_folder",
-                "E:/Work Spaces/Thesis/Data/Si-C-H/52_55_58_test_output",
+                "E:/Work Spaces/Thesis/Data/SiCH_v2/output",
                 "--training_json",
-                "E:/Work Spaces/Thesis/Code/ThesisMaster/phase1/training_params/se_e2_a/input_02_01.json",
-                "--load_phase1_status",
+                "E:/Work Spaces/Thesis/Code/ThesisMaster/phase1/training_params/best/input.json",
+                "--only_make_data",
                 "--verbose"
             ]
         }

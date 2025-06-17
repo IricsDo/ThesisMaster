@@ -85,6 +85,9 @@ def creation_data_from_siesta(
         if not num_of_hidro:
             raise Exception("Unknow option to get number of atom type")
 
+        data_training = dpdata.LabeledSystem()
+        data_validation = dpdata.LabeledSystem()
+        
         index_validation = np.random.choice(
             data_size, size=int(data_size * 0.2), replace=False
         )
