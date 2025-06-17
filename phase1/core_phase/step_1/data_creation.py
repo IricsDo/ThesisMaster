@@ -36,7 +36,7 @@ def creation_data_from_siesta(
     data_npy_path: str,
     data_size: int,
     data_keyword: str,
-    option_keywork: list = [],
+    num_of_hidro: list = [],
     task_predict: bool = False,
     verbose: bool = False,
 ) -> dict:
@@ -82,7 +82,7 @@ def creation_data_from_siesta(
 
     else:
 
-        if not option_keywork:
+        if not num_of_hidro:
             raise Exception("Unknow option to get number of atom type")
 
         index_validation = np.random.choice(
@@ -111,7 +111,7 @@ def creation_data_from_siesta(
                 "# the validation data contains %d frames" % len(data_validation)
             )
 
-        for i in option_keywork:
+        for i in num_of_hidro:
             if i in os.path.basename(data_raw_path):
                 return {i: [training_path, validation_path]}
 
