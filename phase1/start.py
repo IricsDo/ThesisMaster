@@ -103,18 +103,20 @@ def step1(
         TYPE_MAP = type_map_train
         data["phase1"]["step_1"]["TYPE_MAP"] = TYPE_MAP
 
-        if predict_directory:
-            folders = scan(predict_directory)
-            _, type_map_predict = creation(
-                os.path.join(predict_directory, "result"),
-                folders,
-                [],
-                task_predict=True,
-                verbose=verbose,
-            )
+    if predict_directory and (data["predict_folder"] != predict_directory):
+        LOGGER.log("Step 1 found new prediction folder, make data to predict")
+        data["predict_folder"] = predict_directory
+        folders = scan(predict_directory)
+        _, type_map_predict = creation(
+            os.path.join(predict_directory, "result"),
+            folders,
+            [],
+            task_predict=True,
+            verbose=verbose,
+        )
 
-            if TYPE_MAP != type_map_predict:
-                raise Exception("The data for training and prediction is different types.")
+        if TYPE_MAP != type_map_predict:
+            raise Exception("The data for training and prediction is different types.")
     
     data["phase1"]["step_1"]["success"] = True
 
@@ -327,6 +329,7 @@ def workflow(
         default_data = {
             "input_folder": input_folder,
             "output_folder": output_folder,
+            "predict_folder": predict_folder,
             "phase1": {
                 "step_1": {
                     "success" : False

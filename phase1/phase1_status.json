@@ -1,6 +1,7 @@
 {
     "input_folder": "E:/Work Spaces/Thesis/Data/SiCH_v2/input",
     "output_folder": "E:/Work Spaces/Thesis/Data/SiCH_v2/output",
+    "predict_folder": "E:/Work Spaces/Thesis/Data/SiCH_v2/predict",
     "phase1": {
         "step_1": {
             "success": true,
