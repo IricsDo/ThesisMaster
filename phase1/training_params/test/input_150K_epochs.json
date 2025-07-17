@@ -1,0 +1,64 @@
+{
+    "_comment": "model parameters",
+    "model": {
+        "type_map": ["replace your type"],
+        "descriptor": {
+            "type": "se_e3",
+            "sel": "auto",
+            "rcut_smth": 0.50,
+            "rcut": 6.00,
+            "neuron": [16, 16, 32, 64, 128],
+            "resnet_dt": false,
+            "seed": 1,
+            "_comment": "descriptor settings"
+        },
+        "fitting_net": {
+            "neuron": [128, 256, 256],
+            "resnet_dt": true,
+            "seed": 1,
+            "_comment": "fitting network settings"
+        },
+        "_comment": "model architecture"
+    },
+
+    "learning_rate": {
+        "type": "exp",
+        "decay_steps": 50000,
+        "start_lr": 0.002,
+        "stop_lr": 1e-6,
+        "_comment": "learning rate schedule"
+    },
+
+    "loss": {
+        "type": "ener",
+        "start_pref_e": 1,
+        "limit_pref_e": 1,
+        "start_pref_f": 10,
+        "limit_pref_f": 1,
+        "start_pref_v": 0,
+        "limit_pref_v": 0,
+        "_comment": "loss weights"
+    },
+
+    "training": {
+        "training_data": {
+            "systems": ["replace your training data path"],
+            "batch_size": "auto",
+            "_comment": "training dataset"
+        },
+        "validation_data": {
+            "systems": ["replace your validation data path"],
+            "batch_size": "auto",
+            "numb_btch": 1,
+            "_comment": "validation dataset"
+        },
+        "numb_steps": 150000,
+        "seed": 10,
+        "disp_file": "replace your disp file path",
+        "disp_freq": 100,
+        "save_freq": 5000,
+        "_comment": "training process settings"
+    },
+
+    "_comment": "end of config"
+}
