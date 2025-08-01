@@ -54,6 +54,7 @@ def step1(
     new_directory: str,
     predict_directory: str,
     num_of_hidro: list,
+    min_len_data: int,
     load_phase1_status: bool,
     verbose: bool,
     bypass: bool = False,
@@ -91,7 +92,7 @@ def step1(
         update_process_ui(10)
 
         train_val_folders, type_map_train = creation(
-            new_directory, folders, num_of_hidro, task_predict=False, verbose=verbose
+            new_directory, folders, num_of_hidro, min_len_data, task_predict=False, verbose=verbose
         )
         update_process_ui(20)
 
@@ -111,6 +112,7 @@ def step1(
             os.path.join(predict_directory, "result"),
             folders,
             [],
+            0,
             task_predict=True,
             verbose=verbose,
         )
@@ -316,6 +318,7 @@ def workflow(
     training_json: str,
     epochs: int,
     num_of_hidro: list,
+    min_len_data: int,
     only_make_data: bool,
     tesorflow_fw: bool,
     pytorch_fw: bool,
@@ -356,7 +359,7 @@ def workflow(
 
     LOGGER.log("\n***Step 1/4 in phase 1 on running!\n")
     if run_with_traceback(
-        step1, input_folder, output_folder, predict_folder, num_of_hidro, load_phase1_status, verbose
+        step1, input_folder, output_folder, predict_folder, num_of_hidro, min_len_data, load_phase1_status, verbose
     ):
         return ReturnCode.ERROR_CODE_1
     else:
@@ -480,6 +483,14 @@ def main():
         nargs="*",
         help="List of different atomic systems.",
     )
+    
+    parser.add_argument(
+        "-mld",
+        "--min_len_data",
+        type=int,
+        default=0,
+        help="Number of minimum data length.",
+    )
 
     parser.add_argument(
         "-trainj",
@@ -526,6 +537,7 @@ def main():
         args.training_json,
         args.epochs,
         args.num_of_hidro,
+        args.min_len_data,
         args.only_make_data,
         args.tesorflow,
         args.pytorch,

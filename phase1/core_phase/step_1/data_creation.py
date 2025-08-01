@@ -37,6 +37,7 @@ def creation_data_from_siesta(
     data_size: int,
     data_keyword: str,
     num_of_hidro: list = [],
+    min_len_data: int = 0,
     task_predict: bool = False,
     verbose: bool = False,
 ) -> dict:
@@ -84,6 +85,12 @@ def creation_data_from_siesta(
 
         if not num_of_hidro:
             raise Exception("Unknow option to get number of atom type")
+        
+        if data_size <= min_len_data:
+            LOGGER.log(
+                f"The data size {data_size} is less than the minimum required {min_len_data}, by pass {data_raw_path}"
+            )
+            return {"empty": ["", ""]} 
 
         data_training = dpdata.LabeledSystem()
         data_validation = dpdata.LabeledSystem()
@@ -127,6 +134,7 @@ def creation_data(
     data_size: int,
     data_keyword: str,
     num_of_hidro: list,
+    min_len_data : int,
     task_predict: bool = False,
     verbose: bool = False,
 ) -> dict:
@@ -137,6 +145,7 @@ def creation_data(
         data_size,
         data_keyword,
         num_of_hidro,
+        min_len_data,
         task_predict,
         verbose,
     )
@@ -177,6 +186,7 @@ def creation(
     data_directory: str,
     folders: list,
     num_of_hidro: list,
+    min_len_data: int,
     task_predict: bool = False,
     verbose: bool = False,
 ) -> Tuple[List[Any], Any]:
@@ -191,15 +201,15 @@ def creation(
     for folder in folders:
         data_size = extract_data_size(folder, KEY_WORD_DATA_FOLDER[1])
         type_map = extract_type_map(folder, KEY_WORD_DATA_FOLDER[0])
-        data_npy_folders.append(
-            creation_data(
+        result = creation_data(
                 folder,
                 data_directory,
                 data_size,
                 KEY_WORD_DATA_FOLDER[0],
                 num_of_hidro,
+                min_len_data,
                 task_predict,
                 verbose,
             )
-        )
+        data_npy_folders.append(result)
     return data_npy_folders, type_map
