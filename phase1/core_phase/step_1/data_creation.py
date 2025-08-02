@@ -211,5 +211,6 @@ def creation(
                 task_predict,
                 verbose,
             )
-        data_npy_folders.append(result)
+        if result and "empty" not in result:
+            data_npy_folders.append(result)
     return data_npy_folders, type_map
