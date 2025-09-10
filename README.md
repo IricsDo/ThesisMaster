@@ -93,11 +93,11 @@ cd ThesisMaster
 
 ## Usage
 
-The pipeline is controlled via `start.py`. It supports **training** and **predict-only** modes.
+The pipeline is controlled via `phase1/start.py`. It supports **training** and **predict-only** modes.
 
 ### Training Example
 ```bash
-python start.py \
+python3 phase1/start.py \
   -i /data/train_input \
   -o /data/train_out \
   -trainj /configs/train_config.json \
@@ -107,7 +107,7 @@ python start.py \
 
 ### Make-Data Only
 ```bash
-python start.py \
+python3 phase1/start.py \
   -i /data/train_input \
   -o /data/train_out \
   -noh 4 10 19 28 52 55 58 100 112 \
@@ -116,7 +116,7 @@ python start.py \
 
 ### Predict Example
 ```bash
-python start.py \
+python3 phase1/start.py \
   -pred_only \
   -mp /models/best/graph.pth \
   -p /data/predict_in \

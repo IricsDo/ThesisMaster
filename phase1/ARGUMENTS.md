@@ -1,12 +1,12 @@
-# `start.py` — Argument Guide
+# `phase1/start.py` — Argument Guide
 
-This document explains how to use the CLI arguments supported by `start.py`, how the two execution modes work, and which arguments conflict with or disable each other.
+This document explains how to use the CLI arguments supported by `phase1/start.py`, how the two execution modes work, and which arguments conflict with or disable each other.
 
 ---
 
 ## 1) Execution Modes
 
-`start.py` supports **two independent modes**. Validation rules are applied based on the chosen mode:
+`phase1/start.py` supports **two independent modes**. Validation rules are applied based on the chosen mode:
 
 1. **Training mode** (default): runs the full Phase 1 pipeline with up to 4 steps  
    `step1 → step2 → step3 → step4`  
@@ -97,37 +97,37 @@ When `--tensorflow` and `--pytorch` are **both omitted** in predict-only mode, t
 
 ### 6.1 Full training (4 steps)
 ```bash
-python start.py   -i /data/train_input   -o /data/train_out   -trainj /configs/train_config.json   -noh 4 10 19 28 52 55 58 100 112   -pt   -lps1   -v
+python3 phase1/start.py   -i /data/train_input   -o /data/train_out   -trainj /configs/train_config.json   -noh 4 10 19 28 52 55 58 100 112   -pt   -lps1   -v
 ```
 
 ### 6.2 Make-data only (run step1, skip steps 2–4)
 ```bash
-python start.py   -i /data/train_input   -o /data/train_out   -noh 4 10 19 28 52 55 58 100 112   -omd   -v
+python3 phase1/start.py   -i /data/train_input   -o /data/train_out   -noh 4 10 19 28 52 55 58 100 112   -omd   -v
 ```
 > If your local validation still enforces `--training_json`, provide a placeholder: `-trainj /configs/dummy.json`.
 
 ### 6.3 Predict-only (model **file**, backend auto-detected)
 ```bash
 # PyTorch (.pth)
-python start.py   -pred_only   -mp /models/best/graph.pth   -p /data/predict_in   -v
+python3 phase1/start.py   -pred_only   -mp /models/best/graph.pth   -p /data/predict_in   -v
 
 # TensorFlow (.pb)
-python start.py   -pred_only   -mp /models/tf/graph.pb   -p /data/predict_in
+python3 phase1/start.py   -pred_only   -mp /models/tf/graph.pb   -p /data/predict_in
 ```
 
 ### 6.4 Predict-only (model **directory**, canonical or newest)
 ```bash
-python start.py   -pred_only   -mp /models/best_dir   -p /data/predict_in
+python3 phase1/start.py   -pred_only   -mp /models/best_dir   -p /data/predict_in
 ```
 
 ### 6.5 Predict-only (directory contains both `.pb` and `.pth` → **must** pick one)
 ```bash
-python start.py   -pred_only   -mp /models/mixed   -p /data/predict_in   -pt        # or -tf
+python3 phase1/start.py   -pred_only   -mp /models/mixed   -p /data/predict_in   -pt        # or -tf
 ```
 
 ### 6.6 Predict-only (skip preparing `<predict_folder>/result`)
 ```bash
-python start.py   -pred_only   -mp /models/best/graph.pth   -p /data/predict_in   --skip_prepare_predict_data
+python3 phase1/start.py   -pred_only   -mp /models/best/graph.pth   -p /data/predict_in   --skip_prepare_predict_data
 ```
 
 ---
