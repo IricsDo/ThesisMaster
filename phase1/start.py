@@ -27,8 +27,15 @@ try:
     from core_phase.step_4.post_process_data import collect_data_to_one
     from utils_com.traceback_func import run_with_traceback
     from config.return_code import ReturnCode
-    from utils.file_utils import is_valid_json, load_json
-
+    from utils.file_utils import load_json
+    from _helper import (
+            ensure_predict_data,
+            auto_detect_backend,
+            _ensure_status_skeleton,
+            _reset_downstream,
+            _get_model_path,
+            _get_model_mtime,
+        )
 except Exception as e:
     traceback.print_exc()
     LOGGER.log(f"An error occurred: {e}")
@@ -70,29 +77,37 @@ def step1(
 
     is_data_available = False
 
-    if load_phase1_status and (data["input_folder"] == data_directory and data["output_folder"] == new_directory):
+    # Safer cache check: also validate num_of_hidro & min_len_data
+    if load_phase1_status and (data.get("input_folder") == data_directory and data.get("output_folder") == new_directory):
         try:
-            FOLDER_COMBINE = data["phase1"]["step_1"]["FOLDER_COMBINE"]
-            TYPE_MAP = data["phase1"]["step_1"]["TYPE_MAP"]
+            cached_params = data["phase1"]["step_1"].get("params", {})
+            same_noh = cached_params.get("num_of_hidro") == (num_of_hidro or [])
+            same_mld = cached_params.get("min_len_data") == min_len_data
 
-            LOGGER.log("Step 1 found data store in status file, load status")
-            LOGGER.log(FOLDER_COMBINE)
-            LOGGER.log(TYPE_MAP)
-            is_data_available = True
+            if data["phase1"]["step_1"]["success"] and same_noh and same_mld:
+                FOLDER_COMBINE = data["phase1"]["step_1"]["FOLDER_COMBINE"]
+                TYPE_MAP = data["phase1"]["step_1"]["TYPE_MAP"]
+                LOGGER.log("Step 1 cache hit: load FOLDER_COMBINE & TYPE_MAP from status")
+                is_data_available = True
+            else:
+                LOGGER.log("Step 1 cache invalidated: num_of_hidro/min_len_data changed or previous not successful")
+                is_data_available = False
         except:
-            LOGGER.log("Step 1 *NOT* found data store in status file, run again")
+            LOGGER.log("Step 1 *NOT* found cache or cache invalid, rebuild")
             is_data_available = False
 
     if not is_data_available:
+        # step1 changes -> invalidate downstream steps 2-4
+        _reset_downstream(data, from_step=2)
 
         data["input_folder"] = data_directory
         data["output_folder"] = new_directory
 
-        folders = scan(data_directory)
+        folders = scan(data_directory, verbose=verbose, allowed_ids=num_of_hidro)
         update_process_ui(10)
 
         train_val_folders, type_map_train = creation(
-            new_directory, folders, num_of_hidro, min_len_data, task_predict=False, verbose=verbose
+            new_directory, folders, num_of_hidro or [], min_len_data or 0, task_predict=False, verbose=verbose
         )
         update_process_ui(20)
 
@@ -104,7 +119,14 @@ def step1(
         TYPE_MAP = type_map_train
         data["phase1"]["step_1"]["TYPE_MAP"] = TYPE_MAP
 
-    if predict_directory and (data["predict_folder"] != predict_directory):
+        # store params to validate cache later
+        data["phase1"]["step_1"]["params"] = {
+            "num_of_hidro": num_of_hidro or [],
+            "min_len_data": min_len_data or 0,
+        }
+
+    # handle prediction data build separately
+    if predict_directory and (data.get("predict_folder") != predict_directory):
         LOGGER.log("Step 1 found new prediction folder, make data to predict")
         data["predict_folder"] = predict_directory
         folders = scan(predict_directory)
@@ -131,7 +153,7 @@ def step2(
     new_directory: str,
     training_json: str,
     epochs: int,
-    tesorflow_fw: bool,
+    tensorflow_fw: bool,  # legacy param name kept for compatibility
     pytorch_fw: bool,
     load_phase1_status: bool,
     verbose: bool,
@@ -152,21 +174,25 @@ def step2(
 
     if load_phase1_status:
         try:
-            new_training_file = data["phase1"]["step_2"]["new_training_file"]
-            config_training_file = data["phase1"]["step_2"]["config_training_file"]
-            LOGGER.log("Step 2 found data store in status file, load status")
-            LOGGER.log(new_training_file)
-            LOGGER.log(training_json)
-            is_data_available = True
+            prev_cfg = data["phase1"]["step_2"].get("config_training_file", "")
+            prev_epochs = data["phase1"]["step_2"].get("epochs", None)
+            if data["phase1"]["step_1"]["success"] and data["phase1"]["step_2"]["success"] \
+               and prev_cfg == training_json and prev_epochs == epochs:
+                LOGGER.log("Step 2 cache hit: reuse previous training input")
+                is_data_available = True
+            else:
+                LOGGER.log("Step 2 cache invalidated: step1 not ready or config/epochs changed")
+                is_data_available = False
         except:
-            LOGGER.log("Step 2 *NOT* found data store in status file, run again")
+            LOGGER.log("Step 2 cache invalid or missing, rebuild")
             is_data_available = False
     
-    if not is_data_available or (config_training_file != training_json):
+    if not is_data_available:
         config_training_file = training_json
         new_training_file = os.path.join(new_directory, "input.json")
         data["phase1"]["step_2"]["new_training_file"] = new_training_file
         data["phase1"]["step_2"]["config_training_file"] = config_training_file
+        data["phase1"]["step_2"]["epochs"] = epochs
 
         type_map_value = TYPE_MAP
         training_systems = [
@@ -191,10 +217,13 @@ def step2(
             tensorboard_log_dir,
             stat_file,
             numb_steps,
-            tesorflow_fw,
+            tensorflow_fw,
             pytorch_fw,
             verbose,
         )
+
+        # step2 (re)built -> invalidate step3-4
+        _reset_downstream(data, from_step=3)
     
     data["phase1"]["step_2"]["success"] = True
 
@@ -205,7 +234,7 @@ def step2(
 
 def step3(
     new_directory: str,
-    tesorflow_fw: bool,
+    tensorflow_fw: bool,  # legacy param name kept for compatibility
     pytorch_fw: bool,
     load_phase1_status: bool,
     verbose: bool,
@@ -222,21 +251,29 @@ def step3(
 
     if load_phase1_status:
         try:
-            model_path = data["phase1"]["step_3"]["model_path"]
-            LOGGER.log("Step 3 found data store in status file, load status")
-            LOGGER.log(model_path)
-            is_data_available = True
+            prev_success = data["phase1"]["step_3"]["success"]
+            model_path = data["phase1"]["step_3"].get("model_path", "")
+            prev_framework = data["phase1"]["step_3"].get("framework", "")
+            curr_framework = "tensorflow" if tensorflow_fw else "pytorch"
+            if prev_success and model_path and os.path.isfile(model_path) and prev_framework == curr_framework:
+                LOGGER.log("Step 3 cache hit: trained model available and framework unchanged")
+                is_data_available = True
+            else:
+                LOGGER.log("Step 3 cache invalidated: missing model or framework changed or previous not successful")
+                is_data_available = False
         except:
-            LOGGER.log("Step 3 *NOT* found data store in status file, run again")
+            LOGGER.log("Step 3 cache invalid or missing, (re)train")
             is_data_available = False
 
     if not is_data_available:
-        train(new_directory, tesorflow_fw, pytorch_fw, verbose)
-        data["phase1"]["step_3"]["model_path"] = os.path.join(new_directory, "graph.pb" if tesorflow_fw else "graph.pth")
+        train(new_directory, tensorflow_fw, pytorch_fw, verbose)
+        model_path = _get_model_path(new_directory, tensorflow_fw, pytorch_fw)
+        data["phase1"]["step_3"]["model_path"] = model_path
+        data["phase1"]["step_3"]["framework"] = "tensorflow" if tensorflow_fw else "pytorch"
+        data["phase1"]["step_3"]["model_mtime"] = _get_model_mtime(model_path)
         update_process_ui(60)
 
         plot_loss(new_directory)
-
 
     data["phase1"]["step_3"]["success"] = True
 
@@ -248,7 +285,7 @@ def step3(
 def step4(
     new_directory: str,
     predict_directory: str,
-    tesorflow_fw: bool,
+    tensorflow_fw: bool,  # legacy param name kept for compatibility
     pytorch_fw: bool,
     load_phase1_status: bool,
     verbose: bool,
@@ -264,21 +301,30 @@ def step4(
 
     is_data_available = False
 
+    # reuse only if model mtime unchanged
+    curr_model_path = _get_model_path(new_directory, tensorflow_fw, pytorch_fw)
+    curr_mtime = _get_model_mtime(curr_model_path)
+
     if load_phase1_status:
         try:
-            image_loss = data["phase1"]["step_4"]["image_loss"]
-            LOGGER.log("Step 4 found data store in status file, load status")
-            LOGGER.log(image_loss)
-            is_data_available = True
+            prev_success = data["phase1"]["step_4"]["success"]
+            prev_image_loss = data["phase1"]["step_4"].get("image_loss", "")
+            prev_mtime = data["phase1"]["step_4"].get("model_mtime", None)
+            if prev_success and prev_image_loss and prev_mtime == curr_mtime:
+                LOGGER.log("Step 4 cache hit: validation artifacts up-to-date")
+                is_data_available = True
+            else:
+                LOGGER.log("Step 4 cache invalidated: model changed or previous not successful")
+                is_data_available = False
         except:
-            LOGGER.log("Step 4 *NOT* found data store in status file, run again")
+            LOGGER.log("Step 4 cache invalid or missing, rebuild")
             is_data_available = False
 
     if not is_data_available:
-        freeze(new_directory, tesorflow_fw, pytorch_fw, verbose)
+        freeze(new_directory, tensorflow_fw, pytorch_fw, verbose)
         update_process_ui(70)
 
-        compress(new_directory, tesorflow_fw, pytorch_fw, verbose)
+        compress(new_directory, tensorflow_fw, pytorch_fw, verbose)
         update_process_ui(75)
 
         validation_systems = [
@@ -286,20 +332,21 @@ def step4(
         ]
         new_path = collect_data_to_one(new_directory, validation_systems)
 
-        test(new_directory, tesorflow_fw, pytorch_fw, verbose)
+        test(new_directory, tensorflow_fw, pytorch_fw, verbose)
         update_process_ui(80)
 
-        vaild(new_directory, new_path, "", tesorflow_fw, pytorch_fw, task_predict=False)
+        vaild(new_directory, new_path, "", tensorflow_fw, pytorch_fw, task_predict=False)
         update_process_ui(85)
 
         data["phase1"]["step_4"]["image_loss"] = os.path.join(new_directory, "output_loss.png")
+        data["phase1"]["step_4"]["model_mtime"] = curr_mtime
 
     if predict_directory:
         predict(
             "",
             os.path.join(predict_directory, "result"),
             new_directory,
-            tesorflow_fw,
+            tensorflow_fw,
             pytorch_fw,
             task_predict=True,
         )
@@ -320,42 +367,15 @@ def workflow(
     num_of_hidro: list,
     min_len_data: int,
     only_make_data: bool,
-    tesorflow_fw: bool,
+    tensorflow_fw: bool,  # legacy param name kept for compatibility
     pytorch_fw: bool,
     load_phase1_status: bool,
     verbose: bool,
 ) -> int:
     
     if load_phase1_status:
-        phase1_status = os.path.join("phase1/phase1_status.json") 
-
-        default_data = {
-            "input_folder": input_folder,
-            "output_folder": output_folder,
-            "predict_folder": predict_folder,
-            "phase1": {
-                "step_1": {
-                    "success" : False
-                },
-                "step_2": {
-                    "success" : False
-                },
-                "step_3": {
-                    "success" : False
-                },
-                "step_4": {
-                    "success" : False
-                }
-            }
-        }
-        if not os.path.exists(phase1_status) or not is_valid_json(phase1_status):
-            # Create or overwrite the file with correct structure
-            with open(phase1_status, "w") as f:
-                json.dump(default_data, f, indent=4)
-            LOGGER.log(f"{phase1_status} created or overwritten with default structure.")
-        else:
-            LOGGER.log(f"{phase1_status} already exists and contains valid JSON.")
-
+        # Ensure skeleton with fields needed for robust cache checks
+        _ensure_status_skeleton(input_folder, output_folder, predict_folder)
 
     LOGGER.log("\n***Step 1/4 in phase 1 on running!\n")
     if run_with_traceback(
@@ -372,7 +392,7 @@ def workflow(
             output_folder,
             training_json,
             epochs,
-            tesorflow_fw,
+            tensorflow_fw,
             pytorch_fw,
             load_phase1_status,
             verbose,
@@ -382,14 +402,14 @@ def workflow(
             LOGGER.log("\n***Step 2/4 in phase 1 run successfully!\n")
 
         LOGGER.log("\n***Step 3/4 in phase 1 on running!\n")
-        if run_with_traceback(step3, output_folder, tesorflow_fw, pytorch_fw, load_phase1_status, verbose):
+        if run_with_traceback(step3, output_folder, tensorflow_fw, pytorch_fw, load_phase1_status, verbose):
             return ReturnCode.ERROR_CODE_3
         else:
             LOGGER.log("\n***Step 3/4 in phase 1 run successfully!\n")
 
         LOGGER.log("\n***Step 4/4 in phase 1 on running!\n")
         if run_with_traceback(
-            step4, output_folder, predict_folder, tesorflow_fw, pytorch_fw, load_phase1_status, verbose
+            step4, output_folder, predict_folder, tensorflow_fw, pytorch_fw, load_phase1_status, verbose
         ):
             return ReturnCode.ERROR_CODE_4
         else:
@@ -407,19 +427,19 @@ def main():
         description="A script to parse folder paths from terminal with verbose option and help support."
     )
 
-    # Add arguments for input and output folders (required)
+    # NOTE: Make these NOT required so predict-only mode can run without them
     parser.add_argument(
         "-i",
         "--input_folder",
         type=str,
-        required=True,
+        required=False,
         help="The input folder to process.",
     )
     parser.add_argument(
         "-o",
         "--output_folder",
         type=str,
-        required=True,
+        required=False,
         help="The output folder where results will be saved.",
     )
 
@@ -454,18 +474,19 @@ def main():
         help="Enable only make data mode for input data.",
     )
 
+    # Fixed typo; keep the correct flag name
     parser.add_argument(
-        "-tf",
-        "--tesorflow",
+        "-tf", "--tensorflow",
+        dest="tensorflow",
         action="store_true",
-        help="Select framework for backend",
+        help="Use TensorFlow backend",
     )
 
     parser.add_argument(
         "-pt",
         "--pytorch",
         action="store_true",
-        help="Using pytorch backend",
+        help="Use PyTorch backend",
     )
 
     parser.add_argument(
@@ -496,8 +517,25 @@ def main():
         "-trainj",
         "--training_json",
         type=str,
-        required=True,
+        required=False,  # NOT required so predict-only can run
         help="The training file name is used to configure all parameters.",
+    )
+
+    # NEW: predict-only specific args
+    parser.add_argument(
+        "-mp", "--model_path",
+        type=str, default="",
+        help="Path to pre-trained model (file or directory) for predict-only mode.",
+    )
+    parser.add_argument(
+        "-pred_only", "--predict_only",
+        action="store_true",
+        help="Enable predict-only mode using model_path and predict_folder.",
+    )
+    parser.add_argument(
+        "--skip_prepare_predict_data",
+        action="store_true",
+        help="Skip preparing <predict_folder>/result and use it as-is.",
     )
 
     # Parse the arguments
@@ -507,16 +545,85 @@ def main():
     if args.verbose:
         LOGGER.log("Verbose mode is enabled.")
 
-    # Check if the input folder exists
-    if not os.path.isdir(args.input_folder):
+    # --- Predict-only mode (runs BEFORE any training validations) ---
+    if args.predict_only:
+        if not args.model_path or not args.predict_folder:
+            LOGGER.log("Error: --model_path and --predict_folder are required in predict-only mode.")
+            return
+
+        # Normalize model_dir (accept file or directory)
+        model_dir = args.model_path
+        if os.path.isfile(model_dir):
+            model_dir = os.path.dirname(model_dir)
+        if not os.path.isdir(model_dir):
+            LOGGER.log(f"Error: model_path '{args.model_path}' is not a valid file or directory.")
+            return
+
+        # Auto-detect backend and the exact model file
+        try:
+            is_tf, is_pt, model_dir, chosen_model_file = auto_detect_backend(
+                args.model_path, args.tensorflow, args.pytorch
+            )
+        except Exception as det_e:
+            LOGGER.log(f"Error: {det_e}")
+            return
+
+        # Reflect detection back into args so downstream code stays unchanged
+        args.tensorflow = is_tf
+        args.pytorch = is_pt
+
+        LOGGER.log(f"Backend detected: {'TensorFlow' if is_tf else 'PyTorch'}")
+        LOGGER.log(f"Model directory: {model_dir}")
+        LOGGER.log(f"Model file used: {chosen_model_file}")
+
+        LOGGER.log("Running in predict-only mode...")
+        update_process_ui(90)
+
+        # Optionally prepare prediction data
+        if args.skip_prepare_predict_data:
+            result_dir = os.path.join(args.predict_folder, "result")
+            if not os.path.isdir(result_dir):
+                LOGGER.log(f"Error: '--skip_prepare_predict_data' set, but '{result_dir}' does not exist.")
+                return
+        else:
+            result_dir = ensure_predict_data(args.predict_folder, args.verbose, LOGGER)
+
+        # Run prediction (same signature as used in step4)
+        try:
+            update_process_ui(95)
+            predict(
+                "",                     # input_path not used in this mode
+                result_dir,             # output folder for results
+                model_dir,              # model directory (contains graph.pth / graph.pb)
+                args.tensorflow,
+                args.pytorch,
+                task_predict=True,
+            )
+            update_process_ui(100)
+            LOGGER.log(f"Predict-only completed. Outputs saved to: {result_dir}")
+        except Exception:
+            traceback.print_exc()
+            LOGGER.log("Predict-only failed due to an exception.")
+            return
+
+        LOGGER.log(f"\nServer shutdown, bye!\n")
+        return
+    # --- End predict-only ---
+
+    # ===== Training/standard workflow validations (only when not predict-only) =====
+    if not args.input_folder or not os.path.isdir(args.input_folder):
         LOGGER.log(f"Error: Input folder '{args.input_folder}' does not exist.")
         return
 
-    if not args.training_json.endswith(".json"):
-        LOGGER.log(f"The config file not vaild, try again or check the correct file")
+    if not args.training_json or not args.training_json.endswith(".json"):
+        LOGGER.log(f"The config file not valid, try again or check the correct file")
         return
 
-    # Check if the output folder exists, create it if it doesn't
+    if not args.output_folder:
+        LOGGER.log(f"Error: Output folder is not specified.")
+        return
+
+    # Check/create output folder
     if not os.path.isdir(args.output_folder):
         LOGGER.log(
             f"Output folder '{args.output_folder}' does not exist. Creating it..."
@@ -539,7 +646,7 @@ def main():
         args.num_of_hidro,
         args.min_len_data,
         args.only_make_data,
-        args.tesorflow,
+        args.tensorflow,
         args.pytorch,
         args.load_phase1_status,
         args.verbose,

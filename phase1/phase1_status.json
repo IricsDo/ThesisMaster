@@ -7,44 +7,12 @@
             "success": true,
             "FOLDER_COMBINE": [
                 {
-                    "empty": [
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\"
-                    ],
-                    "10": [
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_10_3",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_9",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_52_10",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_55_10"
-                    ],
                     "4": [
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_10_7_400K",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_10_8_400K",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_11_400K",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_15_400K",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_4",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_10_7_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_10_8_400K",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_4_1",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_4_10",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_4_2",
@@ -56,6 +24,12 @@
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_52_4",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_55_4",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_58_4"
+                    ],
+                    "10": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_9",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_10_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_52_10",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_55_10"
                     ],
                     "112": [
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_112_1"
@@ -92,44 +66,12 @@
                     ]
                 },
                 {
-                    "empty": [
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\"
-                    ],
-                    "10": [
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_10_3",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_9",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_52_10",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_55_10"
-                    ],
                     "4": [
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_10_7_400K",
-                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_10_8_400K",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_11_400K",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_15_400K",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_4",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_10_7_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_10_8_400K",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_4_1",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_4_10",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_4_2",
@@ -141,6 +83,12 @@
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_52_4",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_55_4",
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_58_4"
+                    ],
+                    "10": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_9",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_10_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_52_10",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_55_10"
                     ],
                     "112": [
                         "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_112_1"
@@ -181,19 +129,36 @@
                 "Si",
                 "C",
                 "H"
-            ]
+            ],
+            "params": {
+                "num_of_hidro": [
+                    "4",
+                    "10",
+                    "19",
+                    "28",
+                    "52",
+                    "55",
+                    "58",
+                    "100",
+                    "112"
+                ],
+                "min_len_data": 500
+            }
         },
         "step_2": {
-            "success": true,
+            "success": false,
             "new_training_file": "/content/drive/MyDrive/Thesis_Code/output/input.json"
         },
         "step_3": {
-            "success": true,
-            "model_path": "/content/drive/MyDrive/Thesis_Code/output/graph.pb"
+            "success": false,
+            "model_path": "",
+            "framework": "",
+            "model_mtime": null
         },
         "step_4": {
-            "success": true,
-            "image_loss": "/content/drive/MyDrive/Thesis_Code/output/output_loss.png"
+            "success": false,
+            "image_loss": "",
+            "model_mtime": null
         }
     }
 }
