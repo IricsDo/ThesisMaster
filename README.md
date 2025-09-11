@@ -70,30 +70,48 @@ The project contributes towards **accelerating materials discovery** by reducing
 
 ## Getting Started
 
-### Prerequisites
-- Python ≥ 3.9  
-- Anaconda environment with required packages (`deepmd-kit`, `dpdata`, `torch` or `tensorflow`)  
-- Access to SIESTA-generated simulation data  
-
-```bash
-conda create -n thesis python=3.9
-conda activate thesis
-conda install deepmd dpdata
-pip install torch tensorflow
-```
+### Requirements  
+- Linux Ubuntu 20.04 (22.04 and 24.04 also)
+- Miniconda already installed  
+- Backend `ThesisMaster` cloned and environment variable `ROOT_WS_DUY` configured
+> **Note:** The environment variable `ROOT_WS_DUY` must point to the directory where you cloned the project.  
+> For example, if you cloned the code into `/home/user/my_workspace/ThesisMaster`, then set:  
+> ```bash
+> export ROOT_WS_DUY="/home/user/my_workspace"
+> ```
+  
 
 ### Installation
 Clone the repo:
-```bash
-git clone https://github.com/IricsDo/ThesisMaster.git
-cd ThesisMaster
-```
+  ```bash
+  git clone https://github.com/IricsDo/ThesisMaster.git
+  cd ThesisMaster
+  ```
 
+### Setup environment:
+1. Move to set up path:
+  ```bash
+  cd setups/linux
+  ```
+2. Run set up script:
+  ```bash
+  chmod +x setup.sh
+  ./setup.sh
+  ```
+3. Activate environment:
+  ```bash
+  conda activate thesis-master
+  ```
 ---
 
 ## Usage
 
 The pipeline is controlled via `phase1/start.py`. It supports **training** and **predict-only** modes.
+
+Before run, change to project path:
+  ```bash
+   cd $ROOT_WS_DUY/ThesisMaster
+  ```
 
 ### Training Example
 ```bash
