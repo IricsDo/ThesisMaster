@@ -31,9 +31,12 @@ fi
 # Navigate to ThesisMaster folder
 cd "$ROOT_WS_DUY/ThesisMaster" || { echo -e "${RED}ThesisMaster folder not found in $ROOT_WS_DUY${NC}"; exit 1; }
 
+# Path to environment file
+ENV_FILE="$ROOT_WS_DUY/ThesisMaster/setups/linux/environment.yaml"
+
 # Check if environment file exists
-if [ ! -f "environment.yaml" ]; then
-    echo -e "${RED}environment.yaml not found in ThesisMaster directory.${NC}"
+if [ ! -f "$ENV_FILE" ]; then
+    echo -e "${RED}$ENV_FILE not found.${NC}"
     exit 1
 fi
 
@@ -44,8 +47,9 @@ if conda info --envs | grep -q "thesis-master"; then
 fi
 
 # Create new environment
-echo -e "${GREEN}Creating conda environment 'thesis-master' from environment.yaml...${NC}"
-conda env create -n thesis-master -f environment.yaml
+echo -e "${GREEN}Creating conda environment 'thesis-master' from $ENV_FILE...${NC}"
+conda env create -n thesis-master -f "$ENV_FILE"
+
 
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}Environment thesis-master successfully created!${NC}"

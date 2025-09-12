@@ -38,7 +38,7 @@ if %errorlevel%==0 (
 call conda activate %ENV_NAME%
 
 :: Install additional packages from the YAML file
-set YAML_FILE="%ROOT_WS_DUY%\ThesisMaster\setups\win\environment.yml"
+set YAML_FILE="%ROOT_WS_DUY%\ThesisMaster\setups\win\environment.yaml"
 echo %YELLOW%Installing additional packages from %YAML_FILE%...%NC%
 conda env update -n %ENV_NAME% -f %YAML_FILE%
 if %errorlevel%==0 (
