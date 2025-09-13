@@ -1,5 +1,6 @@
 import os
 import json
+from pathlib import Path
 
 from utils.file_utils import is_valid_json
 
@@ -28,16 +29,17 @@ def ensure_predict_data(predict_directory: str, verbose: bool, logger) -> str:
 
     # Filter out the result folder itself if scanner picks it up
     folders = [f for f in folders if os.path.abspath(f) != os.path.abspath(result_dir)]
-
+     
     # Build prediction-ready data into <predict_directory>/result
     creation(
         result_dir,
         folders,
-        [],      # not required in predict-only mode
-        0,       # not required in predict-only mode
+        [],
+        0,
         task_predict=True,
         verbose=verbose,
     )
+    
     return result_dir
 
 
@@ -198,4 +200,8 @@ def _get_model_mtime(path: str):
     except Exception:
         return None
 
+
+
+def get_all_folders(path):
+    return [str(p.resolve()) for p in Path(path).iterdir() if p.is_dir()]
 # ------------------------------------------------------------------------------------

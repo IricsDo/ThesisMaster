@@ -62,7 +62,7 @@ def creation_data_from_siesta(
     LOGGER = ServerLogger()
 
     if task_predict:
-        predict_path = "prediction_data"
+        predict_path = "prediction_data_" + os.path.basename(data_raw_path)
         new_path = os.path.join(data_npy_path, predict_path)
         if not os.path.exists(new_path):
             if verbose:

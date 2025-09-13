@@ -5,14 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: Current File",
+            "name": "Python Debugger: Create Dataset",
             "type": "debugpy",
             "request": "launch",
-            "program": "${file}",
+            "program": "${workspaceFolder}/phase1/start.py",
             "console": "integratedTerminal",
             "args": [
-                "-tf",
-                "--num_of_hidro",
+                "-noh",
                 "4",
                 "10",
                 "19",
@@ -20,18 +19,29 @@
                 "52",
                 "55",
                 "58",
+                "79",
                 "100",
                 "112",
-                "--min_len_data",
-                "500",
-                "--input_folder",
+                "-i",
                 "E:/Work Spaces/Thesis/Data/SiCH_v2/input",
-                "--output_folder",
+                "-o",
                 "E:/Work Spaces/Thesis/Data/SiCH_v2/output",
-                "--training_json",
-                "E:/Work Spaces/Thesis/Code/ThesisMaster/phase1/training_params/best/input.json",
-                "--only_make_data",
-                "--verbose"
+                "-omd",
+                "-v"
+            ]
+        },
+        {
+            "name": "Python Debugger: Test Predict (79H)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/phase1/start.py",
+            "console": "integratedTerminal",
+            "args": [
+                "-pred_only",
+                "-mp", "E:/Work Spaces/Thesis/Data/model/52_55_58_100_112_graph_non_data_under_52H.pb",
+                "-p", "E:/Work Spaces/Thesis/Data/SiCH_v2/predict",
+                "-tf",
+                "-v"
             ]
         }
     ]

@@ -29,6 +29,7 @@ try:
     from config.return_code import ReturnCode
     from utils.file_utils import load_json
     from _helper import (
+            get_all_folders,
             ensure_predict_data,
             auto_detect_backend,
             _ensure_status_skeleton,
@@ -130,6 +131,7 @@ def step1(
         LOGGER.log("Step 1 found new prediction folder, make data to predict")
         data["predict_folder"] = predict_directory
         folders = scan(predict_directory)
+
         _, type_map_predict = creation(
             os.path.join(predict_directory, "result"),
             folders,
@@ -330,7 +332,8 @@ def step4(
         validation_systems = [
             item for sublist in FOLDER_COMBINE[1].values() for item in sublist
         ]
-        new_path = collect_data_to_one(new_directory, validation_systems)
+        type_of_data = "validation_data"
+        new_path = collect_data_to_one(new_directory, type_of_data, validation_systems)
 
         test(new_directory, tensorflow_fw, pytorch_fw, verbose)
         update_process_ui(80)
@@ -615,9 +618,10 @@ def main():
         LOGGER.log(f"Error: Input folder '{args.input_folder}' does not exist.")
         return
 
-    if not args.training_json or not args.training_json.endswith(".json"):
-        LOGGER.log(f"The config file not valid, try again or check the correct file")
-        return
+    if not args.only_make_data:
+        if not args.training_json or not args.training_json.endswith(".json"):
+            LOGGER.log("The config file not valid, try again or check the correct file")
+            return
 
     if not args.output_folder:
         LOGGER.log(f"Error: Output folder is not specified.")

@@ -25,26 +25,26 @@ def vaild(
             if not os.path.isdir(data_path):
                 LOGGER.log(f"{data_path} not vaild, find another file")
                 continue
-            training_systems = dpdata.LabeledSystem(
+            systems = dpdata.LabeledSystem(
                 data_path,
                 fmt="deepmd/npy",
             )
             predict = None
 
             if task_predict and model_path:
-                predict = training_systems.predict(
+                predict = systems.predict(
                     os.path.join(
                         model_path, "graph.pb" if tesorflow_fw else "graph.pth"
                     )
                 )
             else:
-                predict = training_systems.predict(
+                predict = systems.predict(
                     os.path.join(
                         new_directory, "graph.pb" if tesorflow_fw else "graph.pth"
                     )
                 )
 
-            plt.scatter(training_systems["energies"], predict["energies"])
+            plt.scatter(systems["energies"], predict["energies"])
             x_range = np.linspace(plt.xlim()[0], plt.xlim()[1])
 
             plt.plot(x_range, x_range, "r--", linewidth=0.25)
