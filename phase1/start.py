@@ -107,18 +107,21 @@ def step1(
         folders = scan(data_directory, verbose=verbose, allowed_ids=num_of_hidro)
         update_process_ui(10)
 
-        train_val_folders, type_map_train = creation(
-            new_directory, folders, num_of_hidro or [], min_len_data or 0, task_predict=False, verbose=verbose
-        )
-        update_process_ui(20)
+        if not num_of_hidro:
+            ensure_predict_data(data_directory, verbose=verbose, logger=LOGGER)
+        else:
+            train_val_folders, type_map_train = creation(
+                new_directory, folders, num_of_hidro or [], min_len_data or 0, task_predict=False, verbose=verbose
+            )
+            update_process_ui(20)
 
-        FOLDER_COMBINE = combine(new_directory, train_val_folders)
-        data["phase1"]["step_1"]["FOLDER_COMBINE"] = FOLDER_COMBINE
+            FOLDER_COMBINE = combine(new_directory, train_val_folders)
+            data["phase1"]["step_1"]["FOLDER_COMBINE"] = FOLDER_COMBINE
 
-        update_process_ui(25)
-        
-        TYPE_MAP = type_map_train
-        data["phase1"]["step_1"]["TYPE_MAP"] = TYPE_MAP
+            update_process_ui(25)
+            
+            TYPE_MAP = type_map_train
+            data["phase1"]["step_1"]["TYPE_MAP"] = TYPE_MAP
 
         # store params to validate cache later
         data["phase1"]["step_1"]["params"] = {

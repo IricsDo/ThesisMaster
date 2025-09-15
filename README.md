@@ -131,7 +131,13 @@ python3 phase1/start.py \
   -noh 4 10 19 28 52 55 58 100 112 \
   -omd -v
 ```
-
+or
+```bash
+python3 phase1/start.py \
+  -i /data/train_input \
+  -o /data/train_out \
+  -omd -v
+```
 ### Predict Example
 ```bash
 python3 phase1/start.py \

@@ -106,6 +106,12 @@ python3 phase1/start.py   -i /data/train_input   -o /data/train_out   -noh 4 10 
 ```
 > If your local validation still enforces `--training_json`, provide a placeholder: `-trainj /configs/dummy.json`.
 
+or
+```bash
+python3 phase1/start.py   -i /data/train_input   -o /data/train_out  -omd   -v
+```
+> Without the **-noh** argument, data will not be split into train and validation.
+
 ### 6.3 Predict-only (model **file**, backend auto-detected)
 ```bash
 # PyTorch (.pth)

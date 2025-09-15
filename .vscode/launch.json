@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: Create Dataset",
+            "name": "Python Debugger: Create Train-Valid Dataset (4-112H)",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/phase1/start.py",
@@ -31,7 +31,22 @@
             ]
         },
         {
-            "name": "Python Debugger: Test Predict (79H)",
+            "name": "Python Debugger: Create Dataset (4-112H)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/phase1/start.py",
+            "console": "integratedTerminal",
+            "args": [
+                "-i",
+                "E:/Work Spaces/Thesis/Data/SiCH_v2/input",
+                "-o",
+                "E:/Work Spaces/Thesis/Data/SiCH_v2/output", // bypass check output folder
+                "-omd",
+                "-v"
+            ]
+        },
+        {
+            "name": "Python Debugger: Run Test Predict (79H)",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/phase1/start.py",

@@ -54,7 +54,7 @@ def vaild(
             plt.savefig(
                 os.path.join(
                     new_path if task_predict else new_directory,
-                    f"output_with_{'prediction_data' if task_predict else os.path.basename(data_path)}.png",
+                    f"output_with_{'predict_' + os.path.basename(data_path) if task_predict else os.path.basename(data_path)}.png",
                 )
             )
             plt.close()
