@@ -27,7 +27,7 @@ This document explains how to use the CLI arguments supported by `phase1/start.p
 | `--predict_only` | `-pred_only` | flag | No | No | – | `False` | Enable predict-only mode. Disables training validations. |
 | `--model_path` | `-mp` | str | No | No | **Yes** | `""` | Path to a **model file** (`.pth`/`.pb`) **or a directory** containing the model. |
 | `--predict_folder` | `-p` | str | No | No | **Yes** | `""` | Folder containing input data to predict. Tool writes to `<predict_folder>/result`. |
-| `--skip_prepare_predict_data` | — | flag | No | No | No | `False` | Skip building `<predict_folder>/result`; it must already exist. |
+| `--skip_prepare_predict_data` | `-sppd` | flag | No | No | No | `False` | Skip building `<predict_folder>/result`; it must already exist. |
 | `--tensorflow` | `-tf` | flag | Optional | Optional | Optional | `False` | Force TensorFlow backend. Mutually exclusive with `--pytorch`. |
 | `--pytorch` | `-pt` | flag | Optional | Optional | Optional | `False` | Force PyTorch backend. Mutually exclusive with `--tensorflow`. |
 | `--input_folder` | `-i` | str | **Yes** | **Yes** | No | — | Training input directory for step1. |

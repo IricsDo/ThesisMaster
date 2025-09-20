@@ -539,7 +539,7 @@ def main():
         help="Enable predict-only mode using model_path and predict_folder.",
     )
     parser.add_argument(
-        "--skip_prepare_predict_data",
+        "--skip_prepare_predict_data", "--sppd",
         action="store_true",
         help="Skip preparing <predict_folder>/result and use it as-is.",
     )
