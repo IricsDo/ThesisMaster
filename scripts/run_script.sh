@@ -1,4 +1,9 @@
 #!/bin/bash
+# ==========================================================
+# run_script.sh
+# Wrapper cho phase1/start.py với 3 mode: train | create | predict
+# ==========================================================
+
 # Define color codes
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -17,60 +22,95 @@ if [ -z "$ROOT_WS_DUY" ]; then
     exit 1
 fi
 
-# Check if arguments are passed
-if [ "$#" -lt 4 ]; then
-    echo -e "${YELLOW}Usage: $0 -i input_folder -o output_folder -p predict_folder [-colab true|false]${NC}"
-    exit 1
-fi
-
-# Default value for colab argument
+# --- Default values ---
 colab=false
+mode=""
+input_folder=""
+output_folder=""
+predict_folder=""
+training_json=""
+noh=""
+epochs=""
+model_path=""
+skip_prepare=false
 
-# Parse the input arguments
-while getopts ":i:o:p:c:" opt; do
-  case $opt in
-    i) input_folder="$OPTARG"
-    ;;
-    o) output_folder="$OPTARG"
-    ;;
-    p) predict_folder="$OPTARG"
-    ;;
-    c) colab="$OPTARG"
-    ;;
-    \?) echo -e "${RED}Invalid option -$OPTARG${NC}" >&2
-        exit 1
-    ;;
+# --- Parse arguments ---
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -m|--mode) mode="$2"; shift 2 ;;
+    -i|--input) input_folder="$2"; shift 2 ;;
+    -o|--output) output_folder="$2"; shift 2 ;;
+    -p|--predict) predict_folder="$2"; shift 2 ;;
+    -j|--trainj) training_json="$2"; shift 2 ;;
+    -n|--noh) noh="$2"; shift 2 ;;
+    -e|--epochs) epochs="$2"; shift 2 ;;
+    -mp|--model_path) model_path="$2"; shift 2 ;;
+    --skip_prepare) skip_prepare=true; shift ;;
+    -c|--colab) colab="$2"; shift 2 ;;
+    *) echo -e "${RED}Unknown argument: $1${NC}"; exit 1 ;;
   esac
 done
 
+# --- Check mode ---
+if [ -z "$mode" ]; then
+    echo -e "${YELLOW}Usage: $0 -m [train|create|predict] [options]${NC}"
+    exit 1
+fi
+
 echo -e "${GREEN}Change to the working directory...${NC}"
-cd "$ROOT_WS_DUY/ThesisMaster" || exit  # Ensure the folder exists
+cd "$ROOT_WS_DUY/ThesisMaster" || exit 1
 
-# Change to the directory where your Python code resides
-ROOT_WS_DUY="${ROOT_WS_DUY:?Environment variable ROOT_WS_DUY is not set}"
-
-# Activate Conda environment if colab is false
+# --- Activate Conda ---
 if [ "$colab" != "true" ]; then
     echo -e "${GREEN}Activating Conda environment 'thesis-master'...${NC}"
-    source ~/miniconda3/etc/profile.d/conda.sh  # Adjust the path if necessary
+    source ~/miniconda3/etc/profile.d/conda.sh
     conda activate thesis-master
 fi
 
+# --- Logging setup ---
 SCRIPT_DIR="${ROOT_WS_DUY}/ThesisMaster/scripts"
 LOG_DIR="${SCRIPT_DIR}/logs"
 LOG_FILE="$LOG_DIR/output_$CURRENT_TIME.log"
 
-# Check if the log directory exists; if not, create it
-if [ ! -d "$LOG_DIR" ]; then
-    mkdir -p "$LOG_DIR"
-    echo "Created log directory: $LOG_DIR"
-fi
+mkdir -p "$LOG_DIR"
 
-echo -e "${GREEN}Running command ...${NC}"
-# Run the Python script with the provided arguments
-python3 -u phase1/start.py -i "$input_folder" -o "$output_folder" -p "$predict_folder"-v 2>&1 | tee "$LOG_FILE"
+# --- Build command ---
+case $mode in
+  train)
+    if [ -z "$input_folder" ] || [ -z "$output_folder" ] || [ -z "$training_json" ] || [ -z "$noh" ]; then
+        echo -e "${RED}Train mode requires: -i, -o, -j, -n${NC}"
+        exit 1
+    fi
+    cmd="python3 -u phase1/start.py -i \"$input_folder\" -o \"$output_folder\" -trainj \"$training_json\" -noh $noh"
+    [ -n "$epochs" ] && cmd="$cmd -e $epochs"
+    [ -n "$predict_folder" ] && cmd="$cmd -p \"$predict_folder\""
+    ;;
+  create)
+    if [ -z "$input_folder" ] || [ -z "$output_folder" ] || [ -z "$noh" ]; then
+        echo -e "${RED}Create mode requires: -i, -o, -n${NC}"
+        exit 1
+    fi
+    cmd="python3 -u phase1/start.py -i \"$input_folder\" -o \"$output_folder\" -noh $noh -omd"
+    ;;
+  predict)
+    if [ -z "$model_path" ] || [ -z "$predict_folder" ]; then
+        echo -e "${RED}Predict mode requires: -mp, -p${NC}"
+        exit 1
+    fi
+    cmd="python3 -u phase1/start.py -pred_only -mp \"$model_path\" -p \"$predict_folder\""
+    $skip_prepare && cmd="$cmd --skip_prepare_predict_data"
+    ;;
+  *)
+    echo -e "${RED}Invalid mode: $mode${NC}"
+    exit 1
+    ;;
+esac
 
-# Deactivate the environment if it was activated
+# --- Run command ---
+echo -e "${GREEN}Running: $cmd${NC}"
+eval $cmd 2>&1 | tee "$LOG_FILE"
+
+# --- Deactivate Conda ---
 if [ "$colab" != "true" ]; then
     conda deactivate
 fi
