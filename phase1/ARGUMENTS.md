@@ -24,19 +24,19 @@ This document explains how to use the CLI arguments supported by `phase1/start.p
 
 | Argument | Aliases | Type | Required (Training) | Required (Make-Data Only) | Required (Predict-Only) | Default | Notes |
 |---|---|---:|:---:|:---:|:---:|---:|---|
-| `--predict_only` | `-pred_only` | flag | No | No | – | `False` | Enable predict-only mode. Disables training validations. |
+| `--predict_only` | `-pred_only` | flag | No | No | **Yes** | `False` | Enable predict-only mode. Disables training validations. |
 | `--model_path` | `-mp` | str | No | No | **Yes** | `""` | Path to a **model file** (`.pth`/`.pb`) **or a directory** containing the model. |
 | `--predict_folder` | `-p` | str | No | No | **Yes** | `""` | Folder containing input data to predict. Tool writes to `<predict_folder>/result`. |
-| `--skip_prepare_predict_data` | `-sppd` | flag | No | No | No | `False` | Skip building `<predict_folder>/result`; it must already exist. |
-| `--tensorflow` | `-tf` | flag | Optional | Optional | Optional | `False` | Force TensorFlow backend. Mutually exclusive with `--pytorch`. |
-| `--pytorch` | `-pt` | flag | Optional | Optional | Optional | `False` | Force PyTorch backend. Mutually exclusive with `--tensorflow`. |
-| `--input_folder` | `-i` | str | **Yes** | **Yes** | No | — | Training input directory for step1. |
-| `--output_folder` | `-o` | str | **Yes** | **Yes** | No | — | Output directory for training artifacts and model. |
-| `--training_json` | `-trainj` | str | **Yes** | *See note* | No | — | Training configuration (`.json`) used by step2. |
-| `--epochs` | `-e` | int | No | No | No | `10000` | Number of training steps/epochs. |
-| `--only_make_data` | `-omd` | flag | Optional | — | No | `False` | Runs only **step1** (data preparation), skipping steps 2–4. |
+| `--skip_prepare_predict_data` | `-sppd` | flag | No | No | Optional | `False` | Skip building `<predict_folder>/result`; it must already exist. |
+| `--tensorflow` | `-tf` | flag | **Yes**  | No | Optional  | `False` | Force TensorFlow backend. Mutually exclusive with `--pytorch`. |
+| `--pytorch` | `-pt` | flag | **Yes** | No | Optional | `False` | Force PyTorch backend. Mutually exclusive with `--tensorflow`. |
+| `--input_folder` | `-i` | str | **Yes** | **Yes** | No | `""` | Training input directory for step1. |
+| `--output_folder` | `-o` | str | **Yes** | **Yes** | No | `""` | Output directory for training artifacts and model. |
+| `--training_json` | `-trainj` | str | **Yes** | *See note* | No | `""` | Training configuration (`.json`) used by step2. |
+| `--epochs` | `-e` | int | **Yes** | No | No | `10000` | Number of training steps/epochs. |
+| `--only_make_data` | `-omd` | flag | No | **Yes** | No | `False` | Runs only **step1** (data preparation), skipping steps 2–4. |
 | `--load_phase1_status` | `-lps1` | flag | Optional | Optional | No | `False` | Reuse previously created data if compatible. |
-| `--num_of_hidro` | `-noh` | list[str] | **Yes** | **Yes** | No | `[]` | List of atomic systems; e.g. `-noh 4 10 19 28 52 55 58 100 112`. |
+| `--num_of_hidro` | `-noh` | list[str] | **Yes** | Optional | No | `[]` | List of atomic systems; e.g. `-noh 4 10 19 28 52 55 58 100 112`. |
 | `--min_len_data` | `-mld` | int | Optional | Optional | No | `0` | Minimum sequence length filter for step1. |
 | `--verbose` | `-v` | flag | Optional | Optional | Optional | `False` | Verbose logging. |
 

@@ -158,7 +158,7 @@ def step2(
     new_directory: str,
     training_json: str,
     epochs: int,
-    tensorflow_fw: bool,  # legacy param name kept for compatibility
+    tensorflow_fw: bool,
     pytorch_fw: bool,
     load_phase1_status: bool,
     verbose: bool,
@@ -239,7 +239,7 @@ def step2(
 
 def step3(
     new_directory: str,
-    tensorflow_fw: bool,  # legacy param name kept for compatibility
+    tensorflow_fw: bool,  
     pytorch_fw: bool,
     load_phase1_status: bool,
     verbose: bool,
@@ -290,7 +290,7 @@ def step3(
 def step4(
     new_directory: str,
     predict_directory: str,
-    tensorflow_fw: bool,  # legacy param name kept for compatibility
+    tensorflow_fw: bool,  
     pytorch_fw: bool,
     load_phase1_status: bool,
     verbose: bool,
@@ -373,7 +373,7 @@ def workflow(
     num_of_hidro: list,
     min_len_data: int,
     only_make_data: bool,
-    tensorflow_fw: bool,  # legacy param name kept for compatibility
+    tensorflow_fw: bool, 
     pytorch_fw: bool,
     load_phase1_status: bool,
     verbose: bool,
