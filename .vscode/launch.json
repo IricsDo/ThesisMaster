@@ -54,7 +54,7 @@
             "args": [
                 "-pred_only",
                 "-mp", "E:/Work Spaces/Thesis/Data/model/52_55_58_100_112_graph_non_data_under_52H.pb",
-                "-p", "E:/Work Spaces/Thesis/Data/SiCH_v2/predict",
+                "-p", "E:/Work Spaces/Thesis/Data/SiCH_v2/predict_79",
                 "-tf",
                 "-v"
             ]
