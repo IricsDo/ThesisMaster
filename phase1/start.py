@@ -145,7 +145,7 @@ def step1(
         )
 
         if TYPE_MAP != type_map_predict:
-            raise Exception("The data for training and prediction is different types.")
+            raise Exception("The data for training and prediction is different types. Please check prediction folder")
     
     data["phase1"]["step_1"]["success"] = True
 
