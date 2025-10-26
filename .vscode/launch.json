@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: Create Train-Valid Dataset (52-100H)",
+            "name": "Python Debugger: Create Train-Valid Dataset",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/phase1/start.py",
@@ -20,18 +20,20 @@
                 "55",
                 "58",
                 // "79",
-                "100",
+                // "100",
                 // "112",
                 "-i",
-                "E:/Work Spaces/Thesis/Data/SiCH_v2/input",
+                "E:/Work Spaces/Thesis/Data/SiCH_v2/input_52_55_58",
                 "-o",
-                "E:/Work Spaces/Thesis/Data/SiCH_v2/output_52_55_58_100",
+                "E:/Work Spaces/Thesis/Data/SiCH_v2/output_52_55_58",
+                "-p",
+                "E:/Work Spaces/Thesis/Data/SiCH_v2/predict_112",
                 "-omd",
                 "-v"
             ]
         },
         {
-            "name": "Python Debugger: Create Predict Dataset (4-112H)",
+            "name": "Python Debugger: Create Predict Dataset",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/phase1/start.py",
@@ -46,7 +48,7 @@
             ]
         },
         {
-            "name": "Python Debugger: Run Test Predict (79H)",
+            "name": "Python Debugger: Run Test Predict",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/phase1/start.py",
