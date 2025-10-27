@@ -116,6 +116,8 @@ def step1(
             update_process_ui(20)
 
             FOLDER_COMBINE = combine(new_directory, train_val_folders)
+            # Index 0: training folders
+            # Index 1: validation folders
             data["phase1"]["step_1"]["FOLDER_COMBINE"] = FOLDER_COMBINE
 
             update_process_ui(25)

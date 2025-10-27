@@ -9,26 +9,26 @@ from utils_com.logger import ServerLogger
 from typing import Tuple, List, Any
 
 
-def max_min_scale_array(arr: np.ndarray) -> np.ndarray:
-    # Compute the min and max of the array
-    arr_min = arr.min()
-    arr_max = arr.max()
-    # Avoid division by zero if all values are equal
-    if arr_max - arr_min == 0:
-        return arr
-    return (arr - arr_min) / (arr_max - arr_min)
+# def max_min_scale_array(arr: np.ndarray) -> np.ndarray:
+#     # Compute the min and max of the array
+#     arr_min = arr.min()
+#     arr_max = arr.max()
+#     # Avoid division by zero if all values are equal
+#     if arr_max - arr_min == 0:
+#         return arr
+#     return (arr - arr_min) / (arr_max - arr_min)
 
 
-def scale_dpdata(data_obj: dpdata.LabeledSystem) -> dpdata.LabeledSystem:
-    # Assuming the dpdata object has a dictionary attribute 'data'
-    for key, value in data_obj.data.items():
-        # Only scale if the value is a numeric numpy array
-        if isinstance(value, np.ndarray) and np.issubdtype(
-            value.dtype, np.number
-        ):  # and key == 'energies':
-            data_obj.data[key] = max_min_scale_array(value)
-            return data_obj
-    return data_obj
+# def scale_dpdata(data_obj: dpdata.LabeledSystem) -> dpdata.LabeledSystem:
+#     # Assuming the dpdata object has a dictionary attribute 'data'
+#     for key, value in data_obj.data.items():
+#         # Only scale if the value is a numeric numpy array
+#         if isinstance(value, np.ndarray) and np.issubdtype(
+#             value.dtype, np.number
+#         ):  # and key == 'energies':
+#             data_obj.data[key] = max_min_scale_array(value)
+#             return data_obj
+#     return data_obj
 
 
 def creation_data_from_siesta(
@@ -46,8 +46,12 @@ def creation_data_from_siesta(
 
     Parameters:
     - data_raw_path: The path to the directory containing the data.
+    - data_npy_path:
     - data_size: The number of data points to process. If negative, the function returns an empty list.
-    - key_word: A keyword to locate the specific data file within the directory.
+    - data_keyword: A keyword to locate the specific data file within the directory.
+    - num_of_hidro:
+    - min_len_data:
+    - task_predict: 
     - verbose: Optional flag to enable detailed logging of the data processing steps.
 
     Returns:

@@ -4,47 +4,47 @@ from utils.folder_utils import create_folder, copy_one_file
 from utils_com.logger import ServerLogger
 
 
-def combine_npy_files(
-    folder_data: list[str], output_folder: str, verbose: bool = False
-) -> None:
+# def combine_npy_files(
+#     folder_data: list[str], output_folder: str, verbose: bool = False
+# ) -> None:
 
-    new_output_folder = os.path.join(output_folder, "set.000")
-    create_folder(new_output_folder)
-    copy_one_file(
-        os.path.join(folder_data[0], "type.raw"),
-        os.path.join(output_folder, "type.raw"),
-    )
-    copy_one_file(
-        os.path.join(folder_data[0], "type_map.raw"),
-        os.path.join(output_folder, "type_map.raw"),
-    )
-    LOGGER = ServerLogger()
+#     new_output_folder = os.path.join(output_folder, "set.000")
+#     create_folder(new_output_folder)
+#     copy_one_file(
+#         os.path.join(folder_data[0], "type.raw"),
+#         os.path.join(output_folder, "type.raw"),
+#     )
+#     copy_one_file(
+#         os.path.join(folder_data[0], "type_map.raw"),
+#         os.path.join(output_folder, "type_map.raw"),
+#     )
+#     LOGGER = ServerLogger()
 
-    npy_files = ["virial.npy", "force.npy", "energy.npy", "coord.npy", "box.npy"]
+#     npy_files = ["virial.npy", "force.npy", "energy.npy", "coord.npy", "box.npy"]
 
-    for data_type in npy_files:
-        data_combine = list()
-        for folder in folder_data:
-            data_combine.append(np.load(os.path.join(folder, "set.000", data_type)))
+#     for data_type in npy_files:
+#         data_combine = list()
+#         for folder in folder_data:
+#             data_combine.append(np.load(os.path.join(folder, "set.000", data_type)))
 
-        # if all(arr.shape == data_combine[0].shape for arr in data_combine):
-        #     combined_data = np.vstack(data_combine)
-        #     np.save(os.path.join(new_output_folder, data_type), combined_data)
+#         # if all(arr.shape == data_combine[0].shape for arr in data_combine):
+#         #     combined_data = np.vstack(data_combine)
+#         #     np.save(os.path.join(new_output_folder, data_type), combined_data)
 
-        if data_combine:
-            # Temp fix incorrect shape of data
-            # Truncate to the smallest number of columns
-            min_cols = min(arr.shape[1] for arr in data_combine)
-            data_combine_aligned = [arr[:, :min_cols] for arr in data_combine]
-            combined_data = np.vstack(data_combine_aligned)
-            np.save(os.path.join(new_output_folder, data_type), combined_data)
-        else:
-            raise ValueError("The list is empty shapes. Cannot be stacked.")
+#         if data_combine:
+#             # Temp fix incorrect shape of data
+#             # Truncate to the smallest number of columns
+#             min_cols = min(arr.shape[1] for arr in data_combine)
+#             data_combine_aligned = [arr[:, :min_cols] for arr in data_combine]
+#             combined_data = np.vstack(data_combine_aligned)
+#             np.save(os.path.join(new_output_folder, data_type), combined_data)
+#         else:
+#             raise ValueError("The list is empty shapes. Cannot be stacked.")
 
-        if verbose:
-            LOGGER.log(f"Combined {data_type} and saved to {new_output_folder}")
+#         if verbose:
+#             LOGGER.log(f"Combined {data_type} and saved to {new_output_folder}")
 
-    return
+#     return
 
 
 # def combine_dp_system(
