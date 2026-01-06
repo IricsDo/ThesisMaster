@@ -44,7 +44,7 @@ def vaild(
                     )
                 )
 
-            plt.scatter(systems["energies"], predict["energies"])
+            plt.scatter(systems["energies"], predict["energies"]) # type: ignore
             x_range = np.linspace(plt.xlim()[0], plt.xlim()[1])
 
             plt.plot(x_range, x_range, "r--", linewidth=0.25)
