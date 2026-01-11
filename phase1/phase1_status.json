@@ -1,19 +1,199 @@
 {
-    "input_folder": "E:\\Work Spaces\\Thesis\\Data\\demo\\convert_siesta_to_deepmdkit\\input",
-    "output_folder": "E:\\Work Spaces\\Thesis\\Data\\demo\\convert_siesta_to_deepmdkit\\output",
+    "input_folder": "E:/Work Spaces/Thesis/Data/SiCH_v2/input",
+    "output_folder": "E:/Work Spaces/Thesis/Data/SiCH_v2/output",
     "predict_folder": "E:/Work Spaces/Thesis/Data/SiCH_v2/predict_112",
     "phase1": {
         "step_1": {
             "success": true,
             "FOLDER_COMBINE": [
                 {
+                    "10": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_1",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_10",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_5",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_6",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_7",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_8",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_9",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_10_1",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_10_2",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_10_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_52_10",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_55_10",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_79_10"
+                    ],
+                    "4": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_11_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_12_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_13_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_14_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_15_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_100_4",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_10_6_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_10_7_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_10_8_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_10_9_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_4_1",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_4_10",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_4_2",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_4_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_4_4",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_4_5",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_4_6",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_4_7",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_4_8",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_4_9",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_52_4",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_55_4",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_58_4",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_79_4"
+                    ],
                     "112": [
-                        "E:\\Work Spaces\\Thesis\\Data\\demo\\convert_siesta_to_deepmdkit\\output\\training_data_112_1"
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_112_1"
+                    ],
+                    "19": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_19_5",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_19_6",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_19_7",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_19_8"
+                    ],
+                    "28": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_28_2",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_28_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_28_5",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_28_6",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_28_7"
+                    ],
+                    "52": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_52_1",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_52_2",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_52_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_52_5",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_52_6",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_52_7",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_52_8",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_52_9"
+                    ],
+                    "55": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_55_2",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_55_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_55_5",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_55_6",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_55_7",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_55_8",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_55_9"
+                    ],
+                    "58": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_58_1",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_58_2",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_58_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_58_5"
+                    ],
+                    "79": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_79_1",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_79_2",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_79_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_79_5",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_79_6",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_79_7",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_79_8",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\training_data_79_9"
                     ]
                 },
                 {
+                    "10": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_1",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_10",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_5",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_6",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_7",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_8",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_9",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_10_1",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_10_2",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_10_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_52_10",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_55_10",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_79_10"
+                    ],
+                    "4": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_11_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_12_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_13_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_14_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_15_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_100_4",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_10_6_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_10_7_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_10_8_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_10_9_400K",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_4_1",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_4_10",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_4_2",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_4_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_4_4",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_4_5",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_4_6",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_4_7",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_4_8",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_4_9",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_52_4",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_55_4",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_58_4",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_79_4"
+                    ],
                     "112": [
-                        "E:\\Work Spaces\\Thesis\\Data\\demo\\convert_siesta_to_deepmdkit\\output\\validation_data_112_1"
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_112_1"
+                    ],
+                    "19": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_19_5",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_19_6",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_19_7",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_19_8"
+                    ],
+                    "28": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_28_2",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_28_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_28_5",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_28_6",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_28_7"
+                    ],
+                    "52": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_52_1",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_52_2",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_52_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_52_5",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_52_6",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_52_7",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_52_8",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_52_9"
+                    ],
+                    "55": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_55_2",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_55_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_55_5",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_55_6",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_55_7",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_55_8",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_55_9"
+                    ],
+                    "58": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_58_1",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_58_2",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_58_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_58_5"
+                    ],
+                    "79": [
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_79_1",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_79_2",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_79_3",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_79_5",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_79_6",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_79_7",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_79_8",
+                        "E:/Work Spaces/Thesis/Data/SiCH_v2/output\\validation_data_79_9"
                     ]
                 }
             ],
@@ -24,6 +204,15 @@
             ],
             "params": {
                 "num_of_hidro": [
+                    "4",
+                    "10",
+                    "19",
+                    "28",
+                    "52",
+                    "55",
+                    "58",
+                    "79",
+                    "100",
                     "112"
                 ],
                 "min_len_data": 0

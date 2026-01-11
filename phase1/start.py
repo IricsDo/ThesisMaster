@@ -50,6 +50,16 @@ def update_process_ui(percent: int) -> None:
 
 
 LOGGER.log(f"Import library success")
+LOGGER.log("""
+********************************************************************************
+*                              IMPORTANT NOTICE                                *
+*                                                                              *
+*  Logging has been moved to another log directory.                            *
+*  Please check your log folder configuration immediately.                     *
+*                                                                              *
+********************************************************************************
+""")
+
 
 update_process_ui(5)
 
@@ -545,9 +555,22 @@ def main():
         action="store_true",
         help="Skip preparing <predict_folder>/result and use it as-is.",
     )
+    
+    parser.add_argument(
+        "-logdir",
+        "--log_dir",
+        type=str,
+        required=False,
+        default="",
+        help="The log directory to process.",
+    )
 
     # Parse the arguments
     args = parser.parse_args()
+
+    LOGGER.set_log_dir(args.log_dir)  # Use default log dir or modify as needed
+    
+    LOGGER.log(f"\nServer starting, hi!\n")
 
     # Verbose mode check
     if args.verbose:
@@ -667,7 +690,6 @@ def main():
 
 
 if __name__ == "__main__":
-    LOGGER.log(f"\nServer starting, hi!\n")
     try:
         main()
     except SystemExit as e:
