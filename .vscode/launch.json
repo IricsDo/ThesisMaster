@@ -33,7 +33,7 @@
             ]
         },
         {
-            "name": "Python Debugger: Create Predict Dataset",
+            "name": "Python Debugger: Create Predict Dataset (version 2)",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/phase1/start.py",
@@ -42,7 +42,33 @@
                 "-i",
                 "E:/Work Spaces/Thesis/Data/SiCH_v2/input",
                 "-o",
-                "E:/Work Spaces/Thesis/Data/SiCH_v2/output", // bypass check output folder
+                "E:/Work Spaces/Thesis/Data/SiCH_v2/output", // bypass check output folder, not important name of folder, but path must exist
+                "-omd",
+                "-v"
+            ]
+        },
+        {
+            "name": "Python Debugger: Create Predict Dataset (version 1)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/phase1/start.py",
+            "console": "integratedTerminal",
+            "args": [
+                "-i",
+                "E:/Work Spaces/Thesis/Data/SiCH_v2/input",
+                "-o",
+                "E:/Work Spaces/Thesis/Data/SiCH_v2/output",
+                "-noh",
+                "4",
+                "10",
+                // "19",
+                // "28",
+                "52",
+                "55",
+                "58",
+                // "79",
+                "100",
+                "112",
                 "-omd",
                 "-v"
             ]
