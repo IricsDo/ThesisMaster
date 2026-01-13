@@ -3,18 +3,18 @@ from utils.folder_utils import delete_file, delete_folder
 from utils_com.logger import ServerLogger
 
 
-def recommend_decay_steps(numb_steps: int, mode: str = "normal") -> int:
+def recommend_decay_steps(numb_steps: int, mode: str = "") -> int:
     LOGGER = ServerLogger()
 
     if mode == "slow":
         n = 2
     elif mode == "fast":
-        n = 5
+        n = 10
     elif mode == "normal":
-        n = 3
+        n = 5
     else:
-        LOGGER.log(f"Decay steps for training invaild ! Set default 5000")
-        return 5000
+        LOGGER.log(f"Decay steps for training not setting ! Set default 50 for {numb_steps} steps")
+        return 50
     return numb_steps // n
 
 
@@ -59,15 +59,13 @@ def modify(
     data["training"]["numb_steps"] = numb_steps
     data["training"]["disp_freq"] = int(numb_steps / 50)
     data["training"]["save_freq"] = int(numb_steps / 10)
+    data["learning_rate"]["decay_steps"] = recommend_decay_steps(numb_steps)
+    
     if tesorflow_fw:
-        data["learning_rate"]["decay_steps"] = recommend_decay_steps(
-            numb_steps
-        )
         data["training"]["tensorboard_freq"] = int(numb_steps / 10)
         data["training"]["tensorboard_log_dir"] = tensorboard_log_dir
 
     else:
-        data["learning_rate"]["decay_steps"] = recommend_decay_steps(numb_steps)
         data["training"]["stat_file"] = stat_file
 
     # Write the updated data back to the JSON file
