@@ -38,6 +38,7 @@ def creation_data_from_siesta(
     data_keyword: str,
     num_of_hidro: list = [],
     min_len_data: int = 0,
+    cutoff_len_data: int = 0,
     task_predict: bool = False,
     verbose: bool = False,
 ) -> dict:
@@ -60,10 +61,22 @@ def creation_data_from_siesta(
     if data_size < 0:
         return {"empty": ["", ""]}
 
+    LOGGER = ServerLogger()
+
     data = dpdata.LabeledSystem(
         os.path.join(data_raw_path, data_keyword), fmt="siesta/aimd_output"
     )
-    LOGGER = ServerLogger()
+    
+    current_size = len(data)
+    if 0 < cutoff_len_data < current_size:
+        data = data.sub_system(list(range(cutoff_len_data)))
+        LOGGER.log(
+            f"The data size {current_size} is cut to {len(data)} because cutoff_len_data is {cutoff_len_data}"            
+            )
+    else:
+        LOGGER.log(f"No cutting applied. Using all {current_size} frames.")
+    data_size = len(data)
+
 
     if task_predict:
         predict_path = "prediction_data_" + os.path.basename(data_raw_path)
@@ -89,7 +102,7 @@ def creation_data_from_siesta(
 
         if not num_of_hidro:
             raise Exception("Unknow option to get number of atom type")
-        
+            
         if data_size <= min_len_data:
             LOGGER.log(
                 f"The data size {data_size} is less than the minimum required {min_len_data}, by pass {data_raw_path}"
@@ -139,6 +152,7 @@ def creation_data(
     data_keyword: str,
     num_of_hidro: list,
     min_len_data : int,
+    cutoff_len_data: int,
     task_predict: bool = False,
     verbose: bool = False,
 ) -> dict:
@@ -150,6 +164,7 @@ def creation_data(
         data_keyword,
         num_of_hidro,
         min_len_data,
+        cutoff_len_data,
         task_predict,
         verbose,
     )
@@ -191,6 +206,7 @@ def creation(
     folders: list,
     num_of_hidro: list,
     min_len_data: int,
+    cutoff_len_data: int,
     task_predict: bool = False,
     verbose: bool = False,
 ) -> Tuple[List[Any], Any]:
@@ -212,6 +228,7 @@ def creation(
                 KEY_WORD_DATA_FOLDER[0],
                 num_of_hidro,
                 min_len_data,
+                cutoff_len_data,
                 task_predict,
                 verbose,
             )

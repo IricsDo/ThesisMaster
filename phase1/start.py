@@ -73,6 +73,7 @@ def step1(
     predict_directory: str,
     num_of_hidro: list,
     min_len_data: int,
+    cutoff_len_data: int,
     load_phase1_status: bool,
     verbose: bool,
     bypass: bool = False,
@@ -94,14 +95,15 @@ def step1(
             cached_params = data["phase1"]["step_1"].get("params", {})
             same_noh = cached_params.get("num_of_hidro") == (num_of_hidro or [])
             same_mld = cached_params.get("min_len_data") == min_len_data
+            same_cld = cached_params.get("cutoff_len_data") == cutoff_len_data
 
-            if data["phase1"]["step_1"]["success"] and same_noh and same_mld:
+            if data["phase1"]["step_1"]["success"] and same_noh and same_mld and same_cld:
                 FOLDER_COMBINE = data["phase1"]["step_1"]["FOLDER_COMBINE"]
                 TYPE_MAP = data["phase1"]["step_1"]["TYPE_MAP"]
                 LOGGER.log("Step 1 cache hit: load FOLDER_COMBINE & TYPE_MAP from status")
                 is_data_available = True
             else:
-                LOGGER.log("Step 1 cache invalidated: num_of_hidro/min_len_data changed or previous not successful")
+                LOGGER.log("Step 1 cache invalidated: num_of_hidro/min_len_data/cutoff_len_data changed or previous not successful")
                 is_data_available = False
         except:
             LOGGER.log("Step 1 *NOT* found cache or cache invalid, rebuild")
@@ -121,7 +123,7 @@ def step1(
             ensure_predict_data(data_directory, verbose=verbose, logger=LOGGER)
         else:
             train_val_folders, type_map_train = creation(
-                new_directory, folders, num_of_hidro or [], min_len_data or 0, task_predict=False, verbose=verbose
+                new_directory, folders, num_of_hidro or [], min_len_data or 0, cutoff_len_data, task_predict=False, verbose=verbose
             )
             update_process_ui(20)
 
@@ -151,6 +153,7 @@ def step1(
             os.path.join(predict_directory, "result"),
             folders,
             [],
+            0,
             0,
             task_predict=True,
             verbose=verbose,
@@ -384,6 +387,7 @@ def workflow(
     epochs: int,
     num_of_hidro: list,
     min_len_data: int,
+    cutoff_len_data: int,
     only_make_data: bool,
     tensorflow_fw: bool, 
     pytorch_fw: bool,
@@ -532,6 +536,14 @@ def main():
     )
 
     parser.add_argument(
+        "-cld",
+        "--cutoff_len_data",
+        type=int,
+        default=0,
+        help="Number of maximum data length. Value zero or less means no cutoff.",
+    )
+    
+    parser.add_argument(
         "-trainj",
         "--training_json",
         type=str,
@@ -677,6 +689,7 @@ def main():
         args.epochs,
         args.num_of_hidro,
         args.min_len_data,
+        args.cutoff_len_data,
         args.only_make_data,
         args.tensorflow,
         args.pytorch,
