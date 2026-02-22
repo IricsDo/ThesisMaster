@@ -31,6 +31,8 @@
                 "-logdir",
                 "E:/Work Spaces/Thesis/Data/SiCH_v2/logs",
                 "-omd",
+                "-cld",
+                "500",
                 "-v"
             ]
         },

@@ -3,5 +3,8 @@
         ""
     ],
     "python.createEnvironment.contentButton": "show",
-    "python.terminal.shellIntegration.enabled": true
+    "python.terminal.shellIntegration.enabled": true,
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "python-envs.pythonProjects": []
 }

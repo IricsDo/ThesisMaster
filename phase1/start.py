@@ -401,7 +401,7 @@ def workflow(
 
     LOGGER.log("\n***Step 1/4 in phase 1 on running!\n")
     if run_with_traceback(
-        step1, input_folder, output_folder, predict_folder, num_of_hidro, min_len_data, load_phase1_status, verbose
+        step1, input_folder, output_folder, predict_folder, num_of_hidro, min_len_data, cutoff_len_data, load_phase1_status, verbose
     ):
         return ReturnCode.ERROR_CODE_1
     else:
