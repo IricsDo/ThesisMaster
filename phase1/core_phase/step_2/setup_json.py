@@ -57,8 +57,8 @@ def modify(
     data["training"]["disp_file"] = disp_file_value
     data["training"]["profiling_file"] = profiling_file
     data["training"]["numb_steps"] = numb_steps
-    data["training"]["disp_freq"] = int(numb_steps / 50)
-    data["training"]["save_freq"] = int(numb_steps / 10)
+    data["training"]["disp_freq"] = int(numb_steps / recommend_decay_steps(numb_steps))
+    data["training"]["save_freq"] = int(20 * numb_steps / recommend_decay_steps(numb_steps))
     data["learning_rate"]["decay_steps"] = recommend_decay_steps(numb_steps)
     
     if tesorflow_fw:

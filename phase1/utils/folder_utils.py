@@ -31,7 +31,7 @@ def delete_folder(path: str, verbose: bool = False) -> None:
             LOGGER.log(f"Folder '{path}' deleted.")
     else:
         if verbose:
-            warnings.warn(f"Folder '{path}' does not exist.")
+            LOGGER.log(f"Folder '{path}' does not exist.")
 
 
 def copy_one_file(source: str, destination: str, verbose: bool = False) -> None:
